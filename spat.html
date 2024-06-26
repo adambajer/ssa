@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech Transcription and Playback</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        button {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #6200ea;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #3700b3;
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        .transcription-button {
+            position: relative;
+            padding-right: 40px; /* Space for delete button */
+        }
+        .edit-button, .delete-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: #333;
+            font-size: 16px;
+        }
+        .edit-button {
+            right: 30px;
+        }
+        .delete-button {
+            right: 5px;
+        }
+        .edit-button:hover, .delete-button:hover {
+            color: #6200ea;
+        }
+    </style>
+</head>
+<body>
+    <h1>Speech Transcription and Playback</h1>
+    <button id="start-recording">Start Recording</button>
+    <div id="transcriptions" class="grid-container"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const startRecordingButton = document.getElementById("start-recording");
+            const transcriptionsContainer = document.getElementById("transcriptions");
+            let isPlaying = false;
+
+            // Load transcriptions from local storage on page load
+            const loadTranscriptions = () => {
+                const storedTranscriptions = JSON.parse(localStorage.getItem("transcriptions")) || [];
+                storedTranscriptions.forEach(transcription => {
+                    createTranscriptionButton(transcription);
+                });
+            };
+
+            // Create a button for each transcription
+            const createTranscriptionButton = (text) => {
+                const buttonWrapper = document.createElement("div");
+                buttonWrapper.className = "transcription-button";
+
+                const button = document.createElement("button");
+                button.textContent = text;
+                button.addEventListener("click", () => {
+                    if (!isPlaying) {
+                        isPlaying = true;
+                        readTextAloud(text);
+                    }
+                });
+
+                const editButton = document.createElement("button");
+                editButton.className = "edit-button";
+                editButton.innerHTML = "✏️";
+                editButton.addEventListener("click", () => {
+                    const newText = prompt("Edit transcription:", text);
+                    if (newText) {
+                        button.textContent = newText;
+                        updateTranscription(text, newText);
+                        text = newText;
+                    }
+                });
+
+                const deleteButton = document.createElement("button");
+                deleteButton.className = "delete-button";
+                deleteButton.innerHTML = "❌";
+                deleteButton.addEventListener("click", () => {
+                    buttonWrapper.remove();
+                    deleteTranscription(text);
+                });
+
+                buttonWrapper.appendChild(button);
+                buttonWrapper.appendChild(editButton);
+                buttonWrapper.appendChild(deleteButton);
+                transcriptionsContainer.appendChild(buttonWrapper);
+            };
+
+            // Save transcriptions to local storage
+            const saveTranscription = (text) => {
+                let storedTranscriptions = JSON.parse(localStorage.getItem("transcriptions")) || [];
+                storedTranscriptions.push(text);
+                localStorage.setItem("transcriptions", JSON.stringify(storedTranscriptions));
+            };
+
+            // Update transcription in local storage
+            const updateTranscription = (oldText, newText) => {
+                let storedTranscriptions = JSON.parse(localStorage.getItem("transcriptions")) || [];
+                const index = storedTranscriptions.indexOf(oldText);
+                if (index !== -1) {
+                    storedTranscriptions[index] = newText;
+                    localStorage.setItem("transcriptions", JSON.stringify(storedTranscriptions));
+                }
+            };
+
+            // Delete transcription from local storage
+            const deleteTranscription = (text) => {
+                let storedTranscriptions = JSON.parse(localStorage.getItem("transcriptions")) || [];
+                storedTranscriptions = storedTranscriptions.filter(transcription => transcription !== text);
+                localStorage.setItem("transcriptions", JSON.stringify(storedTranscriptions));
+            };
+
+            // Annyang setup for speech recognition
+            if (annyang) {
+                const commands = {
+                    '*text': (text) => {
+                        createTranscriptionButton(text);
+                        saveTranscription(text);
+                    }
+                };
+
+                annyang.addCommands(commands);
+                annyang.setLanguage('cs-CZ'); // Set language to Czech
+
+                startRecordingButton.addEventListener("click", () => {
+                    if (!isPlaying) {
+                        annyang.start();
+                        startRecordingButton.disabled = true;
+                        setTimeout(() => {
+                            annyang.abort();
+                            startRecordingButton.disabled = false;
+                        }, 10000); // Stop recording after 10 seconds
+                    }
+                });
+
+                annyang.addCallback('end', () => {
+                    startRecordingButton.disabled = false;
+                });
+
+                annyang.addCallback('error', (event) => {
+                    console.error("Speech recognition error", event.error);
+                    startRecordingButton.disabled = false;
+                });
+            } else {
+                console.log("Annyang is not supported in this browser.");
+            }
+
+            // Text-to-speech setup
+            const readTextAloud = (text) => {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'cs-CZ'; // Set language to Czech
+                utterance.onend = () => {
+                    isPlaying = false;
+                };
+                speechSynthesis.speak(utterance);
+            };
+
+            loadTranscriptions();
+        });
+    </script>
+</body>
+</html>

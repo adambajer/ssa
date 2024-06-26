@@ -271,8 +271,9 @@
         annyang.setLanguage('cs-CZ'); // Set language to Czech
 
 
-        const startRecording = () => {
-            if (!isRecording) {
+        
+function recording () {
+    if (!isRecording) {
                 annyang.start();
                 startRecordingButton.classList.toggle('active');
                 isRecording = true;
@@ -280,44 +281,35 @@
                     annyang.abort();
                      startRecordingButton.classList.toggle('active');
                  }, 5000); // Stop recording after 5 seconds
-            }
-        };
-
-        const stopRecording = () => {
-            if (isRecording) {
+            } 
+    else {
                 annyang.abort();                 
                 startRecordingButton.classList.toggle('active');
-                isRecording = false;
-            }
-        };
-
+                isRecording = false;   
+    }
+}
         startRecordingButton.addEventListener("click", () => {
-            if (isRecording) {
-                stopRecording();
-            } else {
-                startRecording();
-            }
+            isRecording = true;   
+                recording();
+            
         });
 
         document.addEventListener("keydown", (event) => {
             if (event.key === "Control") {
-                if (isRecording) {
-                    stopRecording();
-                } else {
-                    startRecording();
-                }
+              isRecording = true;     
+              recording();
+            
             }
         });
 
         annyang.addCallback('end', () => {
             isRecording = false;
-             startRecordingButton.classList.toggle('active');
+          recording();  
         });
 
         annyang.addCallback('error', (event) => {
             console.error("Speech recognition error", event.error);
-            isRecording = false;
-            startRecordingButton.classList.toggle('active');
+            
 
         });
     } else {

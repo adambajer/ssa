@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPAT</title>
+    <link crossorigin="anonymous" rel="icon" href="fav.svg" sizes="32x32">
+    <style>
+        body {
+            padding: 0px;
+            margin: 0px;
+            width: 100%;
+            overflow: hidden;
+        }
+        .wrap {
+            padding: 10px;
+        }
+        button {
+            display: inline-block;
+            margin: 5px;
+            font-size: 16px;
+            border: none;
+             color: #333;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            color: red;
+        }
+        .grid-container {
+            display: flex; 
+             justify-items: stretch;
+            flex-direction: row;
+            width: auto;
+            padding-top: 20px;             
+            justify-content: flex-start;
+            align-content: center;
+            flex-wrap: wrap;
+            border-top-left-radius: 0px;
+        }
+        .transcription-button {
+            position: relative;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        button.text-button { 
+            border: 0px solid #ccc;
+            background-color: #ffffff;
+        } 
+        .edit-button { 
+            border-left: 1px solid #ccc;
+            background-color: transparent;            
+            cursor: pointer;
+            color: #333;
+            font-size: 16px;
+            padding: 2px;
+        }
+        .delete-button { 
+            border-right: 1px solid #ccc;
+            background-color: transparent;
+            cursor: pointer;
+            color: #333;
+            font-size: 16px;
+            padding: 2px;
+        }
+        #start-recording {
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: transparent;
+            border-radius: 100%;
+             transform: translateY(1px);
+        }
+        #start-recording svg path {
+            fill: rgb(164, 164, 164);
+            stroke: transparent;
+        }
+        #start-recording.active svg path {
+            fill: red;
+        }
+        #start-recording.active {
+            border: 1px solid red;
+            box-shadow: 0px 0px 7px 0px rgba(255, 0, 0, 0.3);
+            padding: 10px;     
+        }
+        #start-recording.active {
+            animation: pulse 1s infinite;
+        }
+        #start-recording svg {     
+            width: 60px;
+            height: 60px;
+            display: block;
+        } 
+        @keyframes pulse {
+            0% {
+                box-shadow: 0px 0px 20px red;
+            }
+            50% {
+                box-shadow: 0px 0px 40px red;
+            }
+            100% {
+                box-shadow: 0px 0px 20px red;
+            }
+        }   .shortcut {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px 5px;
+            font-size: 12px;
+            color: black;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        } .transcription-button {
+            position: relative;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }  .tooltip {
+            position: absolute;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            padding: 5px;
+            font-size: 12px;
+            visibility: hidden;
+            z-index: 1;
+            top:-25px;
+        }
+        .transcription-button:hover .tooltip {
+            visibility: visible;
+        }
+        button.active {
+        border:1px solid red;}
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <button id="start-recording">
+            <svg width="210mm" height="210mm" viewBox="0 0 210 210" xmlns="http://www.w3.org/2000/svg">
+                <g transform="translate(0 4.174)">
+                    <path d="M46.195 87.43c-6.23 0-11.28 4.842-11.28 10.815 0 31.98 24.795 58.497 57.064 64.213v26.812h.047a13.02 12.747 0 00-.046.622A13.02 12.747 0 00105 202.64a13.02 12.747 0 0013.02-12.747 13.02 12.747 0 00-.016-.622h.016v-26.812c32.27-5.716 57.066-32.232 57.065-64.213 0-5.973-5.05-10.815-11.28-10.815-6.23 0-11.28 4.842-11.28 10.815 0 24.09-20.947 43.741-47.525 43.741s-47.525-19.65-47.525-43.741c0-5.973-5.05-10.815-11.28-10.815z" color="#000" fill="none" stroke-width="3.00030552" stroke-linecap="square" paint-order="stroke markers fill" stroke="#000"/>
+                    <ellipse cx="92.736" cy="205.75" rx=".757" ry=".076" paint-order="markers fill stroke"/>
+                </g>
+                <path d="M105 0C87.513 0 72.645 10.775 66.616 26.07h52.208c2.77 0 5 1.973 5 4.425 0 2.451-2.23 4.425-5 4.425H64.218a41.91 41.91 0 00-.482 6.344v.68h55.088c2.77 0 5 1.974 5 4.426 0 2.451-2.23 4.425-5 4.425H63.736v7.025h55.088c2.77 0 5 1.973 5 4.425 0 2.451-2.23 4.425-5 4.425H63.736v29.24c0 22.86 18.404 41.264 41.264 41.264 22.86 0 41.264-18.404 41.264-41.264V41.264C146.264 18.404 127.86 0 105 0z" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" stroke-miterlimit="4.1" paint-order="markers fill stroke"/>
+                <text>REC</text>
+            </svg>
+        </button> 
+        <br>
+        <div id="transcriptions" class="grid-container"></div>
+    </div>
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
+       <script>
+        const synth = window.speechSynthesis;
+        const shortcuts = "abcdefghijklmnopqrstuvwxyz".split("");
+        let isRecording = false;
+        let isPlaying = false;
+        
+        document.addEventListener("DOMContentLoaded", () => {
+            const startRecordingButton = document.getElementById("start-recording");
+            const transcriptionsContainer = document.getElementById("transcriptions");
+        
+            // Load transcriptions from local storage on page load
+            const loadTranscriptions = () => {
+                const storedTranscriptions = JSON.parse(localStorage.getItem("transcriptions")) || [];
+                storedTranscriptions.forEach(transcription => {
+                    createTranscriptionButton(transcription);
+                });
+            };
+        
+            // Create a button for each transcription
+            const createTranscriptionButton = (text) => {
+                const buttonWrapper = document.createElement("div");
+                buttonWrapper.className = "transcription-button";
+        
+                const button = document.createElement("button");
+                button.className = "text-button";
+                button.textContent = text;
+                button.addEventListener("click", () => {
+                    if (!isPlaying) {
+                        isPlaying = true;
+                        readTextAloud(text);
+                    }
+                });
+        
+                const shortcut = shortcuts.shift();
+                if (shortcut) {
+                    const shortcutSpan = document.createElement("span");
+                    shortcutSpan.className = "shortcut";
+                    shortcutSpan.textContent = shortcut.toUpperCase();
+                    button.appendChild(shortcutSpan);
+        
+                    document.addEventListener("keydown", (event) => {
+                        if (event.key === shortcut) {
+                            button.click();
+                            button.classList.toggle('active');
+                        }
+                    });
+                }
+        
+                const tooltip = document.createElement("span");
+                tooltip.className = "tooltip";
+                tooltip.textContent = `Press ${shortcut.toUpperCase()} to activate`;
+                buttonWrapper.appendChild(tooltip);
+        
+                const editButton = document.createElement("button");
+                editButton.className = "edit-button";
+                editButton.innerHTML = "✏️";
+                editButton.addEventListener("click", () => {
+                    const newText = prompt("Edit transcription:", text);
+                    if (newText) {
+                        button.textContent = newText;
+                        updateTranscription(text, newText);
+                        text = newText;
+                    }
+                });
+        
+                const deleteButton = document.createElement("button");
+                deleteButton.className = "delete-button";
+                deleteButton.innerHTML = "🗑️";
+                deleteButton.addEventListener("click", () => {
+                    buttonWrapper.remove();
+                    deleteTranscription(text);
+                });
+        
+                buttonWrapper.appendChild(deleteButton);
+                buttonWrapper.appendChild(button);
+                
+                buttonWrapper.appendChild(editButton);
+                transcriptionsContainer.appendChild(buttonWrapper);
+            };
+        
+            // Save transcriptions to local storage
+            const saveTranscription = (text) => {
+                let storedTranscriptions = JSON.parse(localStorage.getItem("transcriptions")) || [];
+                storedTranscriptions.push(text);
+                localStorage.setItem("transcriptions", JSON.stringify(storedTranscriptions));
+            };
+        
+            // Update transcription in local storage
+            const updateTranscription = (oldText, newText) => {
+                let storedTranscriptions = JSON.parse(localStorage.getItem("transcriptions")) || [];
+                const index = storedTranscriptions.indexOf(oldText);
+                if (index !== -1) {
+                    storedTranscriptions[index] = newText;
+                    localStorage.setItem("transcriptions", JSON.stringify(storedTranscriptions));
+                }
+            };
+        
+            // Delete transcription from local storage
+            const deleteTranscription = (text) => {
+                let storedTranscriptions = JSON.parse(localStorage.getItem("transcriptions")) || [];
+                storedTranscriptions = storedTranscriptions.filter(transcription => transcription !== text);
+                localStorage.setItem("transcriptions", JSON.stringify(storedTranscriptions));
+            };
+        
+            // Annyang setup for speech recognition
+            
+    // Annyang setup for speech recognition
+    if (annyang) {
+        const commands = {
+            '*text': (text) => {
+                createTranscriptionButton(text);
+                saveTranscription(text);
+            }
+        };
+
+        annyang.addCommands(commands);
+        annyang.setLanguage('cs-CZ'); // Set language to Czech
+
+
+        const startRecording = () => {
+            if (!isRecording) {
+                annyang.start();
+                startRecordingButton.classList.toggle('active');
+                isRecording = true;
+                setTimeout(() => {
+                    annyang.abort();
+                     startRecordingButton.classList.toggle('active');
+                 }, 5000); // Stop recording after 5 seconds
+            }
+        };
+
+        const stopRecording = () => {
+            if (isRecording) {
+                annyang.abort();                 
+                startRecordingButton.classList.toggle('active');
+                isRecording = false;
+            }
+        };
+
+        startRecordingButton.addEventListener("click", () => {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key === "Control") {
+                if (isRecording) {
+                    stopRecording();
+                } else {
+                    startRecording();
+                }
+            }
+        });
+
+        annyang.addCallback('end', () => {
+            isRecording = false;
+             startRecordingButton.classList.toggle('active');
+        });
+
+        annyang.addCallback('error', (event) => {
+            console.error("Speech recognition error", event.error);
+            isRecording = false;
+            startRecordingButton.classList.toggle('active');
+
+        });
+    } else {
+        console.log("Annyang is not supported in this browser.");
+    }
+            const readTextAloud = (text) => {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'cs-CZ'; // Set language to Czech
+        
+                // Randomly change speed and voice
+                utterance.rate = Math.random() * (1.5 - 0.5) + 0.5;
+                const voices = synth.getVoices().filter(voice => voice.lang === 'cs-CZ');
+                if (voices.length > 0) {
+                    const randomVoice = voices[Math.floor(Math.random() * voices.length)];
+                    utterance.voice = randomVoice;
+                }
+        
+                utterance.onend = () => {
+                    isPlaying = false;
+                };
+                speechSynthesis.speak(utterance);
+            };
+        
+            loadTranscriptions();
+        });        
+    </script>
+</body>
+</html>

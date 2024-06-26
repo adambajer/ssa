@@ -289,21 +289,21 @@ function recording () {
     }
 }
         startRecordingButton.addEventListener("click", () => {
-            isRecording = true;   
+            isRecording = false;   
                 recording();
             
         });
 
         document.addEventListener("keydown", (event) => {
             if (event.key === "Control") {
-              isRecording = true;     
+              isRecording = false;     
               recording();
             
             }
         });
 
         annyang.addCallback('end', () => {
-            isRecording = false;
+            isRecording = true;
           recording();  
         });
 

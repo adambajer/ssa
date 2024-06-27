@@ -284,19 +284,18 @@ function recording () {
             } 
     else {
                 annyang.abort();                 
-                startRecordingButton.classList.toggle('active');
-                isRecording = false;   
+                
     }
 }
         startRecordingButton.addEventListener("click", () => {
-            isRecording = false;   
+            
                 recording();
             
         });
 
         document.addEventListener("keydown", (event) => {
             if (event.key === "Control") {
-              isRecording = false;     
+                  
               recording();
             
             }

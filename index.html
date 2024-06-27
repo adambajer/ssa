@@ -20,19 +20,21 @@
             margin: 5px;
             font-size: 16px;
             border: none;
-             color: #333;
+            border-radius: 5px;
+            color: #333;
             cursor: pointer;
             transition: background-color 0.3s;
+            position: relative;
         }
         button:hover {
             color: red;
         }
         .grid-container {
-            display: flex; 
-             justify-items: stretch;
+            display: flex;
+            justify-items: stretch;
             flex-direction: row;
             width: auto;
-            padding-top: 20px;             
+            padding-top: 20px;
             justify-content: flex-start;
             align-content: center;
             flex-wrap: wrap;
@@ -44,19 +46,19 @@
             border: 1px solid #ccc;
             border-radius: 10px;
         }
-        button.text-button { 
+        button.text-button {
             border: 0px solid #ccc;
             background-color: #ffffff;
-        } 
-        .edit-button { 
+        }
+        .edit-button {
             border-left: 1px solid #ccc;
-            background-color: transparent;            
+            background-color: transparent;
             cursor: pointer;
             color: #333;
             font-size: 16px;
             padding: 2px;
         }
-        .delete-button { 
+        .delete-button {
             border-right: 1px solid #ccc;
             background-color: transparent;
             cursor: pointer;
@@ -64,33 +66,21 @@
             font-size: 16px;
             padding: 2px;
         }
-        #start-recording {
+        #start-recording, #start-sound-capture {
             padding: 10px;
             border: 1px solid #ccc;
             background-color: transparent;
             border-radius: 100%;
-             transform: translateY(1px);
+            transform: translateY(1px);
         }
-        #start-recording svg path {
-            fill: rgb(164, 164, 164);
-            stroke: transparent;
-        }
-        #start-recording.active svg path {
-            fill: red;
-        }
-        #start-recording.active {
+        #start-recording.active, #start-sound-capture.active {
             border: 1px solid red;
             box-shadow: 0px 0px 7px 0px rgba(255, 0, 0, 0.3);
-            padding: 10px;     
+            padding: 10px;
         }
-        #start-recording.active {
+        #start-recording.active, #start-sound-capture.active {
             animation: pulse 1s infinite;
         }
-        #start-recording svg {     
-            width: 60px;
-            height: 60px;
-            display: block;
-        } 
         @keyframes pulse {
             0% {
                 box-shadow: 0px 0px 20px red;
@@ -101,7 +91,8 @@
             100% {
                 box-shadow: 0px 0px 20px red;
             }
-        }   .shortcut {
+        }
+        .shortcut {
             position: absolute;
             top: -10px;
             right: -10px;
@@ -112,12 +103,8 @@
             font-size: 12px;
             color: black;
             box-shadow: 1px 1px 3px rgba(0,0,0,0.2);
-        } .transcription-button {
-            position: relative;
-            margin: 5px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-        }  .tooltip {
+        }
+        .tooltip {
             position: absolute;
             background-color: #333;
             color: #fff;
@@ -127,30 +114,24 @@
             font-size: 12px;
             visibility: hidden;
             z-index: 1;
-            top:-25px;
+            top: -25px;
         }
         .transcription-button:hover .tooltip {
             visibility: visible;
         }
         button.active {
-        border:1px solid red;}
+            border: 1px solid red;
+        }
     </style>
 </head>
 <body>
     <div class="wrap">
-        <button id="start-recording">
-            <svg width="210mm" height="210mm" viewBox="0 0 210 210" xmlns="http://www.w3.org/2000/svg">
-                <g transform="translate(0 4.174)">
-                    <path d="M46.195 87.43c-6.23 0-11.28 4.842-11.28 10.815 0 31.98 24.795 58.497 57.064 64.213v26.812h.047a13.02 12.747 0 00-.046.622A13.02 12.747 0 00105 202.64a13.02 12.747 0 0013.02-12.747 13.02 12.747 0 00-.016-.622h.016v-26.812c32.27-5.716 57.066-32.232 57.065-64.213 0-5.973-5.05-10.815-11.28-10.815-6.23 0-11.28 4.842-11.28 10.815 0 24.09-20.947 43.741-47.525 43.741s-47.525-19.65-47.525-43.741c0-5.973-5.05-10.815-11.28-10.815z" color="#000" fill="none" stroke-width="3.00030552" stroke-linecap="square" paint-order="stroke markers fill" stroke="#000"/>
-                    <ellipse cx="92.736" cy="205.75" rx=".757" ry=".076" paint-order="markers fill stroke"/>
-                </g>
-                <path d="M105 0C87.513 0 72.645 10.775 66.616 26.07h52.208c2.77 0 5 1.973 5 4.425 0 2.451-2.23 4.425-5 4.425H64.218a41.91 41.91 0 00-.482 6.344v.68h55.088c2.77 0 5 1.974 5 4.426 0 2.451-2.23 4.425-5 4.425H63.736v7.025h55.088c2.77 0 5 1.973 5 4.425 0 2.451-2.23 4.425-5 4.425H63.736v29.24c0 22.86 18.404 41.264 41.264 41.264 22.86 0 41.264-18.404 41.264-41.264V41.264C146.264 18.404 127.86 0 105 0z" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" stroke-miterlimit="4.1" paint-order="markers fill stroke"/>
-                <text>REC</text>
-            </svg>
-        </button> 
+        <button id="start-recording">Mic</button>
+        <button id="start-sound-capture">Pure Sound</button>
         <br>
         <div id="transcriptions" class="grid-container"></div>
     </div>
+
        <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
        <script>
         const synth = window.speechSynthesis;

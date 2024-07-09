@@ -55,15 +55,7 @@
 
             </div>
             <div id="rec">
-            <form id="voiceForm">
-                
-                <select id="language"></select>
             
-                
-                <select id="voice"></select>
-            
-                <button type="submit">Speak</button>
-            </form>
         </div>
         </div>
         <br>
@@ -75,12 +67,11 @@
     const startRecordingButton = document.getElementById("start-recording");
     const startSoundCaptureButton = document.getElementById("start-sound-capture");
     const transcriptionsContainer = document.getElementById("transcriptions");
-    const languageSelect = document.getElementById("language");
-    const voiceSelect = document.getElementById("voice");
-    const voiceForm = document.getElementById("voiceForm");
+    
+
     const synth = window.speechSynthesis;
     const shortcuts = "abcdefghijklmnopqrstuvwxyz".split("");
-    let voices = [];
+    
     let isRecording = false;
     let isPlaying = false;
     let mediaRecorder;
@@ -233,11 +224,6 @@
 
     
 
-    voiceForm.addEventListener("submit", (event) => {
-        event.preventDefault();
-        const text = prompt("Enter text to speak:") || "Hello, this is a test.";
-        readTextAloud(text);
-    });
 
     const readTextAloud = (text) => {
         const utterance = new SpeechSynthesisUtterance(text);
@@ -285,7 +271,7 @@
         });
     }
 
-    synth.onvoiceschanged = populateVoices;
+
     loadTranscriptions();
 });
 

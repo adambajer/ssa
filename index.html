@@ -229,31 +229,9 @@
         transcriptionsContainer.appendChild(buttonWrapper);
     };
 
-    const populateVoices = () => {
-        voices = synth.getVoices();
-        const languages = [...new Set(voices.map(voice => voice.lang))];
 
-        languages.forEach(lang => {
-            const option = document.createElement("option");
-            option.value = lang;
-            option.textContent = lang;
-            languageSelect.appendChild(option);
-        });
 
-        languageSelect.addEventListener("change", updateVoices);
-        updateVoices();
-    };
-
-    const updateVoices = () => {
-        const selectedLanguage = languageSelect.value;
-        voiceSelect.innerHTML = '';
-        voices.filter(voice => voice.lang === selectedLanguage).forEach(voice => {
-            const option = document.createElement("option");
-            option.value = voice.name;
-            option.textContent = voice.name;
-            voiceSelect.appendChild(option);
-        });
-    };
+    
 
     voiceForm.addEventListener("submit", (event) => {
         event.preventDefault();
@@ -263,15 +241,6 @@
 
     const readTextAloud = (text) => {
         const utterance = new SpeechSynthesisUtterance(text);
-        const selectedVoiceName = voiceSelect.value;
-        const selectedVoice = voices.find(voice => voice.name === selectedVoiceName);
-        utterance.voice = selectedVoice;
-        utterance.lang = selectedVoice.lang;
-        utterance.rate = Math.random() * (1.5 - 0.5) + 0.5;
-
-        utterance.onend = () => {
-            isPlaying = false;
-        };
         synth.speak(utterance);
     };
 

@@ -1,24 +1,18 @@
-<!DOCTYPE html>
-<html lang="cs">
+<!DOCTYPE html><html lang="cs">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SSA</title>
   <style>
-    body {
-      font-family: sans-serif;
-    }
-
     .wrap {
       padding: 20px;
+      font-family: sans-serif;
     }
-
     .tabs {
       display: flex;
       gap: 10px;
       margin-bottom: 10px;
     }
-
     .tab-button {
       padding: 8px 16px;
       cursor: pointer;
@@ -26,27 +20,34 @@
       background: #eee;
       border-radius: 5px;
     }
-
     .tab-button.active {
       background: #ccc;
       font-weight: bold;
     }
-
     .tab-content {
       display: none;
     }
-
     .tab-content.active {
       display: block;
     }
-
+    .panel {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    #rec button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 80px;
+      height: 80px;
+    }
     .transcription-button {
       display: flex;
       align-items: center;
       gap: 10px;
       margin-bottom: 8px;
     }
-
     .text-button {
       padding: 6px 12px;
       background: #f0f0f0;
@@ -55,62 +56,55 @@
       flex-grow: 1;
       text-align: left;
     }
-
     .edit-button, .delete-button {
       cursor: pointer;
       background: transparent;
       border: none;
       font-size: 18px;
     }
-
-    .shortcut {
-      margin-left: 10px;
-      color: gray;
-    }
-
-    .panel {
-      margin-bottom: 20px;
-    }
-
-    .record-button {
-      padding: 10px;
-      font-size: 16px;
-      margin-right: 10px;
-      cursor: pointer;
-    }
-
-    .record-button.active {
-      background-color: red;
-      color: white;
-    }
   </style>
 </head>
-
 <body>
   <div class="wrap">
-    <div class="panel">
-      <button id="start-recording" class="record-button">🎙️ Hlas</button>
-      <button id="start-sound-capture" class="record-button">🔴 Zvuk</button>
-    </div>
-
     <div class="tabs">
-      <button class="tab-button active" data-tab="predefined">Předdefinované</button>
       <button class="tab-button" data-tab="user">Vlastní</button>
+      <button class="tab-button" data-tab="predefined">Předdefinované</button>
+    </div><div class="tab-content" id="user">
+  <div class="panel">
+    <div id="rec">
+      <button id="start-recording">
+        <!-- SVG TEXT -->
+        <svg viewBox="0 0 210 210" xmlns="http://www.w3.org/2000/svg">
+          <text transform="rotate(-90)" x="-100" y="20" style="font-size:35.28px;stroke-width:.786">TEXT</text>
+        </svg>
+      </button>
     </div>
-
-    <div class="tab-content active" id="predefined"></div>
-    <div class="tab-content" id="user"></div>
+    <div id="rec">
+      <button id="start-sound-capture">
+        <!-- SVG RAW -->
+        <svg viewBox="0 0 210 210" xmlns="http://www.w3.org/2000/svg">
+          <text transform="rotate(-90)" x="-100" y="20" style="font-size:35.28px;stroke-width:.786">RAW</text>
+        </svg>
+      </button>
+    </div>
   </div>
+  <div id="user-container"></div>
+</div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
-  <script>
+<div class="tab-content" id="predefined">
+  <div id="predefined-container"></div>
+</div>
+
+  </div>  <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>  <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const predefinedContainer = document.getElementById("predefined");
-      const userContainer = document.getElementById("user");
+      const tabButtons = document.querySelectorAll(".tab-button");
+      const tabContents = document.querySelectorAll(".tab-content");
+      const predefinedContainer = document.getElementById("predefined-container");
+      const userContainer = document.getElementById("user-container");
       const startRecordingButton = document.getElementById("start-recording");
       const startSoundCaptureButton = document.getElementById("start-sound-capture");
-
       const shortcuts = "abcdefghijklmnopqrstuvwxyz".split("");
+
       let isPlaying = false;
       let hasSpoken = false;
       let isRecording = false;
@@ -118,13 +112,17 @@
       let audioChunks = [];
       let audioStartTime;
 
-      document.querySelectorAll(".tab-button").forEach(btn => {
-        btn.addEventListener("click", () => {
-          document.querySelectorAll(".tab-button").forEach(b => b.classList.remove("active"));
-          document.querySelectorAll(".tab-content").forEach(tc => tc.classList.remove("active"));
-          btn.classList.add("active");
-          document.getElementById(btn.dataset.tab).classList.add("active");
-        });
+      const setActiveTab = (id) => {
+        tabButtons.forEach(btn => btn.classList.toggle("active", btn.dataset.tab === id));
+        tabContents.forEach(tab => tab.classList.toggle("active", tab.id === id));
+        localStorage.setItem("activeTab", id);
+      };
+
+      let activeTab = localStorage.getItem("activeTab") || "user";
+      setActiveTab(activeTab);
+
+      tabButtons.forEach(btn => {
+        btn.addEventListener("click", () => setActiveTab(btn.dataset.tab));
       });
 
       const readTextAloud = (text, callback) => {
@@ -135,8 +133,8 @@
       };
 
       const createTranscriptionButton = (text, container = userContainer, isPredefined = false) => {
-        const buttonWrapper = document.createElement("div");
-        buttonWrapper.className = "transcription-button";
+        const wrapper = document.createElement("div");
+        wrapper.className = "transcription-button";
 
         const button = document.createElement("button");
         button.className = "text-button";
@@ -144,15 +142,15 @@
 
         const shortcut = shortcuts.shift();
         if (shortcut) {
-          const shortcutSpan = document.createElement("span");
-          shortcutSpan.className = "shortcut";
-          shortcutSpan.textContent = shortcut.toUpperCase();
-          button.appendChild(shortcutSpan);
+          const span = document.createElement("span");
+          span.className = "shortcut";
+          span.textContent = shortcut.toUpperCase();
+          button.appendChild(span);
 
-          document.addEventListener("keydown", (event) => {
-            if (event.key === shortcut) {
+          document.addEventListener("keydown", e => {
+            if (e.key === shortcut) {
               button.click();
-              buttonWrapper.classList.toggle('active');
+              wrapper.classList.toggle('active');
             }
           });
         }
@@ -168,10 +166,10 @@
           }
         });
 
-        const editButton = document.createElement("button");
-        editButton.className = "edit-button";
-        editButton.innerHTML = "✏️";
-        editButton.addEventListener("click", () => {
+        const editBtn = document.createElement("button");
+        editBtn.className = "edit-button";
+        editBtn.innerHTML = "✏️";
+        editBtn.addEventListener("click", () => {
           const newText = prompt("Upravit text:", text);
           if (newText) {
             button.textContent = newText;
@@ -179,22 +177,22 @@
           }
         });
 
-        const deleteButton = document.createElement("button");
-        deleteButton.className = "delete-button";
-        deleteButton.innerHTML = "🗑️";
-        deleteButton.addEventListener("click", () => {
-          buttonWrapper.remove();
+        const delBtn = document.createElement("button");
+        delBtn.className = "delete-button";
+        delBtn.innerHTML = "🗑️";
+        delBtn.addEventListener("click", () => {
+          wrapper.remove();
           if (!isPredefined) deleteTranscription(text);
         });
 
-        buttonWrapper.appendChild(deleteButton);
-        buttonWrapper.appendChild(button);
-        buttonWrapper.appendChild(editButton);
-        container.appendChild(buttonWrapper);
+        wrapper.appendChild(delBtn);
+        wrapper.appendChild(button);
+        wrapper.appendChild(editBtn);
+        container.appendChild(wrapper);
       };
 
       const saveTranscription = (text) => {
-        let stored = JSON.parse(localStorage.getItem("transcriptions")) || [];
+        const stored = JSON.parse(localStorage.getItem("transcriptions")) || [];
         stored.push(text);
         localStorage.setItem("transcriptions", JSON.stringify(stored));
       };
@@ -219,20 +217,13 @@
         stored.forEach(text => createTranscriptionButton(text, userContainer));
       };
 
-      const predefined = [
-        "Dobrý den",
-        "Jak vám mohu pomoci?",
-        "Prosím, řekněte něco.",
-        "Děkuji, nashledanou.",
-        "Zkuste to znovu."
-      ];
-      predefined.forEach(text => createTranscriptionButton(text, predefinedContainer, true));
+      const predefined = ["Dobrý den", "Jak vám mohu pomoci?", "Zkuste to znovu."];
+      predefined.forEach(t => createTranscriptionButton(t, predefinedContainer, true));
       loadTranscriptions();
 
-      // Speech Recognition (annyang)
       if (annyang) {
         const commands = {
-          '*text': (text) => {
+          '*text': text => {
             createTranscriptionButton(text, userContainer);
             saveTranscription(text);
           }
@@ -252,22 +243,15 @@
         };
 
         startRecordingButton.addEventListener("click", toggleRecording);
-        document.addEventListener("keydown", (event) => {
-          if (event.key === "Control") {
-            toggleRecording();
-          }
+        document.addEventListener("keydown", e => {
+          if (e.key === "Control") toggleRecording();
         });
 
         annyang.addCallback('end', () => {
           if (isRecording) toggleRecording();
         });
-
-        annyang.addCallback('error', (event) => {
-          console.error("Speech recognition error", event.error);
-        });
       }
 
-      // Audio capture
       startSoundCaptureButton.addEventListener("click", () => {
         if (mediaRecorder && mediaRecorder.state === "recording") {
           mediaRecorder.stop();
@@ -275,54 +259,43 @@
         } else {
           navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
             mediaRecorder = new MediaRecorder(stream);
-            audioStartTime = Date.now();
             audioChunks = [];
+            audioStartTime = Date.now();
 
-            mediaRecorder.ondataavailable = event => {
-              audioChunks.push(event.data);
-            };
-
+            mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
             mediaRecorder.onstop = () => {
-              const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-              const audioUrl = URL.createObjectURL(audioBlob);
+              const blob = new Blob(audioChunks, { type: 'audio/wav' });
+              const url = URL.createObjectURL(blob);
               const duration = (Date.now() - audioStartTime) / 1000;
 
-              const buttonWrapper = document.createElement("div");
-              buttonWrapper.className = "transcription-button";
+              const wrapper = document.createElement("div");
+              wrapper.className = "transcription-button";
 
-              const playButton = document.createElement("button");
-              playButton.className = "edit-button";
-              playButton.innerHTML = "▶️";
-              playButton.addEventListener("click", () => {
-                const audio = new Audio(audioUrl);
-                audio.play();
-              });
+              const playBtn = document.createElement("button");
+              playBtn.className = "edit-button";
+              playBtn.textContent = "▶️";
+              playBtn.onclick = () => new Audio(url).play();
 
               const label = document.createElement("button");
-              label.textContent = `Raw Audio (${duration.toFixed(2)}s)`;
               label.className = "text-button";
+              label.textContent = `Raw Audio (${duration.toFixed(1)}s)`;
 
-              const deleteButton = document.createElement("button");
-              deleteButton.className = "delete-button";
-              deleteButton.innerHTML = "🗑️";
-              deleteButton.addEventListener("click", () => {
-                buttonWrapper.remove();
-              });
+              const del = document.createElement("button");
+              del.className = "delete-button";
+              del.textContent = "🗑️";
+              del.onclick = () => wrapper.remove();
 
-              buttonWrapper.appendChild(deleteButton);
-              buttonWrapper.appendChild(label);
-              buttonWrapper.appendChild(playButton);
-              userContainer.appendChild(buttonWrapper);
+              wrapper.appendChild(del);
+              wrapper.appendChild(label);
+              wrapper.appendChild(playBtn);
+              userContainer.appendChild(wrapper);
             };
 
             mediaRecorder.start();
             startSoundCaptureButton.classList.add("active");
-          }).catch(err => {
-            console.error("Microphone error: ", err);
           });
         }
       });
     });
-  </script>
-</body>
+  </script></body>
 </html>

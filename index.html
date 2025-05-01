@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="cs">
-
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>SSA</title>
-  <link rel="stylesheet" href="style.css" />
   <style>
+    body {
+      font-family: sans-serif;
+    }
+
     .wrap {
       padding: 20px;
-      font-family: sans-serif;
     }
 
     .tabs {
@@ -66,11 +67,32 @@
       margin-left: 10px;
       color: gray;
     }
+
+    .panel {
+      margin-bottom: 20px;
+    }
+
+    .record-button {
+      padding: 10px;
+      font-size: 16px;
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    .record-button.active {
+      background-color: red;
+      color: white;
+    }
   </style>
 </head>
 
 <body>
   <div class="wrap">
+    <div class="panel">
+      <button id="start-recording" class="record-button">🎙️ Hlas</button>
+      <button id="start-sound-capture" class="record-button">🔴 Zvuk</button>
+    </div>
+
     <div class="tabs">
       <button class="tab-button active" data-tab="predefined">Předdefinované</button>
       <button class="tab-button" data-tab="user">Vlastní</button>
@@ -80,26 +102,31 @@
     <div class="tab-content" id="user"></div>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const predefinedContainer = document.getElementById("predefined");
       const userContainer = document.getElementById("user");
+      const startRecordingButton = document.getElementById("start-recording");
+      const startSoundCaptureButton = document.getElementById("start-sound-capture");
+
       const shortcuts = "abcdefghijklmnopqrstuvwxyz".split("");
       let isPlaying = false;
       let hasSpoken = false;
+      let isRecording = false;
+      let mediaRecorder;
+      let audioChunks = [];
+      let audioStartTime;
 
-      // TAB SWITCHING
       document.querySelectorAll(".tab-button").forEach(btn => {
         btn.addEventListener("click", () => {
           document.querySelectorAll(".tab-button").forEach(b => b.classList.remove("active"));
           document.querySelectorAll(".tab-content").forEach(tc => tc.classList.remove("active"));
-
           btn.classList.add("active");
           document.getElementById(btn.dataset.tab).classList.add("active");
         });
       });
 
-      // SPEAK TEXT
       const readTextAloud = (text, callback) => {
         const utterThis = new SpeechSynthesisUtterance(text);
         utterThis.lang = 'cs-CZ';
@@ -107,7 +134,6 @@
         window.speechSynthesis.speak(utterThis);
       };
 
-      // CREATE BUTTON
       const createTranscriptionButton = (text, container = userContainer, isPredefined = false) => {
         const buttonWrapper = document.createElement("div");
         buttonWrapper.className = "transcription-button";
@@ -167,7 +193,6 @@
         container.appendChild(buttonWrapper);
       };
 
-      // LOCAL STORAGE LOGIC
       const saveTranscription = (text) => {
         let stored = JSON.parse(localStorage.getItem("transcriptions")) || [];
         stored.push(text);
@@ -201,11 +226,103 @@
         "Děkuji, nashledanou.",
         "Zkuste to znovu."
       ];
-
       predefined.forEach(text => createTranscriptionButton(text, predefinedContainer, true));
       loadTranscriptions();
+
+      // Speech Recognition (annyang)
+      if (annyang) {
+        const commands = {
+          '*text': (text) => {
+            createTranscriptionButton(text, userContainer);
+            saveTranscription(text);
+          }
+        };
+        annyang.addCommands(commands);
+        annyang.setLanguage('cs-CZ');
+
+        const toggleRecording = () => {
+          if (isRecording) {
+            annyang.abort();
+            startRecordingButton.classList.remove('active');
+          } else {
+            annyang.start();
+            startRecordingButton.classList.add('active');
+          }
+          isRecording = !isRecording;
+        };
+
+        startRecordingButton.addEventListener("click", toggleRecording);
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Control") {
+            toggleRecording();
+          }
+        });
+
+        annyang.addCallback('end', () => {
+          if (isRecording) toggleRecording();
+        });
+
+        annyang.addCallback('error', (event) => {
+          console.error("Speech recognition error", event.error);
+        });
+      }
+
+      // Audio capture
+      startSoundCaptureButton.addEventListener("click", () => {
+        if (mediaRecorder && mediaRecorder.state === "recording") {
+          mediaRecorder.stop();
+          startSoundCaptureButton.classList.remove("active");
+        } else {
+          navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+            mediaRecorder = new MediaRecorder(stream);
+            audioStartTime = Date.now();
+            audioChunks = [];
+
+            mediaRecorder.ondataavailable = event => {
+              audioChunks.push(event.data);
+            };
+
+            mediaRecorder.onstop = () => {
+              const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+              const audioUrl = URL.createObjectURL(audioBlob);
+              const duration = (Date.now() - audioStartTime) / 1000;
+
+              const buttonWrapper = document.createElement("div");
+              buttonWrapper.className = "transcription-button";
+
+              const playButton = document.createElement("button");
+              playButton.className = "edit-button";
+              playButton.innerHTML = "▶️";
+              playButton.addEventListener("click", () => {
+                const audio = new Audio(audioUrl);
+                audio.play();
+              });
+
+              const label = document.createElement("button");
+              label.textContent = `Raw Audio (${duration.toFixed(2)}s)`;
+              label.className = "text-button";
+
+              const deleteButton = document.createElement("button");
+              deleteButton.className = "delete-button";
+              deleteButton.innerHTML = "🗑️";
+              deleteButton.addEventListener("click", () => {
+                buttonWrapper.remove();
+              });
+
+              buttonWrapper.appendChild(deleteButton);
+              buttonWrapper.appendChild(label);
+              buttonWrapper.appendChild(playButton);
+              userContainer.appendChild(buttonWrapper);
+            };
+
+            mediaRecorder.start();
+            startSoundCaptureButton.classList.add("active");
+          }).catch(err => {
+            console.error("Microphone error: ", err);
+          });
+        }
+      });
     });
   </script>
 </body>
-
 </html>

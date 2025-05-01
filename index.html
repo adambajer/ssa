@@ -1,283 +1,211 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="cs">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SSA</title>
-    <link crossorigin="anonymous" rel="icon" href="fav.svg" sizes="32x32">
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SSA</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .wrap {
+      padding: 20px;
+      font-family: sans-serif;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .tab-button {
+      padding: 8px 16px;
+      cursor: pointer;
+      border: none;
+      background: #eee;
+      border-radius: 5px;
+    }
+
+    .tab-button.active {
+      background: #ccc;
+      font-weight: bold;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .transcription-button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .text-button {
+      padding: 6px 12px;
+      background: #f0f0f0;
+      border: none;
+      border-radius: 4px;
+      flex-grow: 1;
+      text-align: left;
+    }
+
+    .edit-button, .delete-button {
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      font-size: 18px;
+    }
+
+    .shortcut {
+      margin-left: 10px;
+      color: gray;
+    }
+  </style>
 </head>
 
 <body>
-    <div class="wrap">
-        <div class="panel">
-            <div id="rec">
-                <button id="start-recording">
-                    <svg version="1.1" viewBox="0 0 210 210" xmlns="http://www.w3.org/2000/svg">
-                        <g transform="translate(0 4.174)">
-                            <path
-                                d="m46.2 87.43c-6.23 0-11.28 4.842-11.28 10.82 0 31.98 24.8 58.5 57.06 64.21v26.81h.047a13.02 12.75 0 00-.046.622 13.02 12.75 0 0013.02 12.75 13.02 12.75 0 0013.02-12.75 13.02 12.75 0 00-.016-.622h.016v-26.81c32.27-5.716 57.07-32.23 57.06-64.21 0-5.973-5.05-10.82-11.28-10.82s-11.28 4.842-11.28 10.82c0 24.09-20.95 43.74-47.52 43.74s-47.52-19.65-47.52-43.74c0-5.973-5.05-10.82-11.28-10.82z" />
-                            <ellipse cx="92.74" cy="205.8" rx=".757" ry=".076" />
-                        </g>
-                        <path
-                            d="m105 0c-17.49 0-32.36 10.78-38.38 26.07h52.21c2.77 0 5 1.973 5 4.425 0 2.451-2.23 4.425-5 4.425h-54.61a41.91 41.91 0 00-.482 6.344v.68h55.09c2.77 0 5 1.974 5 4.426 0 2.451-2.23 4.425-5 4.425h-55.09v7.025h55.09c2.77 0 5 1.973 5 4.425 0 2.451-2.23 4.425-5 4.425h-55.09v29.24c0 22.86 18.4 41.26 41.26 41.26s41.26-18.4 41.26-41.26v-54.65c0-22.86-18.4-41.26-41.26-41.26z"
-                            stroke-linecap="round" stroke-miterlimit="4.1" paint-order="markers fill stroke" />
-                        <text transform="rotate(-90)" x="-79.128105" y="25.294184" xml:space="preserve">
-                            <tspan x="-100" y="20" style="font-size:35.28px;stroke-width:.786">TEXT
-                            </tspan>
-                        </text>
-                    </svg>
-
-                </button>
-            </div>
-            <div id="rec">
-
-                <button id="start-sound-capture">
-                    <svg version="1.1" viewBox="0 0 210 210" xmlns="http://www.w3.org/2000/svg">
-                        <g transform="translate(0 4.174)">
-                            <path
-                                d="m46.2 87.43c-6.23 0-11.28 4.842-11.28 10.82 0 31.98 24.8 58.5 57.06 64.21v26.81h.047a13.02 12.75 0 00-.046.622 13.02 12.75 0 0013.02 12.75 13.02 12.75 0 0013.02-12.75 13.02 12.75 0 00-.016-.622h.016v-26.81c32.27-5.716 57.07-32.23 57.06-64.21 0-5.973-5.05-10.82-11.28-10.82s-11.28 4.842-11.28 10.82c0 24.09-20.95 43.74-47.52 43.74s-47.52-19.65-47.52-43.74c0-5.973-5.05-10.82-11.28-10.82z" />
-                            <ellipse cx="92.74" cy="205.8" rx=".757" ry=".076" />
-                        </g>
-                        <path
-                            d="m105 0c-17.49 0-32.36 10.78-38.38 26.07h52.21c2.77 0 5 1.973 5 4.425 0 2.451-2.23 4.425-5 4.425h-54.61a41.91 41.91 0 00-.482 6.344v.68h55.09c2.77 0 5 1.974 5 4.426 0 2.451-2.23 4.425-5 4.425h-55.09v7.025h55.09c2.77 0 5 1.973 5 4.425 0 2.451-2.23 4.425-5 4.425h-55.09v29.24c0 22.86 18.4 41.26 41.26 41.26s41.26-18.4 41.26-41.26v-54.65c0-22.86-18.4-41.26-41.26-41.26z"
-                            stroke-linecap="round" stroke-miterlimit="4.1" paint-order="markers fill stroke" />
-                        <text transform="rotate(-90)" x="-75.423897" y="25.294184" xml:space="preserve">
-                            <tspan x="-100" y="20" style="font-size:35.28px;stroke-width:.786">RAW
-                            </tspan>
-                        </text>
-                    </svg>
-
-
-                </button>
-
-
-            </div>
-            <div id="rec">
-            
-        </div>
-        </div>
-        <br>
-        <div id="transcriptions" class="grid-container"></div>
+  <div class="wrap">
+    <div class="tabs">
+      <button class="tab-button active" data-tab="predefined">Předdefinované</button>
+      <button class="tab-button" data-tab="user">Vlastní</button>
     </div>
-    <a href="https://github.com/adambajer/ssa/tree/main">Source code</a>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const startRecordingButton = document.getElementById("start-recording");
-    const startSoundCaptureButton = document.getElementById("start-sound-capture");
-    const transcriptionsContainer = document.getElementById("transcriptions");
 
-    const synth = window.speechSynthesis;
-    const shortcuts = "abcdefghijklmnopqrstuvwxyz".split("");
+    <div class="tab-content active" id="predefined"></div>
+    <div class="tab-content" id="user"></div>
+  </div>
 
-    let isRecording = false;
-    let isPlaying = false;
-    let mediaRecorder;
-    let audioChunks = [];
-    let audioStartTime;
-    let hasSpoken = false; // Added flag to ensure single speech per button click
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const predefinedContainer = document.getElementById("predefined");
+      const userContainer = document.getElementById("user");
+      const shortcuts = "abcdefghijklmnopqrstuvwxyz".split("");
+      let isPlaying = false;
+      let hasSpoken = false;
 
-    const loadTranscriptions = () => {
-        const storedTranscriptions = JSON.parse(localStorage.getItem("transcriptions")) || [];
-        storedTranscriptions.forEach(text => {
-            createTranscriptionButton(text);
+      // TAB SWITCHING
+      document.querySelectorAll(".tab-button").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".tab-button").forEach(b => b.classList.remove("active"));
+          document.querySelectorAll(".tab-content").forEach(tc => tc.classList.remove("active"));
+
+          btn.classList.add("active");
+          document.getElementById(btn.dataset.tab).classList.add("active");
         });
-    };
+      });
 
-    const createTranscriptionButton = (text) => {
+      // SPEAK TEXT
+      const readTextAloud = (text, callback) => {
+        const utterThis = new SpeechSynthesisUtterance(text);
+        utterThis.lang = 'cs-CZ';
+        utterThis.onend = callback;
+        window.speechSynthesis.speak(utterThis);
+      };
+
+      // CREATE BUTTON
+      const createTranscriptionButton = (text, container = userContainer, isPredefined = false) => {
         const buttonWrapper = document.createElement("div");
         buttonWrapper.className = "transcription-button";
 
         const button = document.createElement("button");
         button.className = "text-button";
         button.textContent = text;
-        button.addEventListener("click", () => {
-            if (!isPlaying && !hasSpoken) { // Check if it hasn't spoken yet
-                isPlaying = true;
-                hasSpoken = true; // Set the flag to true after speaking
-                readTextAloud(text, () => {
-                    isPlaying = false;
-                    hasSpoken = false;
-                });
-            }
-        });
 
         const shortcut = shortcuts.shift();
         if (shortcut) {
-            const shortcutSpan = document.createElement("span");
-            shortcutSpan.className = "shortcut";
-            shortcutSpan.textContent = shortcut.toUpperCase();
-            button.appendChild(shortcutSpan);
+          const shortcutSpan = document.createElement("span");
+          shortcutSpan.className = "shortcut";
+          shortcutSpan.textContent = shortcut.toUpperCase();
+          button.appendChild(shortcutSpan);
 
-            document.addEventListener("keydown", (event) => {
-                if (event.key === shortcut) {
-                    button.click();
-                    buttonWrapper.classList.toggle('active');
-                }
-            });
+          document.addEventListener("keydown", (event) => {
+            if (event.key === shortcut) {
+              button.click();
+              buttonWrapper.classList.toggle('active');
+            }
+          });
         }
+
+        button.addEventListener("click", () => {
+          if (!isPlaying && !hasSpoken) {
+            isPlaying = true;
+            hasSpoken = true;
+            readTextAloud(text, () => {
+              isPlaying = false;
+              hasSpoken = false;
+            });
+          }
+        });
 
         const editButton = document.createElement("button");
         editButton.className = "edit-button";
         editButton.innerHTML = "✏️";
         editButton.addEventListener("click", () => {
-            const newText = prompt("Edit transcription:", text);
-            if (newText) {
-                button.textContent = newText;
-                updateTranscription(text, newText);
-            }
+          const newText = prompt("Upravit text:", text);
+          if (newText) {
+            button.textContent = newText;
+            if (!isPredefined) updateTranscription(text, newText);
+          }
         });
 
         const deleteButton = document.createElement("button");
         deleteButton.className = "delete-button";
         deleteButton.innerHTML = "🗑️";
         deleteButton.addEventListener("click", () => {
-            buttonWrapper.remove();
-            deleteTranscription(text);
+          buttonWrapper.remove();
+          if (!isPredefined) deleteTranscription(text);
         });
 
         buttonWrapper.appendChild(deleteButton);
         buttonWrapper.appendChild(button);
         buttonWrapper.appendChild(editButton);
-        transcriptionsContainer.appendChild(buttonWrapper);
-    };
+        container.appendChild(buttonWrapper);
+      };
 
-    const saveTranscription = (text) => {
-        let storedTranscriptions = JSON.parse(localStorage.getItem("transcriptions")) || [];
-        storedTranscriptions.push(text);
-        localStorage.setItem("transcriptions", JSON.stringify(storedTranscriptions));
-    };
+      // LOCAL STORAGE LOGIC
+      const saveTranscription = (text) => {
+        let stored = JSON.parse(localStorage.getItem("transcriptions")) || [];
+        stored.push(text);
+        localStorage.setItem("transcriptions", JSON.stringify(stored));
+      };
 
-    const updateTranscription = (oldText, newText) => {
-        let storedTranscriptions = JSON.parse(localStorage.getItem("transcriptions")) || [];
-        const index = storedTranscriptions.indexOf(oldText);
+      const updateTranscription = (oldText, newText) => {
+        let stored = JSON.parse(localStorage.getItem("transcriptions")) || [];
+        const index = stored.indexOf(oldText);
         if (index !== -1) {
-            storedTranscriptions[index] = newText;
-            localStorage.setItem("transcriptions", JSON.stringify(storedTranscriptions));
+          stored[index] = newText;
+          localStorage.setItem("transcriptions", JSON.stringify(stored));
         }
-    };
+      };
 
-    const deleteTranscription = (text) => {
-        let storedTranscriptions = JSON.parse(localStorage.getItem("transcriptions")) || [];
-        storedTranscriptions = storedTranscriptions.filter(transcription => transcription !== text);
-        localStorage.setItem("transcriptions", JSON.stringify(storedTranscriptions));
-    };
+      const deleteTranscription = (text) => {
+        let stored = JSON.parse(localStorage.getItem("transcriptions")) || [];
+        stored = stored.filter(t => t !== text);
+        localStorage.setItem("transcriptions", JSON.stringify(stored));
+      };
 
-    startSoundCaptureButton.addEventListener("click", () => {
-        if (mediaRecorder && mediaRecorder.state === "recording") {
-            mediaRecorder.stop();
-            startSoundCaptureButton.classList.remove('active');
-        } else {
-            navigator.mediaDevices.getUserMedia({ audio: true })
-                .then(stream => {
-                    mediaRecorder = new MediaRecorder(stream);
-                    audioStartTime = Date.now();
+      const loadTranscriptions = () => {
+        const stored = JSON.parse(localStorage.getItem("transcriptions")) || [];
+        stored.forEach(text => createTranscriptionButton(text, userContainer));
+      };
 
-                    mediaRecorder.ondataavailable = event => {
-                        audioChunks.push(event.data);
-                    };
+      const predefined = [
+        "Dobrý den",
+        "Jak vám mohu pomoci?",
+        "Prosím, řekněte něco.",
+        "Děkuji, nashledanou.",
+        "Zkuste to znovu."
+      ];
 
-                    mediaRecorder.onstop = () => {
-                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                        const audioUrl = URL.createObjectURL(audioBlob);
-                        const audioDuration = (Date.now() - audioStartTime) / 1000;
-                        createAudioButton(audioUrl, audioDuration);
-                        audioChunks = [];
-                    };
-
-                    mediaRecorder.start();
-                    startSoundCaptureButton.classList.add('active');
-                })
-                .catch(error => {
-                    console.error("Error accessing microphone: ", error);
-                });
-        }
+      predefined.forEach(text => createTranscriptionButton(text, predefinedContainer, true));
+      loadTranscriptions();
     });
-
-    const createAudioButton = (audioUrl, duration) => {
-        const buttonWrapper = document.createElement("div");
-        buttonWrapper.className = "transcription-button";
-
-        const button = document.createElement("button");
-        button.className = "edit-button";
-        button.innerHTML = "&#9654;"; // Triangle icon for play
-        button.addEventListener("click", () => {
-            const audio = new Audio(audioUrl);
-            audio.play();
-        });
-
-        const info = document.createElement("button");
-        info.textContent = `Raw Audio (${duration.toFixed(2)}s)`;
-        info.className = "text-button";
-
-        const deleteButton = document.createElement("button");
-        deleteButton.className = "delete-button";
-        deleteButton.innerHTML = "🗑️";
-        deleteButton.addEventListener("click", () => {
-            buttonWrapper.remove();
-        });
-
-        buttonWrapper.appendChild(deleteButton);
-        buttonWrapper.appendChild(info);
-        buttonWrapper.appendChild(button);
-        transcriptionsContainer.appendChild(buttonWrapper);
-    };
-
-    const readTextAloud = (text, callback) => {
-        const utterThis = new SpeechSynthesisUtterance(text);
-        utterThis.lang = 'cs-CZ';
-        utterThis.onend = callback; // Call the callback function when speech ends
-        window.speechSynthesis.speak(utterThis);
-    };
-
-    if (annyang) {
-        const commands = {
-            '*text': (text) => {
-                createTranscriptionButton(text);
-                saveTranscription(text);
-            }
-        };
-
-        annyang.addCommands(commands);
-        annyang.setLanguage('cs-CZ');
-
-        const toggleRecording = () => {
-            if (isRecording) {
-                annyang.abort();
-                startRecordingButton.classList.remove('active');
-            } else {
-                annyang.start();
-                startRecordingButton.classList.add('active');
-            }
-            isRecording = !isRecording;
-        };
-
-        startRecordingButton.addEventListener("click", toggleRecording);
-
-        document.addEventListener("keydown", (event) => {
-            if (event.key === "Control") {
-                toggleRecording();
-            }
-        });
-
-        annyang.addCallback('end', () => {
-            if (isRecording) {
-                toggleRecording();
-            }
-        });
-
-        annyang.addCallback('error', (event) => {
-            console.error("Speech recognition error", event.error);
-        });
-    }
-
-    loadTranscriptions();
-});
-</script>
-
-
+  </script>
 </body>
 
 </html>

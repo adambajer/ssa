@@ -7,7 +7,9 @@
   <title>SSA</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
-
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#1976D2">
+  
 </head>
 
 <body>
@@ -365,6 +367,13 @@ helpBtn.addEventListener('click', () => {
   ].join('\n');
   alert(msg);
 });
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('Service Worker registrován:', reg.scope))
+      .catch(err => console.warn('SW registrace selhala:', err));
+  });
+}
 
   </script>
 </body>

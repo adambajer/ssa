@@ -16,6 +16,26 @@
   <div class="wrap">
     <div class="tabs"></div>
     <!-- Statické ovládací prvky pro nahrávání -->
+    <div class="menu"> <button id="import-tab" title="Import">
+      <span class="material-icons">folder_open</span>
+       
+    </button>
+    <button id="export-tab" title="Export">
+      <span class="material-icons">save</span>
+     </button>
+    <button id="delete-tab" title="Smazat tab">
+      <span class="material-icons">delete</span>
+       
+    </button>
+    <!-- vedle ostatních tlačítek v div#controls -->
+<button id="help-btn" title="Nápověda">
+<span class="material-icons">help_outline</span>
+ 
+</button>
+<button id="btn-install" hidden title=  "Instalovat aplikaci">
+<span class="material-icons">phone_android</span>
+</button>
+</div>
     <div id="controls">
       <button id="start-recording">
         <svg version="1.1" viewBox="0 0 210 290" xmlns="http://www.w3.org/2000/svg">
@@ -66,26 +86,7 @@
             </text>
         </svg>
       </button>
-      <button id="import-tab" title="Import">
-        <span class="material-icons">folder_open</span>
-         
-      </button>
-      <button id="export-tab" title="Export">
-        <span class="material-icons">save</span>
-       </button>
-      <button id="delete-tab" title="Smazat tab">
-        <span class="material-icons">delete</span>
-         
-      </button>
-      <!-- vedle ostatních tlačítek v div#controls -->
-<button id="help-btn" title="Nápověda">
-  <span class="material-icons">help_outline</span>
-   
-</button>
-<button id="btn-install" hidden title=  "Instalovat aplikaci">
-  <span class="material-icons">phone_android</span>
-</button>
-
+     
     </div>
     <!-- pod controls -->
 <input id="file-input" type="file" accept="application/json" style="display:none" />

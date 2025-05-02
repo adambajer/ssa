@@ -95,6 +95,7 @@ body {
     width: auto;
     
   }
+  #controls {position: absolute;bottom: 0px;}
   .transcription-button {
     display: flex;
     align-items: center;

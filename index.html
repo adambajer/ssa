@@ -76,230 +76,295 @@
         <span class="material-icons">delete</span>
         Smazat
       </button>
+      <!-- vedle ostatních tlačítek v div#controls -->
+<button id="help-btn" title="Nápověda">
+  <span class="material-icons">help_outline</span>
+  Nápověda
+</button>
+
     </div>
+    <!-- pod controls -->
+<input id="file-input" type="file" accept="application/json" style="display:none" />
+
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
-  <script>
- // SSA Application JavaScript
-window.addEventListener('DOMContentLoaded', () => {
-  // Dynamické načtení annyang
-  function initAnnyang() {
-    if (!window.annyang) return;
-    annyang.setLanguage('cs-CZ');
-    annyang.addCommands({
-      '*text': txt => {
-        const id = document.querySelector('.tab-button.active').dataset.tab;
-        const body = document.querySelector(`#${id} .tab-content-body`);
-        addTextButton(txt, body, id, id === 'predefined');
-        tabsData[id] = tabsData[id] || [];
-        tabsData[id].push(txt);
-        persist();
-        annyang.abort();
-        recBtn.classList.remove('active');
+  <script>// SSA Application JavaScript
+    window.addEventListener('DOMContentLoaded', () => {
+      // Dynamické načtení annyang
+      function initAnnyang() {
+        if (!window.annyang) return;
+        annyang.setLanguage('cs-CZ');
+        annyang.addCommands({
+          '*text': txt => {
+            const id = document.querySelector('.tab-button.active').dataset.tab;
+            const body = document.querySelector(`#${id} .tab-content-body`);
+            addTextButton(txt, body, id, id === 'predefined');
+            tabsData[id] = tabsData[id] || [];
+            tabsData[id].push(txt);
+            persist();
+            annyang.abort();
+            recBtn.classList.remove('active');
+          }
+        });
+        annyang.addCallback('end', () => recBtn.classList.remove('active'));
       }
-    });
-    annyang.addCallback('end', () => recBtn.classList.remove('active'));
-  }
-  const script = document.createElement('script');
-  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js';
-  script.onload = initAnnyang;
-  script.onerror = () => console.warn('annyang se nepodařilo načíst');
-  document.head.appendChild(script);
-
-  // Globální reference
-  const wrap = document.querySelector('.wrap');
-  const tabsContainer = document.querySelector('.tabs');
-  const recBtn = document.getElementById('start-recording');
-  const soundBtn = document.getElementById('start-sound-capture');
-  const impBtn = document.getElementById('import-tab');
-  const expBtn = document.getElementById('export-tab');
-  const delBtn = document.getElementById('delete-tab');
-
-  // Stav a data
-  let isPlaying = false, isRecording = false;
-  let isSoundRecording = false; // flag for audio recording
-  let mediaRecorder, audioChunks = [], audioStartTime;
-  const customTabs = JSON.parse(localStorage.getItem('customTabs') || '[]');
-  const tabsData = JSON.parse(localStorage.getItem('tabsData') || '{}');
-  let keyHandlers = [];
-
-  function persist() {
-    localStorage.setItem('customTabs', JSON.stringify(customTabs));
-    localStorage.setItem('tabsData', JSON.stringify(tabsData));
-  }
-
-  function speak(text, cb) {
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'cs-CZ'; u.onend = cb;
-    speechSynthesis.speak(u);
-  }
-
-  function resetShortcuts(container) {
-    keyHandlers.forEach(h => document.removeEventListener('keydown', h)); keyHandlers = [];
-    container.querySelectorAll('.text-button').forEach((btn, i) => {
-      const letter = 'abcdefghijklmnopqrstuvwxyz'[i];
-      if (!letter) return;
-      let span = btn.querySelector('.shortcut') || document.createElement('span');
-      span.className = 'shortcut';
-      span.textContent = letter.toUpperCase();
-      btn.appendChild(span);
-      const handler = e => (e.key === letter) && btn.click();
-      document.addEventListener('keydown', handler);
-      keyHandlers.push(handler);
-    });
-  }
-
-  function addTextButton(text, container, tabId, isPredef = false) {
-    const wrapper = document.createElement('div'); wrapper.className = 'transcription-button';
-    const btn = document.createElement('button'); btn.className = 'text-button'; btn.textContent = text;
-    btn.addEventListener('click', () => {
-      if (!isPlaying) { isPlaying = true; speak(text, () => isPlaying = false); }
-    });
-    const edit = document.createElement('button'); edit.className = 'edit-button'; edit.textContent = '✏️';
-    edit.addEventListener('click', () => {
-      const nt = prompt('Upravit text:', text); if (!nt) return;
-      btn.textContent = nt;
-      if (!isPredef) { tabsData[tabId] = tabsData[tabId].map(t => t === text ? nt : t); persist(); }
-      resetShortcuts(container);
-    });
-    const del = document.createElement('button'); del.className = 'delete-button'; del.textContent = '🗑️';
-    del.addEventListener('click', () => {
-      wrapper.remove(); if (!isPredef) { tabsData[tabId] = tabsData[tabId].filter(t => t !== text); persist(); }
-      resetShortcuts(container);
-    });
-    wrapper.append(del, btn, edit);
-    container.appendChild(wrapper);
-    resetShortcuts(container);
-  }
-
-  function createTab(id, name, isPredef = false) {
-    const btn = document.createElement('button'); btn.className = 'tab-button'; btn.dataset.tab = id; btn.textContent = name;
-    tabsContainer.appendChild(btn);
-    const tabDiv = document.createElement('div'); tabDiv.className = 'tab-content'; tabDiv.id = id;
-    const body = document.createElement('div'); body.className = 'tab-content-body'; tabDiv.appendChild(body); wrap.appendChild(tabDiv);
-    const arr = tabsData[id] || (isPredef ? ['Úplně cítím jak ti v ní cuká','Ježiši','Počkej'] : []);
-    arr.forEach(t => addTextButton(t, body, id, isPredef));
-  }
-
-  function activateTab(id) {
-        // Reset recording state when switching tabs
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js';
+      script.onload = initAnnyang;
+      script.onerror = () => console.warn('annyang se nepodařilo načíst');
+      document.head.appendChild(script);
+    
+      // Globální reference
+      const wrap = document.querySelector('.wrap');
+      const tabsContainer = document.querySelector('.tabs');
+      const recBtn = document.getElementById('start-recording');
+      const soundBtn = document.getElementById('start-sound-capture');
+      const impBtn = document.getElementById('import-tab');
+      const expBtn = document.getElementById('export-tab');
+      const delBtn = document.getElementById('delete-tab');
+    
+      // Stav a data
+      let isPlaying = false;
+      let isRecording = false;
+      let isSoundRecording = false;
+      let mediaRecorder, audioChunks = [], audioStartTime;
+      const customTabs = JSON.parse(localStorage.getItem('customTabs') || '[]');
+      const tabsData   = JSON.parse(localStorage.getItem('tabsData')   || '{}');
+      let keyHandlers = [];
+    
+      function persist() {
+        localStorage.setItem('customTabs', JSON.stringify(customTabs));
+        localStorage.setItem('tabsData', JSON.stringify(tabsData));
+      }
+    
+      function speak(text, cb) {
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'cs-CZ';
+        u.onend = cb;
+        speechSynthesis.speak(u);
+      }
+    
+      function resetShortcuts(container) {
+        keyHandlers.forEach(h => document.removeEventListener('keydown', h));
+        keyHandlers = [];
+        container.querySelectorAll('.text-button').forEach((btn, i) => {
+          const letter = 'abcdefghijklmnopqrstuvwxyz'[i];
+          if (!letter) return;
+          let span = btn.querySelector('.shortcut') || document.createElement('span');
+          span.className = 'shortcut';
+          span.textContent = letter.toUpperCase();
+          btn.appendChild(span);
+          const handler = e => e.key === letter && btn.click();
+          document.addEventListener('keydown', handler);
+          keyHandlers.push(handler);
+        });
+      }
+    
+      function addTextButton(text, container, tabId, isPredef = false) {
+        const wrapper = document.createElement('div'); wrapper.className = 'transcription-button';
+        const btn = document.createElement('button'); btn.className = 'text-button'; btn.textContent = text;
+        btn.addEventListener('click', () => {
+          if (!isPlaying) {
+            isPlaying = true;
+            wrapper.classList.add('playing');
+            speak(text, () => {
+              wrapper.classList.remove('playing');
+              isPlaying = false;
+            });
+          }
+        });
+        const edit = document.createElement('button'); edit.className = 'edit-button'; edit.textContent = '✏️';
+        edit.addEventListener('click', () => {
+          const nt = prompt('Upravit text:', text);
+          if (!nt) return;
+          btn.textContent = nt;
+          if (!isPredef) {
+            tabsData[tabId] = tabsData[tabId].map(t => t === text ? nt : t);
+            persist();
+          }
+          resetShortcuts(container);
+        });
+        const del = document.createElement('button'); del.className = 'delete-button'; del.textContent = '🗑️';
+        del.addEventListener('click', () => {
+          if (!isPredef) {
+            tabsData[tabId] = tabsData[tabId].filter(t => t !== text);
+            persist();
+            container.innerHTML = '';
+            tabsData[tabId].forEach(t => addTextButton(t, container, tabId, isPredef));
+            resetShortcuts(container);
+          }
+        });
+        wrapper.append(del, btn, edit);
+        container.appendChild(wrapper);
+        resetShortcuts(container);
+      }
+    
+      function createTab(id, name, isPredef = false) {
+        const btn = document.createElement('button');
+        btn.className = 'tab-button'; btn.dataset.tab = id; btn.textContent = name;
+        tabsContainer.appendChild(btn);
+        const tabDiv = document.createElement('div'); tabDiv.className = 'tab-content'; tabDiv.id = id;
+        const body = document.createElement('div'); body.className = 'tab-content-body'; tabDiv.appendChild(body);
+        wrap.appendChild(tabDiv);
+        const arr = tabsData[id] || (isPredef ? ['Příklad','Text'] : []);
+        arr.forEach(t => addTextButton(t, body, id, isPredef));
+      }
+    
+      function activateTab(id) {
+        // Reset rec/sound on switch
         if (isRecording) {
-          window.annyang && annyang.abort();
-          recBtn.classList.remove('active');
-          isRecording = false;
+          window.annyang?.abort(); recBtn.classList.remove('active'); isRecording = false;
+        }
+        if (isSoundRecording) {
+          mediaRecorder?.stop(); soundBtn.classList.remove('active'); isSoundRecording = false;
         }
         document.querySelectorAll('.tab-button').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
-    document.querySelectorAll('.tab-button').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === id));
-    localStorage.setItem('activeTab', id);
-    const body = document.querySelector(`#${id} .tab-content-body`);
-    if (body) resetShortcuts(body);
-  }
-
-  // Přepínání záložek
-  tabsContainer.addEventListener('click', e => { if (e.target.matches('.tab-button')) activateTab(e.target.dataset.tab); });
-  document.addEventListener('keydown', e => {
-    if (e.shiftKey && /^[1-9]$/.test(e.key)) {
-      const idx = parseInt(e.key, 10) - 1;
-      const btns = Array.from(document.querySelectorAll('.tab-button'));
-      if (btns[idx]) activateTab(btns[idx].dataset.tab);
-    }
-  });
-
-  // Inicializace tabů
-  createTab('user','Vlastní',false);
-  createTab('predefined','Předdefinované',true);
-  customTabs.forEach(t => createTab(t.id, t.name, false));
-  const plusBtn = document.createElement('button'); plusBtn.className = 'add-tab-button'; plusBtn.textContent = '+';
-  plusBtn.addEventListener('click', () => {
-    const name = prompt('Název nového tabu:'); if (!name) return;
-    const id = 'tab-' + Date.now(); customTabs.push({id,name}); tabsData[id] = [];
-    persist(); createTab(id,name,false); activateTab(id);
-  }); tabsContainer.appendChild(plusBtn);
-  activateTab(localStorage.getItem('activeTab') || 'user');
-
-  // Import
-  impBtn.addEventListener('click', () => {
-    const id = document.querySelector('.tab-button.active').dataset.tab;
-    const json = prompt('Vlož JSON:');
-    try {
-      tabsData[id] = JSON.parse(json);
-      persist();
-      const body = document.querySelector(`#${id} .tab-content-body`);
-      body.innerHTML = '';
-      tabsData[id].forEach(t => addTextButton(t, body, id, id === 'predefined'));
-    } catch {
-      alert('Neplatné JSON');
-    }
-  });
-
-  // Export
-  expBtn.addEventListener('click', () => {
-    const id = document.querySelector('.tab-button.active').dataset.tab;
-    const arr = Array.from(document.querySelectorAll(`#${id} .text-button`)).map(b => b.textContent);
-    prompt('Kopíruj JSON:', JSON.stringify(arr));
-  });
-
-  // Delete
-  delBtn.addEventListener('click', () => {
-    const id = document.querySelector('.tab-button.active').dataset.tab;
-    if (id === 'user' || id === 'predefined') return;
-    if (!confirm('Opravdu smazat tento tab?')) return;
-    delete tabsData[id];
-    const idx = customTabs.findIndex(t => t.id === id);
-    if (idx !== -1) customTabs.splice(idx, 1);
-    persist();
-    document.querySelector(`.tab-button[data-tab="${id}"]`).remove();
-    document.getElementById(id).remove();
-    activateTab('user');
-  });
-
-    // Ovládací diktování (annyang)
-  recBtn.addEventListener('click', () => {
-    if (isRecording) {
-      window.annyang && annyang.abort();
-      recBtn.classList.remove('active');
-    } else {
-      window.annyang && annyang.start({autoRestart:false,continuous:false});
-      recBtn.classList.add('active');
-    }
-    isRecording = !isRecording;
-  });
-
-  // Ovládací nahrávání zvuku
-  soundBtn.addEventListener('click', () => {
-    const id = document.querySelector('.tab-button.active').dataset.tab;
-    const body = document.querySelector(`#${id} .tab-content-body`);
-    if (isSoundRecording) {
-      mediaRecorder.stop();
-      soundBtn.classList.remove('active');
-      isSoundRecording = false;
-    } else {
-      navigator.mediaDevices.getUserMedia({audio:true}).then(stream => {
-        mediaRecorder = new MediaRecorder(stream);
-        audioChunks = [];
-        audioStartTime = Date.now();
-        mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-        mediaRecorder.onstop = () => {
-          const blob = new Blob(audioChunks,{type:'audio/wav'});
-          const url = URL.createObjectURL(blob);
-          const dur = ((Date.now()-audioStartTime)/1000).toFixed(1);
-          const wrapper = document.createElement('div'); wrapper.className='transcription-button';
-          const play = document.createElement('button'); play.className='edit-button'; play.textContent='▶️'; play.onclick=()=>new Audio(url).play();
-          const lbl = document.createElement('button'); lbl.className='text-button'; lbl.textContent=`Raw Audio (${dur}s)`;
-          const del = document.createElement('button'); del.className='delete-button'; del.textContent='🗑️'; del.onclick=()=>wrapper.remove();
-          wrapper.append(del,lbl,play); body.append(wrapper); resetShortcuts(body);
-        };
-        mediaRecorder.start();
-        soundBtn.classList.add('active');
-        isSoundRecording = true;
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === id));
+        localStorage.setItem('activeTab', id);
+        const body = document.querySelector(`#${id} .tab-content-body`);
+        if (body) resetShortcuts(body);
+      }
+    
+      // Event listeners
+      tabsContainer.addEventListener('click', e => {
+        if (e.target.matches('.tab-button')) activateTab(e.target.dataset.tab);
       });
-    }
-  });
+      document.addEventListener('keydown', e => {
+        if (e.shiftKey && /^[1-9]$/.test(e.key)) {
+          const idx = parseInt(e.key, 10) - 1;
+          const btns = Array.from(document.querySelectorAll('.tab-button'));
+          if (btns[idx]) activateTab(btns[idx].dataset.tab);
+        }
+        if (e.key === 'Control') recBtn.click();
+      });
+    
+      // Initialize tabs 
+      createTab('predefined','Předdefinované',true);
+      customTabs.forEach(t => createTab(t.id, t.name, false));
+      const plusBtn = document.createElement('button'); plusBtn.className = 'add-tab-button'; plusBtn.textContent = '+';
+      plusBtn.addEventListener('click', () => {
+        const name = prompt('Název nového tabu:'); if (!name) return;
+        const id = 'tab-' + Date.now(); customTabs.push({id,name}); tabsData[id] = [];
+        persist(); createTab(id,name,false); activateTab(id);
+      });
+      tabsContainer.prepend(plusBtn);
+      activateTab(localStorage.getItem('activeTab') || 'user');
+    
+      impBtn.addEventListener('click', () => {
+        const id = document.querySelector('.tab-button.active').dataset.tab;
+        const fileInput = document.getElementById('file-input');
+        fileInput.onchange = async e => {
+          const file = e.target.files[0];
+          if (!file) return;
+          try {
+            const text = await file.text();
+            tabsData[id] = JSON.parse(text);
+            persist();
+            const body = document.querySelector(`#${id} .tab-content-body`);
+            body.innerHTML = '';
+            tabsData[id].forEach(t => addTextButton(t, body, id, id === 'predefined'));
+          } catch (err) {
+            alert('Neplatný JSON soubor');
+          }
+          fileInput.value = '';
+        };
+        fileInput.click();
+      });
+      expBtn.addEventListener('click', () => {
+        const id = document.querySelector('.tab-button.active').dataset.tab;
+        const arr = Array.from(document.querySelectorAll(`#${id} .text-button`))
+                          .map(b => b.textContent);
+        const json = JSON.stringify(arr, null, 2);
+        const blob = new Blob([json], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${id}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      });
+      
+      delBtn.addEventListener('click', () => {
+        const id = document.querySelector('.tab-button.active').dataset.tab;
+        if (id==='user'||id==='predefined') return;
+        if (!confirm('Opravdu smazat tento tab?')) return;
+        delete tabsData[id];
+        const idx = customTabs.findIndex(t=>t.id===id);
+        if(idx!==-1) customTabs.splice(idx,1);
+        persist();
+        document.querySelector(`.tab-button[data-tab="${id}"]`).remove();
+        document.getElementById(id).remove();
+        activateTab('user');
+      });
+    
+      // Diktování (annyang) handler
+      recBtn.addEventListener('click', () => {
+        if (isRecording) { window.annyang?.abort(); recBtn.classList.remove('active'); }
+        else { window.annyang?.start({autoRestart:false,continuous:false}); recBtn.classList.add('active'); }
+        isRecording = !isRecording;
+      });
+    
+      // Nahrávání zvuku handler
+      soundBtn.addEventListener('click', () => {
+        const id = document.querySelector('.tab-button.active').dataset.tab;
+        const body = document.querySelector(`#${id} .tab-content-body`);
+        if (isSoundRecording) {
+          mediaRecorder.stop(); soundBtn.classList.remove('active'); isSoundRecording = false;
+        } else {
+          navigator.mediaDevices.getUserMedia({audio:true}).then(stream => {
+            mediaRecorder = new MediaRecorder(stream); audioChunks=[]; audioStartTime=Date.now();
+            mediaRecorder.ondataavailable = e=>audioChunks.push(e.data);
+            mediaRecorder.onstop = () => {
+              const blob=new Blob(audioChunks,{type:'audio/wav'});
+              const url=URL.createObjectURL(blob);
+              const dur=((Date.now()-audioStartTime)/1000).toFixed(1);
+              const wr=document.createElement('div'); wr.className='transcription-button';
+              const play=document.createElement('button'); play.className='edit-button'; play.textContent='▶️'; play.onclick=()=>new Audio(url).play();
+              const lbl=document.createElement('button'); lbl.className='text-button'; lbl.textContent=`Raw Audio (${dur}s)`;
+              const dl=document.createElement('button'); dl.className='delete-button'; dl.textContent='🗑️'; dl.onclick=()=>wr.remove();
+              wr.append(dl,lbl,play); body.append(wr); resetShortcuts(body);
+            };
+            mediaRecorder.start(); soundBtn.classList.add('active'); isSoundRecording=true;
+          });
+        }
+      });
+    });
+    
+// … existující kód …
 
+const helpBtn = document.getElementById('help-btn');
+
+helpBtn.addEventListener('click', () => {
+  // seznam zkratek a popis
+  const msg = [
+    'Klávesové zkratky:',
+    '',
+    'Shift + 1–9', 
+    '  Přepne na záložku číslo 1–9 (pokud existuje).',
+    '',
+    'Ctrl',
+    '  Spustí / zastaví nahrávání diktování (stejně jako klik na mikrofon).',
+    '',
+    'Písmena A–Z',
+    '  Aktivují odpovídající tlačítko v aktivní záložce (zkratky jsou vidět u jednotlivých tlačítek).',
+    '',
+    '+ (plus)',
+    '  Přidá novou vlastní záložku.',
+    '',
+    'Kliknutí na textové tlačítko',
+    '  Přehrání textu pomocí SpeechSynthesis.',
+    '',
+    '✏️ (edit)',
+    '  Upraví daný text.',
+    '',
+    '🗑️ (delete)',
+    '  Smaže položku (pokud není předdefinovaná).'
+  ].join('\n');
+  alert(msg);
 });
-
 
   </script>
 </body>

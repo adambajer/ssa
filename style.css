@@ -286,7 +286,11 @@ button.active {
 #start-sound-capture.active svg path {
     fill: blue;
 }
-
+.transcription-button.playing {
+    border: 1px solid red;
+    box-shadow: 0px 0px 7px 0px rgba(255, 0, 0, 0.3);
+    animation: pulse 1s infinite;
+ }
 #start-recording.active {
     border: 1px solid red;
     box-shadow: 0px 0px 7px 0px rgba(255, 0, 0, 0.3);

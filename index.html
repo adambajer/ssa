@@ -7,37 +7,41 @@
   <meta name="theme-color" content="#1976D2">
   <link rel="stylesheet" href="style.css" />
 
-  <link rel="icon" type="image/svg+xml" href="./fav.svg" /
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="icon" type="image/svg+xml" href="./fav.svg" / <meta name="viewport"
+    content="width=device-width, initial-scale=1.0" />
   <link rel="manifest" href="./site.webmanifest" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+    crossorigin="anonymous"></script>
 </head>
 
 <body>
-  <div class="wrap">
+  <div class="wrap container">
     <div class="tabs"></div>
     <!-- Statické ovládací prvky pro nahrávání -->
     <div class="menu"> <button id="import-tab" title="Import">
-      <span class="material-icons">folder_open</span>
-       
-    </button>
-    <button id="export-tab" title="Export">
-      <span class="material-icons">save</span>
-     </button>
-    <button id="delete-tab" title="Smazat tab">
-      <span class="material-icons">delete</span>
-       
-    </button>
-    <!-- vedle ostatních tlačítek v div#controls -->
-<button id="help-btn" title="Nápověda">
-<span class="material-icons">help_outline</span>
- 
-</button>
-<button id="btn-install" hidden title=  "Instalovat aplikaci">
-<span class="material-icons">phone_android</span>
-</button>
-</div>
+        <span class="material-icons">folder_open</span>
+
+      </button>
+      <button id="export-tab" title="Export">
+        <span class="material-icons">save</span>
+      </button>
+      <button id="delete-tab" title="Smazat tab">
+        <span class="material-icons">delete</span>
+
+      </button>
+      <!-- vedle ostatních tlačítek v div#controls -->
+      <button id="help-btn" title="Nápověda">
+        <span class="material-icons">help_outline</span>
+
+      </button>
+      <button id="btn-install" hidden title="Instalovat aplikaci">
+        <span class="material-icons">phone_android</span>
+      </button>
+    </div>
     <div id="controls">
       <button id="start-recording">
         <svg version="1.1" viewBox="0 0 210 290" xmlns="http://www.w3.org/2000/svg">
@@ -58,14 +62,14 @@
                5 1.973 5 4.425 0 2.451-2.23 4.425-5 4.425h-55.09v29.24c0 
                22.86 18.4 41.26 41.26 41.26s41.26-18.4 41.26-41.26v-54.65c0-22.86-18.4-41.26-41.26-41.26z"
             stroke-linecap="round" stroke-miterlimit="4.1" paint-order="markers fill stroke" />
-          <text   xml:space="preserve">
+          <text xml:space="preserve">
             <tspan x="0" y="270" style="font-size:4rem;stroke-width:.786">TEXT</tspan>
           </text>
         </svg>
-       </button>
+      </button>
       <button id="start-sound-capture">
         <!-- SVG záznam zvuku -->
-        <svg version="1.1" viewBox="0 0 210 290"  xmlns="http://www.w3.org/2000/svg">
+        <svg version="1.1" viewBox="0 0 210 290" xmlns="http://www.w3.org/2000/svg">
           <g transform="translate(0 4.174)">
             <path d="m46.2 87.43c-6.23 0-11.28 4.842-11.28 10.82 0 31.98 
                  24.8 58.5 57.06 64.21v26.81h.047a13.02 12.75 0 00-.046.622 
@@ -83,15 +87,15 @@
                5 1.973 5 4.425 0 2.451-2.23 4.425-5 4.425h-55.09v29.24c0 
                22.86 18.4 41.26 41.26 41.26s41.26-18.4 41.26-41.26v-54.65c0-22.86-18.4-41.26-41.26-41.26z"
             stroke-linecap="round" stroke-miterlimit="4.1" paint-order="markers fill stroke" />
-            <text   xml:space="preserve">
-              <tspan x="0" y="270" style="font-size:4rem;stroke-width:.786">ZVUK</tspan>
-            </text>
+          <text xml:space="preserve">
+            <tspan x="0" y="270" style="font-size:4rem;stroke-width:.786">ZVUK</tspan>
+          </text>
         </svg>
       </button>
-     
+
     </div>
     <!-- pod controls -->
-<input id="file-input" type="file" accept="application/json" style="display:none" />
+    <input id="file-input" type="file" accept="application/json" style="display:none" />
 
   </div>
 
@@ -121,7 +125,7 @@
       script.onload = initAnnyang;
       script.onerror = () => console.warn('annyang se nepodařilo načíst');
       document.head.appendChild(script);
-    
+
       // Globální reference
       const wrap = document.querySelector('.wrap');
       const tabsContainer = document.querySelector('.tabs');
@@ -130,28 +134,28 @@
       const impBtn = document.getElementById('import-tab');
       const expBtn = document.getElementById('export-tab');
       const delBtn = document.getElementById('delete-tab');
-    
+
       // Stav a data
       let isPlaying = false;
       let isRecording = false;
       let isSoundRecording = false;
       let mediaRecorder, audioChunks = [], audioStartTime;
       const customTabs = JSON.parse(localStorage.getItem('customTabs') || '[]');
-      const tabsData   = JSON.parse(localStorage.getItem('tabsData')   || '{}');
+      const tabsData = JSON.parse(localStorage.getItem('tabsData') || '{}');
       let keyHandlers = [];
-    
+
       function persist() {
         localStorage.setItem('customTabs', JSON.stringify(customTabs));
         localStorage.setItem('tabsData', JSON.stringify(tabsData));
       }
-    
+
       function speak(text, cb) {
         const u = new SpeechSynthesisUtterance(text);
         u.lang = 'cs-CZ';
         u.onend = cb;
         speechSynthesis.speak(u);
       }
-    
+
       function resetShortcuts(container) {
         keyHandlers.forEach(h => document.removeEventListener('keydown', h));
         keyHandlers = [];
@@ -167,7 +171,7 @@
           keyHandlers.push(handler);
         });
       }
-    
+
       function addTextButton(text, container, tabId, isPredef = false) {
         const wrapper = document.createElement('div'); wrapper.className = 'transcription-button';
         const btn = document.createElement('button'); btn.className = 'text-button'; btn.textContent = text;
@@ -206,7 +210,7 @@
         container.appendChild(wrapper);
         resetShortcuts(container);
       }
-    
+
       function createTab(id, name, isPredef = false) {
         const btn = document.createElement('button');
         btn.className = 'tab-button'; btn.dataset.tab = id; btn.textContent = name;
@@ -214,10 +218,10 @@
         const tabDiv = document.createElement('div'); tabDiv.className = 'tab-content'; tabDiv.id = id;
         const body = document.createElement('div'); body.className = 'tab-content-body'; tabDiv.appendChild(body);
         wrap.appendChild(tabDiv);
-        const arr = tabsData[id] || (isPredef ? ['Příklad','Text'] : []);
+        const arr = tabsData[id] || (isPredef ? ['Příklad', 'Text'] : []);
         arr.forEach(t => addTextButton(t, body, id, isPredef));
       }
-    
+
       function activateTab(id) {
         // Reset rec/sound on switch
         if (isRecording) {
@@ -232,7 +236,7 @@
         const body = document.querySelector(`#${id} .tab-content-body`);
         if (body) resetShortcuts(body);
       }
-    
+
       // Event listeners
       tabsContainer.addEventListener('click', e => {
         if (e.target.matches('.tab-button')) activateTab(e.target.dataset.tab);
@@ -245,19 +249,19 @@
         }
         if (e.key === 'Control') recBtn.click();
       });
-    
+
       // Initialize tabs 
-      createTab('predefined','Předdefinované',true);
+      createTab('predefined', 'Předdefinované', true);
       customTabs.forEach(t => createTab(t.id, t.name, false));
       const plusBtn = document.createElement('button'); plusBtn.className = 'add-tab-button'; plusBtn.textContent = '+';
       plusBtn.addEventListener('click', () => {
         const name = prompt('Název nového tabu:'); if (!name) return;
-        const id = 'tab-' + Date.now(); customTabs.push({id,name}); tabsData[id] = [];
-        persist(); createTab(id,name,false); activateTab(id);
+        const id = 'tab-' + Date.now(); customTabs.push({ id, name }); tabsData[id] = [];
+        persist(); createTab(id, name, false); activateTab(id);
       });
       tabsContainer.prepend(plusBtn);
       activateTab(localStorage.getItem('activeTab') || 'user');
-    
+
       impBtn.addEventListener('click', () => {
         const id = document.querySelector('.tab-button.active').dataset.tab;
         const fileInput = document.getElementById('file-input');
@@ -281,7 +285,7 @@
       expBtn.addEventListener('click', () => {
         const id = document.querySelector('.tab-button.active').dataset.tab;
         const arr = Array.from(document.querySelectorAll(`#${id} .text-button`))
-                          .map(b => b.textContent);
+          .map(b => b.textContent);
         const json = JSON.stringify(arr, null, 2);
         const blob = new Blob([json], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
@@ -293,27 +297,27 @@
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
       });
-      
+
       delBtn.addEventListener('click', () => {
         const id = document.querySelector('.tab-button.active').dataset.tab;
-        if (id==='user'||id==='predefined') return;
+        if (id === 'user' || id === 'predefined') return;
         if (!confirm('Opravdu smazat tento tab?')) return;
         delete tabsData[id];
-        const idx = customTabs.findIndex(t=>t.id===id);
-        if(idx!==-1) customTabs.splice(idx,1);
+        const idx = customTabs.findIndex(t => t.id === id);
+        if (idx !== -1) customTabs.splice(idx, 1);
         persist();
         document.querySelector(`.tab-button[data-tab="${id}"]`).remove();
         document.getElementById(id).remove();
         activateTab('user');
       });
-    
+
       // Diktování (annyang) handler
       recBtn.addEventListener('click', () => {
         if (isRecording) { window.annyang?.abort(); recBtn.classList.remove('active'); }
-        else { window.annyang?.start({autoRestart:false,continuous:false}); recBtn.classList.add('active'); }
+        else { window.annyang?.start({ autoRestart: false, continuous: false }); recBtn.classList.add('active'); }
         isRecording = !isRecording;
       });
-    
+
       // Nahrávání zvuku handler
       soundBtn.addEventListener('click', () => {
         const id = document.querySelector('.tab-button.active').dataset.tab;
@@ -321,83 +325,83 @@
         if (isSoundRecording) {
           mediaRecorder.stop(); soundBtn.classList.remove('active'); isSoundRecording = false;
         } else {
-          navigator.mediaDevices.getUserMedia({audio:true}).then(stream => {
-            mediaRecorder = new MediaRecorder(stream); audioChunks=[]; audioStartTime=Date.now();
-            mediaRecorder.ondataavailable = e=>audioChunks.push(e.data);
+          navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+            mediaRecorder = new MediaRecorder(stream); audioChunks = []; audioStartTime = Date.now();
+            mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
             mediaRecorder.onstop = () => {
-              const blob=new Blob(audioChunks,{type:'audio/wav'});
-              const url=URL.createObjectURL(blob);
-              const dur=((Date.now()-audioStartTime)/1000).toFixed(1);
-              const wr=document.createElement('div'); wr.className='transcription-button';
-              const play=document.createElement('button'); play.className='edit-button'; play.textContent='▶️'; play.onclick=()=>new Audio(url).play();
-              const lbl=document.createElement('button'); lbl.className='text-button'; lbl.textContent=`Raw Audio (${dur}s)`;
-              const dl=document.createElement('button'); dl.className='delete-button'; dl.textContent='🗑️'; dl.onclick=()=>wr.remove();
-              wr.append(dl,lbl,play); body.append(wr); resetShortcuts(body);
+              const blob = new Blob(audioChunks, { type: 'audio/wav' });
+              const url = URL.createObjectURL(blob);
+              const dur = ((Date.now() - audioStartTime) / 1000).toFixed(1);
+              const wr = document.createElement('div'); wr.className = 'transcription-button';
+              const play = document.createElement('button'); play.className = 'edit-button'; play.textContent = '▶️'; play.onclick = () => new Audio(url).play();
+              const lbl = document.createElement('button'); lbl.className = 'text-button'; lbl.textContent = `Raw Audio (${dur}s)`;
+              const dl = document.createElement('button'); dl.className = 'delete-button'; dl.textContent = '🗑️'; dl.onclick = () => wr.remove();
+              wr.append(dl, lbl, play); body.append(wr); resetShortcuts(body);
             };
-            mediaRecorder.start(); soundBtn.classList.add('active'); isSoundRecording=true;
+            mediaRecorder.start(); soundBtn.classList.add('active'); isSoundRecording = true;
           });
         }
       });
     });
-    
-// … existující kód …
 
-const helpBtn = document.getElementById('help-btn');
+    // … existující kód …
 
-helpBtn.addEventListener('click', () => {
-  // seznam zkratek a popis
-  const msg = [
-    'Klávesové zkratky:',
-    '',
-    'Shift + 1–9', 
-    '  Přepne na záložku číslo 1–9 (pokud existuje).',
-    '',
-    'Ctrl',
-    '  Spustí / zastaví nahrávání diktování (stejně jako klik na mikrofon).',
-    '',
-    'Písmena A–Z',
-    '  Aktivují odpovídající tlačítko v aktivní záložce (zkratky jsou vidět u jednotlivých tlačítek).',
-    '',
-    '+ (plus)',
-    '  Přidá novou vlastní záložku.',
-    '',
-    'Kliknutí na textové tlačítko',
-    '  Přehrání textu pomocí SpeechSynthesis.',
-    '',
-    '✏️ (edit)',
-    '  Upraví daný text.',
-    '',
-    '🗑️ (delete)',
-    '  Smaže položku (pokud není předdefinovaná).'
-  ].join('\n');
-  alert(msg);
-});
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then(reg => console.log('Service Worker registrován:', reg.scope))
-      .catch(err => console.warn('SW registrace selhala:', err));
-  });
-}
-let deferredPrompt;
-const installBtn = document.getElementById('btn-install');
+    const helpBtn = document.getElementById('help-btn');
 
-// 1) Zachytíme událost, kterou prohlížeč vyvolá, když by byl PWA installable
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();            // zamezíme defaultní prompt
-  deferredPrompt = e;            // uložíme si objekt pro pozdější použití
-  installBtn.hidden = false;     // ukážeme tlačítko
-});
+    helpBtn.addEventListener('click', () => {
+      // seznam zkratek a popis
+      const msg = [
+        'Klávesové zkratky:',
+        '',
+        'Shift + 1–9',
+        '  Přepne na záložku číslo 1–9 (pokud existuje).',
+        '',
+        'Ctrl',
+        '  Spustí / zastaví nahrávání diktování (stejně jako klik na mikrofon).',
+        '',
+        'Písmena A–Z',
+        '  Aktivují odpovídající tlačítko v aktivní záložce (zkratky jsou vidět u jednotlivých tlačítek).',
+        '',
+        '+ (plus)',
+        '  Přidá novou vlastní záložku.',
+        '',
+        'Kliknutí na textové tlačítko',
+        '  Přehrání textu pomocí SpeechSynthesis.',
+        '',
+        '✏️ (edit)',
+        '  Upraví daný text.',
+        '',
+        '🗑️ (delete)',
+        '  Smaže položku (pokud není předdefinovaná).'
+      ].join('\n');
+      alert(msg);
+    });
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(reg => console.log('Service Worker registrován:', reg.scope))
+          .catch(err => console.warn('SW registrace selhala:', err));
+      });
+    }
+    let deferredPrompt;
+    const installBtn = document.getElementById('btn-install');
 
-// 2) Když na tlačítko uživatel klikne, vyvoláme instalaci
-installBtn.addEventListener('click', async () => {
-  if (!deferredPrompt) return;
-  deferredPrompt.prompt();                     // zobrazí dialog Chrome
-  const { outcome } = await deferredPrompt.userChoice;
-  console.log('Instalace:', outcome);          // 'accepted' / 'dismissed'
-  deferredPrompt = null;
-  installBtn.hidden = true;
-});
+    // 1) Zachytíme událost, kterou prohlížeč vyvolá, když by byl PWA installable
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();            // zamezíme defaultní prompt
+      deferredPrompt = e;            // uložíme si objekt pro pozdější použití
+      installBtn.hidden = false;     // ukážeme tlačítko
+    });
+
+    // 2) Když na tlačítko uživatel klikne, vyvoláme instalaci
+    installBtn.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();                     // zobrazí dialog Chrome
+      const { outcome } = await deferredPrompt.userChoice;
+      console.log('Instalace:', outcome);          // 'accepted' / 'dismissed'
+      deferredPrompt = null;
+      installBtn.hidden = true;
+    });
 
   </script>
 </body>

@@ -111,14 +111,22 @@
           '*text': txt => {
             const id = document.querySelector('.tab-button.active').dataset.tab;
             const body = document.querySelector(`#${id} .tab-content-body`);
+        
+            // always add the button to the UI…
             addTextButton(txt, body, id, id === 'predefined');
-            tabsData[id] = tabsData[id] || [];
-            tabsData[id].push(txt);
-            persist();
+        
+            // …but only save for non‐predefined tabs:
+            if (id !== 'predefined') {
+              tabsData[id] = tabsData[id] || [];
+              tabsData[id].push(txt);
+              persist();
+            }
+        
             annyang.abort();
             recBtn.classList.remove('active');
           }
         });
+        
         annyang.addCallback('end', () => recBtn.classList.remove('active'));
       }
       const script = document.createElement('script');

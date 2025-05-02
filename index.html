@@ -67,11 +67,11 @@
         </svg>
       </button>
       <button id="import-tab" title="Import">
-        <span class="material-icons">file_upload</span>
+        <span class="material-icons">folder_open</span>
          
       </button>
       <button id="export-tab" title="Export">
-        <span class="material-icons">file_download</span>
+        <span class="material-icons">save</span>
        </button>
       <button id="delete-tab" title="Smazat tab">
         <span class="material-icons">delete</span>
@@ -81,6 +81,9 @@
 <button id="help-btn" title="Nápověda">
   <span class="material-icons">help_outline</span>
    
+</button>
+<button id="btn-install" hidden title=  "Instalovat aplikaci">
+  <span class="material-icons">phone_android</span>
 </button>
 
     </div>
@@ -373,6 +376,25 @@ if ('serviceWorker' in navigator) {
       .catch(err => console.warn('SW registrace selhala:', err));
   });
 }
+let deferredPrompt;
+const installBtn = document.getElementById('btn-install');
+
+// 1) Zachytíme událost, kterou prohlížeč vyvolá, když by byl PWA installable
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();            // zamezíme defaultní prompt
+  deferredPrompt = e;            // uložíme si objekt pro pozdější použití
+  installBtn.hidden = false;     // ukážeme tlačítko
+});
+
+// 2) Když na tlačítko uživatel klikne, vyvoláme instalaci
+installBtn.addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();                     // zobrazí dialog Chrome
+  const { outcome } = await deferredPrompt.userChoice;
+  console.log('Instalace:', outcome);          // 'accepted' / 'dismissed'
+  deferredPrompt = null;
+  installBtn.hidden = true;
+});
 
   </script>
 </body>

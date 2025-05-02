@@ -1,13 +1,13 @@
 button {
     outline: 0;
     display: inline-block;
-    font-size: 16px;
+    font-size: 0.7rem;
     border: none;
-    border-radius: 0px;
+    
     color: #333;
     cursor: pointer;
     transition: background-color 0.3s;
-    position: relative;
+  
 }
 
 button:hover {
@@ -146,9 +146,9 @@ button.active {
 }
 
 .text-button {
-    padding: 6px 12px;
-    background: #f0f0f0;
-    border: 1px solid #ccc;
+ 
+    background: white;
+ 
     flex-grow: 1;
     text-align: left;
 }
@@ -157,8 +157,7 @@ button.active {
 .delete-button {
     cursor: pointer;
     background: transparent;
-    border: 1px solid #ccc;
-    font-size: 16px;
+     font-size: 16px;
     padding: 2px;
     background: #eee;
 }
@@ -176,8 +175,7 @@ button.active {
 #start-recording,
 #start-sound-capture {
     padding: 10px;
-    border: 1px solid #ccc;
-    background-color: white;
+     background-color: white;
     border-radius: 20px;
     width: 100%;
     transform: translateY(1px);
@@ -219,13 +217,9 @@ button.active {
 }
 
 .shortcut {
-    right: -10px;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    font-size: 17px;
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
-    margin: 2px 5px;
+      background-color: #f0f0f0;
+     font-size: 17px;
+     margin-left: 5px;
     padding: 5px;
 }
 

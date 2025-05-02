@@ -19,28 +19,27 @@
 
 <body>
   <div class="wrap container">
+       <!-- Header with tabs and dropdown menu -->
+       <div class="d-flex justify-content-between align-items-center">
+ 
+        <div class="dropdown">
+          <button class="btn btn-link p-0 text-secondary" type="button" id="menuDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Ovládání">
+            <span class="material-icons">menu</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="menuDropdown">
+            
+            <li><button class="dropdown-item d-flex align-items-center" id="add-tab-btn" title="Nová záložka"><span class="material-icons me-2">add</span>Nový</button></li>
+            <li><button class="dropdown-item d-flex align-items-center" id="import-tab" title="Import"><span class="material-icons me-2">folder_open</span>Import</button></li>
+            <li><button class="dropdown-item d-flex align-items-center" id="export-tab" title="Export"><span class="material-icons me-2">save</span>Export</button></li>
+            <li><button class="dropdown-item d-flex align-items-center" id="delete-tab" title="Smazat tab"><span class="material-icons me-2">delete</span>Smazat tab</button></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><button class="dropdown-item d-flex align-items-center" id="help-btn" title="Nápověda"><span class="material-icons me-2">help_outline</span>Nápověda</button></li>
+            <li><button class="dropdown-item d-flex align-items-center" id="btn-install" hidden title="Instalovat aplikaci"><span class="material-icons me-2">phone_android</span>Instalovat aplikaci</button></li>
+          </ul>
+        </div>
+      </div>
     <div class="tabs"></div>
-    <!-- Statické ovládací prvky pro nahrávání -->
-    <div class="menu"> <button id="import-tab" title="Import">
-        <span class="material-icons">folder_open</span>
-
-      </button>
-      <button id="export-tab" title="Export">
-        <span class="material-icons">save</span>
-      </button>
-      <button id="delete-tab" title="Smazat tab">
-        <span class="material-icons">delete</span>
-
-      </button>
-      <!-- vedle ostatních tlačítek v div#controls -->
-      <button id="help-btn" title="Nápověda">
-        <span class="material-icons">help_outline</span>
-
-      </button>
-      <button id="btn-install" hidden title="Instalovat aplikaci">
-        <span class="material-icons">phone_android</span>
-      </button>
-    </div>
+ 
     <div id="controls">
       <button id="start-recording">
         <svg version="1.1" viewBox="0 0 210 290" xmlns="http://www.w3.org/2000/svg">
@@ -250,16 +249,16 @@
       });
 
       // Initialize tabs 
-      createTab('predefined', 'Předdefinované', true);
+      createTab('predefined', 'Static', true);
       customTabs.forEach(t => createTab(t.id, t.name, false));
-      const plusBtn = document.createElement('button'); plusBtn.className = 'add-tab-button'; plusBtn.textContent = '+';
+      const plusBtn = document.querySelector('#add-tab-btn');
+       
       plusBtn.addEventListener('click', () => {
         const name = prompt('Název nového tabu:'); if (!name) return;
         const id = 'tab-' + Date.now(); customTabs.push({ id, name }); tabsData[id] = [];
         persist(); createTab(id, name, false); activateTab(id);
       });
-      tabsContainer.prepend(plusBtn);
-      activateTab(localStorage.getItem('activeTab') || 'user');
+       activateTab(localStorage.getItem('activeTab') || 'user');
 
       impBtn.addEventListener('click', () => {
         const id = document.querySelector('.tab-button.active').dataset.tab;

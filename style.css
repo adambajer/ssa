@@ -1,8 +1,7 @@
 button {
     outline: 0;
     display: inline-block;
-    font-size: 0.7rem;
-    border: none;
+     border: none;
     
     color: #333;
     cursor: pointer;
@@ -10,13 +9,7 @@ button {
   
 }
 
-button:hover {
-    color: red;
-}
-
-button.active {
-    /* Placeholder for active button styles if needed */
-}
+ 
 
 .material-icons {
     font-family: 'Material Icons';
@@ -33,7 +26,7 @@ button.active {
     direction: ltr;
     -webkit-font-smoothing: antialiased;
 }
-
+ 
 .wrap {
     padding: 0px;
 }
@@ -89,24 +82,9 @@ button.active {
     margin-bottom: 20px;
 }
 
-#controls {
-    margin: 20px;
-    display: inline-flex;
-    flex-direction: row;
-    align-items: center;
-    align-content: flex-start;
-    flex-wrap: wrap;
-    font-size: 0.8rem;
-    justify-content: space-around;
-}
+ 
 
-#controls button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    width: auto;
-}
-
+ 
 .grid-container {
     display: flex;
     justify-items: stretch;
@@ -121,8 +99,7 @@ button.active {
 .transcription-button {
     position: relative;
     margin: 5px;
-    height: 35px;
-    border: 1px solid #ccc;
+     border: 1px solid #ccc;
     border-radius: 5px;
     display: inline-flex;
     flex-direction: row;
@@ -130,9 +107,27 @@ button.active {
     align-content: space-around;
     justify-content: center;
     align-items: stretch;
-    background-color: #eee;
-}
+    background-color: #eee;    box-shadow: 0px 0px 7px 0px rgba(255, 0, 0, 0.0);
 
+}
+.icon-button {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+      cursor: pointer;
+      margin: 20px;
+   }
+
+  
+
+  .label {
+    margin-top: 0.5rem;
+    font-size: 1rem;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
 .transcription-button.active {
     border: 1px solid red;
     box-shadow: 0px 0px 7px 0px rgba(255, 0, 0, 0.3);
@@ -151,7 +146,7 @@ button.active {
  border-left: 1px solid #ccc;
     border-right: 1px solid #ccc;
     flex-grow: 1;
-    text-align: left;
+    text-align: left; 
 }
 
 .edit-button,
@@ -172,16 +167,18 @@ button.active {
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
 }
-
-#start-recording,
-#start-sound-capture {
+#controls{
+    padding: 20px;
+    text-align: center;
+}
+#start-recording{
+    margin: 0px auto;
     padding: 10px;    border: 1px solid white;
      background-color: white;
     border-radius: 20px;
-    width: 100%;
-    transform: translateY(1px);
-    font-size: 8px;
-}
+      box-shadow: 0px 0px 40px rgba(255, 0, 0, 0);
+
+ }
 
 #start-recording.active,
 #start-sound-capture.active {
@@ -218,10 +215,11 @@ button.active {
 }
 
 .shortcut {
-      background-color: #f0f0f0;
-     font-size: 17px;
-     margin-left: 5px;
-    padding: 5px;
+border-left: 1px solid #ccc;      margin-left: 5px;
+background-color: #ccc;padding: 4px;z-index: 1;
+    border-radius: 5px;
+    font-size: 12px;
+    color: #333;
 }
 
 .tooltip {

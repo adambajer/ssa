@@ -18,27 +18,29 @@
 </head>
 
 <body>
-  <div class="wrap container">
-       <!-- Header with tabs and dropdown menu -->
-       <div class="d-flex justify-content-between align-items-center">
+  <div class="wrap container-fluid">
+    
+    <div class="tabs">
+   <!-- Header with tabs and dropdown menu -->
+   <div class="d-flex justify-content-between align-items-center">
  
-        <div class="dropdown">
-          <button class="btn btn-link p-0 text-secondary" type="button" id="menuDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Ovládání">
-            <span class="material-icons">menu</span>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="menuDropdown">
-            
-            <li><button class="dropdown-item d-flex align-items-center" id="add-tab-btn" title="Nová záložka"><span class="material-icons me-2">add</span>Nový</button></li>
-            <li><button class="dropdown-item d-flex align-items-center" id="import-tab" title="Import"><span class="material-icons me-2">folder_open</span>Import</button></li>
-            <li><button class="dropdown-item d-flex align-items-center" id="export-tab" title="Export"><span class="material-icons me-2">save</span>Export</button></li>
-            <li><button class="dropdown-item d-flex align-items-center" id="delete-tab" title="Smazat tab"><span class="material-icons me-2">delete</span>Smazat tab</button></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><button class="dropdown-item d-flex align-items-center" id="help-btn" title="Nápověda"><span class="material-icons me-2">help_outline</span>Nápověda</button></li>
-            <li><button class="dropdown-item d-flex align-items-center" id="btn-install" hidden title="Instalovat aplikaci"><span class="material-icons me-2">phone_android</span>Instalovat aplikaci</button></li>
-          </ul>
-        </div>
-      </div>
-    <div class="tabs"></div>
+    <div class="dropdown">
+      <button class="btn btn-link p-2 text-secondary" type="button" id="menuDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Ovládání">
+        <span class="material-icons">menu</span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="menuDropdown">
+        
+        <li><button class="dropdown-item d-flex align-items-center" id="add-tab-btn" title="Nová záložka"><span class="material-icons me-2">add</span>Nová záložka</button></li>
+        <li><button class="dropdown-item d-flex align-items-center" id="import-tab" title="Import"><span class="material-icons me-2">folder_open</span>Import záložky</button></li>
+        <li><button class="dropdown-item d-flex align-items-center" id="export-tab" title="Export"><span class="material-icons me-2">save</span>Export záložky</button></li>
+        <li><button class="dropdown-item d-flex align-items-center" id="delete-tab" title="Smazat tab"><span class="material-icons me-2">delete</span>Smazat záložku</button></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><button class="dropdown-item d-flex align-items-center" id="help-btn" title="Nápověda"><span class="material-icons me-2">help_outline</span>Nápověda</button></li>
+        <li><button class="dropdown-item d-flex align-items-center" id="btn-install" hidden title="Instalovat aplikaci"><span class="material-icons me-2">phone_android</span>Instalovat aplikaci</button></li>
+      </ul>
+    </div>
+  </div>
+    </div>
  
     <div id="controls">
       <button id="start-recording">
@@ -94,6 +96,15 @@
     </div>
     <!-- pod controls -->
     <input id="file-input" type="file" accept="application/json" style="display:none" />
+<!-- Toast container -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
+  <div id="helpToast" class="toast align-items-start text-bg-light border-0" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body" id="helpToastBody"></div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+</div>
 
   </div>
 
@@ -343,37 +354,27 @@
     });
 
     // … existující kód …
+  // Help toast logic
+  const helpBtn = document.getElementById('help-btn');
+  const helpToastEl = document.getElementById('helpToast');
+  const helpToastBody = document.getElementById('helpToastBody');
+  const toast = new bootstrap.Toast(helpToastEl, { autohide: false });
 
-    const helpBtn = document.getElementById('help-btn');
+  helpBtn.addEventListener('click', () => {
+    const msgLines = [
+      '<strong>Klávesové zkratky:</strong>',
+      '<em>Shift + 1–9</em>: Přepne na záložku číslo 1–9 (pokud existuje).',
+      '<em>Ctrl</em>: Spustí / zastaví nahrávání diktování.',
+      '<em>Písmena A–Z</em>: Aktivují odpovídající tlačítko.',
+      '<em>+</em>: Přidá novou záložku.',
+      '<em>Kliknutí na text</em>: Přehrání textu.',
+      '<em>✏️</em>: Upravit text.',
+      '<em>🗑️</em>: Smazat položku (pokud není předdefinovaná).'
+    ];
+    helpToastBody.innerHTML = msgLines.join('<br>');
+    toast.show();
+  });
 
-    helpBtn.addEventListener('click', () => {
-      // seznam zkratek a popis
-      const msg = [
-        'Klávesové zkratky:',
-        '',
-        'Shift + 1–9',
-        '  Přepne na záložku číslo 1–9 (pokud existuje).',
-        '',
-        'Ctrl',
-        '  Spustí / zastaví nahrávání diktování (stejně jako klik na mikrofon).',
-        '',
-        'Písmena A–Z',
-        '  Aktivují odpovídající tlačítko v aktivní záložce (zkratky jsou vidět u jednotlivých tlačítek).',
-        '',
-        '+ (plus)',
-        '  Přidá novou vlastní záložku.',
-        '',
-        'Kliknutí na textové tlačítko',
-        '  Přehrání textu pomocí SpeechSynthesis.',
-        '',
-        '✏️ (edit)',
-        '  Upraví daný text.',
-        '',
-        '🗑️ (delete)',
-        '  Smaže položku (pokud není předdefinovaná).'
-      ].join('\n');
-      alert(msg);
-    });
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js')

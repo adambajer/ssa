@@ -148,7 +148,8 @@ button.active {
 .text-button {
  
     background: white;
- 
+ border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
     flex-grow: 1;
     text-align: left;
 }
@@ -174,7 +175,7 @@ button.active {
 
 #start-recording,
 #start-sound-capture {
-    padding: 10px;
+    padding: 10px;    border: 1px solid white;
      background-color: white;
     border-radius: 20px;
     width: 100%;

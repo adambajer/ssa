@@ -218,7 +218,7 @@
         const tabDiv = document.createElement('div'); tabDiv.className = 'tab-content'; tabDiv.id = id;
         const body = document.createElement('div'); body.className = 'tab-content-body'; tabDiv.appendChild(body);
         wrap.appendChild(tabDiv);
-        const arr = tabsData[id] || (isPredef ? ['Příklad', 'Text'] : []);
+        const arr = tabsData[id] || (isPredef ? ['Nende', 'Vůbec to nende', 'Nefunguje', 'Zmáčkni si éčko','Počkej', 'Ježiši', 'Max nervy' ] : []);
         arr.forEach(t => addTextButton(t, body, id, isPredef));
       }
 
@@ -249,7 +249,7 @@
       });
 
       // Initialize tabs 
-      createTab('predefined', 'Static', true);
+      createTab('predefined', '0', true);
       customTabs.forEach(t => createTab(t.id, t.name, false));
       const plusBtn = document.querySelector('#add-tab-btn');
 
@@ -258,7 +258,13 @@
         const id = 'tab-' + Date.now(); customTabs.push({ id, name }); tabsData[id] = [];
         persist(); createTab(id, name, false); activateTab(id);
       });
-      activateTab(localStorage.getItem('activeTab') || 'user');
+// ensure we always have an activeTab in LS
+let initial = localStorage.getItem('activeTab');
+if (!initial) {
+  initial = 'predefined';
+  localStorage.setItem('activeTab', initial);
+}
+activateTab(initial);
 
       impBtn.addEventListener('click', () => {
         const id = document.querySelector('.tab-button.active').dataset.tab;

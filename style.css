@@ -216,9 +216,9 @@ button {
 
 .shortcut {
 border-left: 1px solid #ccc;      margin-left: 5px;
-background-color: #ccc;padding: 4px;z-index: 1;
-    border-radius: 5px;
-    font-size: 12px;
+background-color: #ccc;padding: 2px;z-index: 1;
+    border-radius: 2px;
+  
     color: #333;
 }
 

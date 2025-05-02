@@ -2,6 +2,11 @@
     "name": "SSA",
     "short_name": "SSA",
     "description": "SSA",
+    "start_url": "/index.html",
+    "scope": "/",
+    "display": "standalone",
+    "background_color": "#FFFFFF",
+    "theme_color": "#1976D2",
     "icons": [
       {
         "src": "/fav.png",
@@ -13,10 +18,6 @@
         "sizes": "512x512",
         "type": "image/png"
       }
-    ],
-    "start_url": "/index.html",
-    "display": "standalone",
-    "background_color": "#FFFFFF",
-    "theme_color": "#1976D2"
+    ]
   }
   

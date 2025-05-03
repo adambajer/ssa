@@ -160,15 +160,12 @@ button {
 
  
 
- 
-#controls{
-    padding: 20px;
-    text-align: center;
-}
+  
 #start-recording {
     display: inline-block; /* Nebo inline-flex, pokud chcete zarovnat obsah */
     box-shadow: none; /* Odstranění výchozího box-shadow */
-    margin:20px;
+
+    margin: 10px;
     border: 1px solid white;
     background-color: white;
     border-radius: 100%;
@@ -193,8 +190,9 @@ button {
 
 #start-recording svg,
 #start-sound-capture svg {
-    width: 60px;
-    height: 60px;
+    width: 70px;
+    height: 70px;
+    padding: 5px;
     display: block;
 }
 
@@ -273,98 +271,6 @@ padding-right: 5px;    color : 'white';  font-weight: bold;color: white;}
 
 #recording-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-  margin-top: 20px;
-}
-
-/* Recording controls (button and text) */
-#recording-controls {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-#start-recording {
-  display: inline-block;
- padding: 10px;
-  border: 2px solid #ddd;
-  background-color: white;
-  border-radius: 50%;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease;
-}
-
-#start-recording.pulsing {
-  animation: pulse 1.5s infinite;
-}
-
-#recording-info {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  color: #333;
-}
-
-#recording-status {
-  font-weight: bold;
-  color: red;
-}
-
-#recording-time {
-  font-size: 12px;
-  color: #666;
-}
-
-/* Timeline canvas */
-#timeline {
-  width: 100%;
-  max-width: 600px;
-  height: 100px;
-  background: none; /* No background */
-  position: relative;
-  margin-top: 10px;
-}
-
-/* Gridlines for the timeline */
-#timeline::before {
-  content: '';
-  position: absolute;
-  top: 25%;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background-color: #ddd; /* Subtle gridline */
-}
-
-#timeline::after {
-  content: '';
-  position: absolute;
-  top: 75%;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background-color: #ddd; /* Subtle gridline */
-}
-
-/* Pulse animation */
-@keyframes pulse {
-  0% {
-    box-shadow: 0px 0px 10px rgba(255, 0, 0, 0.5);
-  }
-  50% {
-    box-shadow: 0px 0px 20px rgba(255, 0, 0, 0.8);
-  }
-  100% {
-    box-shadow: 0px 0px 10px rgba(255, 0, 0, 0.5);
-  }
-}
-
-#recording-container {
-  display: flex;
   flex-direction: row; /* Align items in a row */
   align-items: center; /* Vertically center the items */
   justify-content: flex-start; /* Keep the mic button in place */
@@ -389,7 +295,3 @@ padding-right: 5px;    color : 'white';  font-weight: bold;color: white;}
   color: #666;
 }
 
-#timeline {
-    margin-top: 10px;
-    display: block;
-   }

@@ -650,6 +650,35 @@ installBtn.addEventListener('click', async () => {
   installBtn.hidden = true;
 });
 
+const eraseDataBtn = document.getElementById('erase-data-btn');
+
+eraseDataBtn.addEventListener('click', () => {
+  if (!confirm('Opravdu chcete vymazat všechna data? Tato akce je nevratná.')) return;
+
+  // Vymazání všech dat z localStorage
+  localStorage.clear();
+
+  // Obnovení výchozího stavu
+  customTabs.length = 0; // Vyprázdnění pole vlastních záložek
+  Object.keys(tabsData).forEach(key => delete tabsData[key]); // Vymazání dat záložek
+  persist();
+
+  // Odstranění všech záložek kromě předdefinované
+  document.querySelectorAll('.tab-button').forEach(btn => {
+    if (btn.dataset.tab !== 'predefined') btn.remove();
+  });
+  document.querySelectorAll('.tab-content').forEach(content => {
+    if (content.id !== 'predefined') content.remove();
+  });
+
+  // Aktivace předdefinované záložky
+  activateTab('predefined');
+
+  // Znovu načtení stránky
+  alert('Všechna data byla úspěšně vymazána. Stránka se nyní znovu načte.');
+  location.reload();
+});
+
   </script>
 </body>
 

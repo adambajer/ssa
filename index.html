@@ -572,12 +572,12 @@ activateTab(initial);
         const normalizedVolume = Math.min(volume / 256, 1); // Normalize volume (0 to 1)
       
         // Shift the canvas content to the left
-        const imageData = ctx.getImageData(2, 0, canvas.width - 2, canvas.height);
+        const imageData = ctx.getImageData(1, 0, canvas.width - 1, canvas.height);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.putImageData(imageData, 0, 0);
       
         // Draw gridlines
-        ctx.strokeStyle = '#eee';
+        ctx.strokeStyle = '#ddd';
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.moveTo(0, canvas.height * 0.25);
@@ -586,11 +586,17 @@ activateTab(initial);
         ctx.lineTo(canvas.width, canvas.height * 0.75);
         ctx.stroke();
       
-        // Draw the new volume level as a vertical bar
-        const x = canvas.width - 2;
-        const y = canvas.height - normalizedVolume * canvas.height;
-        ctx.fillStyle = 'red';
-        ctx.fillRect(x, y, 2, canvas.height - y);
+        // Draw the line graph
+        const x = canvas.width - 1; // Rightmost edge of the canvas
+        const y = canvas.height - normalizedVolume * canvas.height; // Map volume to canvas height
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 2;
+      
+        // Draw a line to the new point
+        ctx.beginPath();
+        ctx.moveTo(x - 1, canvas.height / 2); // Start from the middle (or previous point)
+        ctx.lineTo(x, y); // Draw to the new point
+        ctx.stroke();
       
         // Continue the animation
         animationFrameId = requestAnimationFrame(drawTimeline);

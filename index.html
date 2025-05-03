@@ -60,9 +60,13 @@
 
     <div id="controls">
       <!-- Define a reusable microphone icon -->
+      <div id="recording-info">
+        <span id="recording-status"></span>
+        <span id="recording-time"></span>
+      </div>
       <button id="start-recording">
 
-
+       
       <!-- HTML for the two buttons --> 
       <svg version="1.1" viewBox="0 0 210 210" xmlns="http://www.w3.org/2000/svg">
         <g transform="translate(0 4.174)">
@@ -149,6 +153,8 @@
       const impBtn = document.getElementById('import-tab');
       const expBtn = document.getElementById('export-tab');
       const delBtn = document.getElementById('delete-tab');
+      const recordingStatus = document.getElementById('recording-status');
+      const recordingTime = document.getElementById('recording-time');
 
       // Stav a data
       let isPlaying = false;
@@ -220,12 +226,19 @@
         const index = container.querySelectorAll('.text-button').length;
         const color = colors[index % colors.length];
         shortcut.textContent = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[index % 26]; // Assign a letter
-        shortcut.style.backgroundColor = color; 
+        shortcut.style.backgroundColor = color;
+        shortcut.style.color = 'white';
+        shortcut.style.padding = '2px 6px';
+        shortcut.style.borderRadius = '5px';
+        shortcut.style.marginLeft = '5px';
       
         console.log('Assigned Background Color:', shortcut.style.backgroundColor);
       
         // Append the shortcut to the wrapper
         wrapper.appendChild(shortcut);
+      
+        // Set the border color of the transcription-button to match the shortcut background color
+        wrapper.style.border = `1px solid ${color}`;
       
         // Add click event to the button
         btn.addEventListener('click', () => {
@@ -236,42 +249,73 @@
             wrapper.classList.add('activated');
             wrapper.style.boxShadow = `0px 0px 20px 0px ${color}`; // Dynamically apply the color
       wrapper.style.animation = 'infinite 0.5s alternate ease-in-out'; // Add animation
-      wrapper.style.border = `1px solid ${color}`; // Add border color
-            wrapper.style.transition = 'box-shadow 0.5s ease-in-out, border 0.5s ease-in-out'; // Add transition
+      wrapper.style.transition = 'box-shadow 0.5s ease-in-out, border 0.5s ease-in-out'; // Add transition
             // Remove the activated class after the button stops playing
             speak(btn.textContent, () => {
+
               wrapper.classList.remove('activated');
-              wrapper.style.boxShadow = ''; // Reset the box-shadow
+              wrapper.style.boxShadow = ''; // Reset the box-shadow           
+                 wrapper.style.border = `1px solid ${color}`; // Add border color
+
               isPlaying = false;
             });
           }
         });
       
-        // Add edit and delete buttons if not predefined
-        if (!isPredef) {
+        // Add context menu (right-click) event
+        wrapper.addEventListener('contextmenu', (e) => {
+          e.preventDefault();
+      
+          // Remove any existing context menu
+          const existingMenu = document.querySelector('.context-menu');
+          if (existingMenu) existingMenu.remove();
+      
+          // Create the context menu
+          const menu = document.createElement('div');
+          menu.className = 'context-menu';
+          menu.style.position = 'absolute';
+          menu.style.top = `${e.clientY}px`;
+          menu.style.left = `${e.clientX}px`;
+          menu.style.backgroundColor = '#fff';
+          menu.style.border = '1px solid #ccc';
+          menu.style.borderRadius = '5px';
+          menu.style.boxShadow = '0px 4px 6px rgba(0, 0, 0, 0.1)';
+           menu.style.zIndex = '1000';
+      
+          // Add edit button to the context menu
           const edit = document.createElement('button');
           edit.className = 'edit-button';
-          edit.textContent = '✏️';
+          edit.textContent = '✏️ Edit';
+          edit.style.display = 'block';
+          edit.style.borderBottom = '1px solid #ccc';
           edit.addEventListener('click', () => {
             const newText = prompt('Upravit text:', btn.textContent);
             if (!newText) return;
             btn.textContent = newText;
             tabsData[tabId] = tabsData[tabId].map(t => (t === text ? newText : t));
             persist();
+            menu.remove();
           });
       
+          // Add delete button to the context menu
           const del = document.createElement('button');
           del.className = 'delete-button';
-          del.textContent = '🗑️';
+          del.textContent = '🗑️ Delete';
+          del.style.display = 'block';
           del.addEventListener('click', () => {
             tabsData[tabId] = tabsData[tabId].filter(t => t !== btn.textContent);
             persist();
             wrapper.remove();
+            menu.remove();
           });
       
-          wrapper.appendChild(edit);
-          wrapper.appendChild(del);
-        }
+          menu.appendChild(edit);
+          menu.appendChild(del);
+          document.body.appendChild(menu);
+      
+          // Remove the context menu when clicking elsewhere
+          document.addEventListener('click', () => menu.remove(), { once: true });
+        });
       
         wrapper.appendChild(btn);
         container.appendChild(wrapper);
@@ -411,21 +455,100 @@ activateTab(initial);
       });
 
       // Diktování (annyang) handler
-      recBtn.addEventListener('click', () => {
+      recBtn.addEventListener('click', async () => {
         const activeTab = localStorage.getItem('activeTab');
         if (activeTab === 'predefined') {
           alert('Nahrávání není povoleno v předdefinované záložce.');
           return;
         }
+      
         if (isRecording) {
-          window.annyang?.abort();
-          recBtn.classList.remove('active');
+          stopRecording();
         } else {
-          window.annyang?.start({ autoRestart: false, continuous: false });
-          recBtn.classList.add('active');
+          await startRecording();
         }
-        isRecording = !isRecording;
       });
+      
+      async function startRecording() {
+        try {
+          // Získání přístupu k mikrofonu
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          if (!audioContext || audioContext.state === 'closed') {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          }
+          analyser = audioContext.createAnalyser();
+          microphone = audioContext.createMediaStreamSource(stream);
+          microphone.connect(analyser);
+      
+          // Nastavení bufferu pro analýzu
+          analyser.fftSize = 256;
+          const bufferLength = analyser.frequencyBinCount;
+          dataArray = new Uint8Array(bufferLength);
+      
+          // Spuštění vizualizace
+          isRecording = true;
+          recBtn.classList.add('pulsing');
+          recordingStatus.textContent = 'Recording...'; // Aktualizace stavu
+          startTime = Date.now();
+          updateRecordingTime();
+          visualizePulse();
+      
+          // Spuštění annyang
+          window.annyang?.start({ autoRestart: false, continuous: false });
+      
+          // Callback pro ukončení nahrávání
+          annyang.addCallback('end', () => {
+            stopRecording();
+          });
+        } catch (err) {
+          console.error('Error accessing microphone:', err);
+        }
+      }
+      
+      function stopRecording() {
+        isRecording = false;
+        recBtn.classList.remove('pulsing');
+        recordingStatus.textContent = ''; // Aktualizace stavu
+        recordingTime.textContent = '';
+      
+        // Zastavení animace a uvolnění zdrojů
+        cancelAnimationFrame(animationFrameId);
+      
+        if (audioContext && audioContext.state !== 'closed') {
+          audioContext.close();
+        }
+      
+        window.annyang?.abort();
+      }
+      
+      function visualizePulse() {
+        if (!isRecording) return;
+      
+        // Získání dat z analyzéru
+        analyser.getByteFrequencyData(dataArray);
+      
+        // Výpočet průměrné hlasitosti
+        const volume = dataArray.reduce((sum, value) => sum + value, 0) / dataArray.length;
+      
+        // Dynamická změna efektu "pulse"
+        const intensity = Math.min(volume / 256, 1); // Normalizace hlasitosti (0–1)
+        recBtn.style.boxShadow = `0px 0px ${120 * intensity}px rgba(255, 0, 0, ${0.3 + intensity * 0.7})`;
+      
+        // Pokračování animace
+        animationFrameId = requestAnimationFrame(visualizePulse);
+      }
+      
+      function updateRecordingTime() {
+        if (!isRecording) return;
+      
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        const minutes = String(Math.floor(elapsed / 60)).padStart(2, '0');
+        const seconds = String(elapsed % 60).padStart(2, '0');
+        recordingTime.textContent = `${minutes}:${seconds}`;
+      
+        setTimeout(updateRecordingTime, 1000);
+      }
+      
 
       enableSwipeNavigation();
     });

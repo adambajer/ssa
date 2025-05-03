@@ -91,6 +91,7 @@
         <span id="recording-status"></span>
         <span id="recording-time"></span>
       </div>
+      <canvas id="timeline" width="600" height="100" style="border: 1px solid #ccc;"></canvas>
 
     </div> 
     <input id="file-input" type="file" accept="application/json" style="display:none" />
@@ -496,6 +497,7 @@ activateTab(initial);
           startTime = Date.now();
           updateRecordingTime();
           visualizePulse();
+          drawTimeline();
       
           // Spuštění annyang
           window.annyang?.start({ autoRestart: false, continuous: false });
@@ -526,6 +528,7 @@ activateTab(initial);
       
         // Reset the box-shadow
         recBtn.style.boxShadow = 'none';
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
       }
       function visualizePulse() {
         if (!isRecording) return;
@@ -555,6 +558,43 @@ activateTab(initial);
         setTimeout(updateRecordingTime, 1000);
       }
       
+      const canvas = document.getElementById('timeline');
+      const ctx = canvas.getContext('2d');
+      let startTime, animationFrameId;
+
+      // Function to draw the timeline
+      function drawTimeline() {
+        if (!isRecording) return;
+      
+        // Get the average volume level
+        analyser.getByteFrequencyData(dataArray);
+        const volume = dataArray.reduce((sum, value) => sum + value, 0) / dataArray.length;
+        const normalizedVolume = Math.min(volume / 256, 1); // Normalize volume (0 to 1)
+      
+        // Shift the canvas content to the left
+        const imageData = ctx.getImageData(2, 0, canvas.width - 2, canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.putImageData(imageData, 0, 0);
+      
+        // Draw gridlines
+        ctx.strokeStyle = '#eee';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(0, canvas.height * 0.25);
+        ctx.lineTo(canvas.width, canvas.height * 0.25);
+        ctx.moveTo(0, canvas.height * 0.75);
+        ctx.lineTo(canvas.width, canvas.height * 0.75);
+        ctx.stroke();
+      
+        // Draw the new volume level as a vertical bar
+        const x = canvas.width - 2;
+        const y = canvas.height - normalizedVolume * canvas.height;
+        ctx.fillStyle = 'red';
+        ctx.fillRect(x, y, 2, canvas.height - y);
+      
+        // Continue the animation
+        animationFrameId = requestAnimationFrame(drawTimeline);
+      }
 
       enableSwipeNavigation();
     });

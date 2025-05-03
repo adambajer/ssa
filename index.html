@@ -120,6 +120,8 @@
             // always add the button to the UI…
             addTextButton(txt, body, id, id === 'predefined');
         
+    // Aktualizace klávesových zkratek
+    resetShortcuts(body);
             // …but only save for non‐predefined tabs:
             if (id !== 'predefined') {
               tabsData[id] = tabsData[id] || [];
@@ -218,8 +220,8 @@
         const index = container.querySelectorAll('.text-button').length;
         const color = colors[index % colors.length];
         shortcut.textContent = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[index % 26]; // Assign a letter
-        shortcut.style.backgroundColor = color;
- 
+        shortcut.style.backgroundColor = color; 
+      
         console.log('Assigned Background Color:', shortcut.style.backgroundColor);
       
         // Append the shortcut to the wrapper
@@ -230,25 +232,46 @@
           if (!isPlaying) {
             isPlaying = true;
       
-            // Use the shortcut's background color for dynamic styles
-            console.log('Shortcut Element:', shortcut);
-            const color = getComputedStyle(shortcut).backgroundColor;
-            console.log('Computed Background Color:', color);
-      
-            // Apply dynamic styles for animation
-            wrapper.style.border = `1px solid ${color}`;
-            wrapper.style.boxShadow = `0px 0px 7px 0px ${color}`;
-            wrapper.style.animation = 'pulse 0.5s infinite';
-      
-            // Remove animation after the button stops playing
+            // Add the activated class
+            wrapper.classList.add('activated');
+            wrapper.style.boxShadow = `0px 0px 20px 0px ${color}`; // Dynamically apply the color
+      wrapper.style.animation = 'infinite 0.5s alternate ease-in-out'; // Add animation
+      wrapper.style.border = `1px solid ${color}`; // Add border color
+            wrapper.style.transition = 'box-shadow 0.5s ease-in-out, border 0.5s ease-in-out'; // Add transition
+            // Remove the activated class after the button stops playing
             speak(btn.textContent, () => {
-              wrapper.style.border = '';
-              wrapper.style.boxShadow = '';
-              wrapper.style.animation = '';
+              wrapper.classList.remove('activated');
+              wrapper.style.boxShadow = ''; // Reset the box-shadow
               isPlaying = false;
             });
           }
         });
+      
+        // Add edit and delete buttons if not predefined
+        if (!isPredef) {
+          const edit = document.createElement('button');
+          edit.className = 'edit-button';
+          edit.textContent = '✏️';
+          edit.addEventListener('click', () => {
+            const newText = prompt('Upravit text:', btn.textContent);
+            if (!newText) return;
+            btn.textContent = newText;
+            tabsData[tabId] = tabsData[tabId].map(t => (t === text ? newText : t));
+            persist();
+          });
+      
+          const del = document.createElement('button');
+          del.className = 'delete-button';
+          del.textContent = '🗑️';
+          del.addEventListener('click', () => {
+            tabsData[tabId] = tabsData[tabId].filter(t => t !== btn.textContent);
+            persist();
+            wrapper.remove();
+          });
+      
+          wrapper.appendChild(edit);
+          wrapper.appendChild(del);
+        }
       
         wrapper.appendChild(btn);
         container.appendChild(wrapper);

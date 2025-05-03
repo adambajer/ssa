@@ -107,15 +107,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
   <script>// SSA Application JavaScript
     window.addEventListener('DOMContentLoaded', () => {
-      beforeinstallpromptevent.prompt(); // Trigger the prompt immediately
-      beforeinstallpromptevent.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === 'accepted') {
-          console.log('User accepted the A2HS prompt');
-        } else {
-          console.log('User dismissed the A2HS prompt');
-        }
-        beforeinstallpromptevent = null; // Clear the event reference
-      });
       // Dynamické načtení annyang
       function initAnnyang() {
         if (!window.annyang) return;

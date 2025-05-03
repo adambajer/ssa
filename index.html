@@ -58,12 +58,8 @@
       </div>
     </div>
 
-    <div id="controls">
-      <!-- Define a reusable microphone icon -->
-      <div id="recording-info">
-        <span id="recording-status"></span>
-        <span id="recording-time"></span>
-      </div>
+       <div id="recording-container">
+      
       <button id="start-recording">
 
        
@@ -90,9 +86,13 @@
       </svg>
       </button>
    
+      <!-- Define a reusable microphone icon -->
+      <div id="recording-info">
+        <span id="recording-status"></span>
+        <span id="recording-time"></span>
+      </div>
 
-    </div>
-    <!-- pod controls -->
+    </div> 
     <input id="file-input" type="file" accept="application/json" style="display:none" />
     <!-- Toast container -->
     <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
@@ -155,6 +155,7 @@
       const delBtn = document.getElementById('delete-tab');
       const recordingStatus = document.getElementById('recording-status');
       const recordingTime = document.getElementById('recording-time');
+      let audioContext; // Globální proměnná pro AudioContext
 
       // Stav a data
       let isPlaying = false;
@@ -473,9 +474,12 @@ activateTab(initial);
         try {
           // Získání přístupu k mikrofonu
           const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      
+          // Inicializace AudioContext pouze jednou
           if (!audioContext || audioContext.state === 'closed') {
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
           }
+      
           analyser = audioContext.createAnalyser();
           microphone = audioContext.createMediaStreamSource(stream);
           microphone.connect(analyser);
@@ -519,8 +523,10 @@ activateTab(initial);
         }
       
         window.annyang?.abort();
-      }
       
+        // Reset the box-shadow
+        recBtn.style.boxShadow = 'none';
+      }
       function visualizePulse() {
         if (!isRecording) return;
       

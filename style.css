@@ -168,11 +168,12 @@ button {
 #start-recording {
     display: inline-block; /* Nebo inline-flex, pokud chcete zarovnat obsah */
     box-shadow: none; /* Odstranění výchozího box-shadow */
-    margin: 0 auto;
-    padding: 10px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    margin-top: 20px;
     border: 1px solid white;
     background-color: white;
-    border-radius: 20px;
+    border-radius: 100%;
   }
 
 #start-recording.active,
@@ -204,7 +205,10 @@ button {
     fill: rgb(164, 164, 164);
     stroke: transparent;
 }
-
+#start-recording.pulsing svg path {
+    fill: red;
+ 
+}
 #start-recording.active svg path {
     fill: red;
 }
@@ -267,5 +271,31 @@ padding-right: 5px;    color : 'white';  font-weight: bold;color: white;}
     100% {
         border-color: #ccc;
     }
+}
+
+#recording-container {
+  display: flex;
+  flex-direction: row; /* Align items in a row */
+  align-items: center; /* Vertically center the items */
+  justify-content: flex-start; /* Keep the mic button in place */
+  gap: 10px; /* Space between the button and the text */
+}
+
+#recording-info {
+  text-align: left; /* Align text to the left */
+  font-size: 14px;
+  color: #333;
+  display: flex;
+  flex-direction: column; /* Stack the status and time vertically */
+  gap: 2px; /* Small gap between status and time */
+}
+
+#recording-status {
+  font-weight: bold;
+}
+
+#recording-time {
+  font-size: 12px;
+  color: #666;
 }
 

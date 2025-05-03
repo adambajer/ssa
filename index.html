@@ -40,6 +40,10 @@
             <li><button class="dropdown-item d-flex align-items-center" id="delete-tab" title="Smazat tab"><span
                   class="material-icons me-2">delete</span>Smazat záložku</button></li>
             <li>
+                  <!-- Add this new menu item in the dropdown menu -->
+            <li><button class="dropdown-item d-flex align-items-center" id="erase-data-btn" title="Vymazat všechna data">
+              <span class="material-icons me-2">delete_forever</span>Vymazat všechna data
+            </button></li>
               <hr class="dropdown-divider">
             </li>
             <li><button class="dropdown-item d-flex align-items-center" id="btn-install" hidden
@@ -47,10 +51,7 @@
                 aplikaci</button></li>
             <li><button class="dropdown-item d-flex align-items-center" id="help-btn" title="Nápověda"><span
                   class="material-icons me-2">help_outline</span>Klávesové zkratky</button></li>
-            <!-- Add this new menu item in the dropdown menu -->
-            <li><button class="dropdown-item d-flex align-items-center" id="erase-data-btn" title="Vymazat všechna data">
-              <span class="material-icons me-2">delete_forever</span>Vymazat všechna data
-            </button></li>
+        
 
           </ul>
         </div>
@@ -169,21 +170,38 @@
       }
 
       function resetShortcuts(container) {
+        const colors = [
+          '#8B0000', '#006400', '#00008B', '#8B008B', '#2F4F4F', '#4B0082', '#483D8B', '#556B2F', '#6B8E23', '#8B4513',
+          '#A0522D', '#2E8B57', '#4682B4', '#5F9EA0', '#7B68EE', '#6A5ACD', '#708090', '#778899', '#696969', '#808000',
+          '#8B0000', '#8B4513', '#2F4F4F', '#4B0082', '#483D8B'
+        ]; // Array of darker colors for better contrast
+
         keyHandlers.forEach(h => document.removeEventListener('keydown', h));
         keyHandlers = [];
         container.querySelectorAll('.text-button').forEach((btn, i) => {
           const letter = 'abcdefghijklmnopqrstuvwxyz'[i];
           if (!letter) return;
-          let span = btn.querySelector('.shortcut') || document.createElement('span');
+      
+          // Remove any existing shortcut span to avoid duplicates
+          const existingShortcut = btn.parentElement.querySelector('.shortcut');
+          if (existingShortcut) existingShortcut.remove();
+      
+          // Create a new shortcut span and append it outside the button
+          const span = document.createElement('span');
           span.className = 'shortcut';
           span.textContent = letter.toUpperCase();
-          btn.appendChild(span);
+          span.style.backgroundColor = colors[i % colors.length];
+          span.style.color = 'white'; // Ensure high contrast text color
+          span.style.padding = '2px 6px'; // Add padding for better readability
+           span.style.fontWeight = 'bold'; // Make the text bold
+            btn.parentElement.appendChild(span);
+      
           const handler = e => e.key === letter && btn.click();
           document.addEventListener('keydown', handler);
           keyHandlers.push(handler);
         });
       }
-
+      
       function addTextButton(text, container, tabId, isPredef = false) {
         const wrapper = document.createElement('div');
         wrapper.className = 'transcription-button';
@@ -191,12 +209,25 @@
         btn.className = 'text-button';
         btn.textContent = text;
       
+        // Use the current button text when clicked
         btn.addEventListener('click', () => {
           if (!isPlaying) {
             isPlaying = true;
-            wrapper.classList.add('playing');
-            speak(text, () => {
-              wrapper.classList.remove('playing');
+      
+            // Get the shortcut background color
+            const shortcut = wrapper.querySelector('.shortcut');
+            const color = shortcut ? shortcut.style.backgroundColor : 'red';
+      
+            // Apply dynamic styles for animation
+            wrapper.style.border = `1px solid ${color}`;
+            wrapper.style.boxShadow = `0px 0px 7px 0px ${color}`;
+            wrapper.style.animation = `dynamicPulse 1s infinite`;
+      
+            // Remove animation after the button stops playing
+            speak(btn.textContent, () => {
+              wrapper.style.border = '';
+              wrapper.style.boxShadow = '';
+              wrapper.style.animation = '';
               isPlaying = false;
             });
           }
@@ -207,7 +238,7 @@
           edit.className = 'edit-button';
           edit.textContent = '✏️';
           edit.addEventListener('click', () => {
-            const nt = prompt('Upravit text:', text);
+            const nt = prompt('Upravit text:', btn.textContent);
             if (!nt) return;
             btn.textContent = nt;
             tabsData[tabId] = tabsData[tabId].map(t => (t === text ? nt : t));
@@ -219,7 +250,7 @@
           del.className = 'delete-button';
           del.textContent = '🗑️';
           del.addEventListener('click', () => {
-            tabsData[tabId] = tabsData[tabId].filter(t => t !== text);
+            tabsData[tabId] = tabsData[tabId].filter(t => t !== btn.textContent);
             persist();
             container.innerHTML = '';
             tabsData[tabId].forEach(t => addTextButton(t, container, tabId, isPredef));
@@ -228,7 +259,7 @@
       
           wrapper.append(del, btn, edit);
         } else {
-          wrapper.append(btn); // Only append the button for predefined tabs
+          wrapper.append(btn);
         }
       
         container.appendChild(wrapper);
@@ -385,9 +416,48 @@ activateTab(initial);
         isRecording = !isRecording;
       });
 
-   
+      enableSwipeNavigation();
     });
 
+    function enableSwipeNavigation() {
+      let startX = 0;
+      let endX = 0;
+    
+      const tabs = Array.from(document.querySelectorAll('.tab-button'));
+      const tabContents = Array.from(document.querySelectorAll('.tab-content'));
+    
+      document.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+      });
+    
+      document.addEventListener('touchend', (e) => {
+        endX = e.changedTouches[0].clientX;
+        const activeTabIndex = tabs.findIndex((tab) => tab.classList.contains('active'));
+    
+        if (startX - endX > 50 && activeTabIndex < tabs.length - 1) {
+          // Swipe left: Go to the next tab
+          animateTabTransition('left');
+          activateTab(tabs[activeTabIndex + 1].dataset.tab);
+        } else if (endX - startX > 50 && activeTabIndex > 0) {
+          // Swipe right: Go to the previous tab
+          animateTabTransition('right');
+          activateTab(tabs[activeTabIndex - 1].dataset.tab);
+        }
+      });
+    }
+    
+    function animateTabTransition(direction) {
+      const activeContent = document.querySelector('.tab-content.active');
+      if (!activeContent) return;
+    
+      const animationClass = direction === 'left' ? 'slide-out-left' : 'slide-out-right';
+      activeContent.classList.add(animationClass);
+    
+      setTimeout(() => {
+        activeContent.classList.remove(animationClass);
+      }, 300); // Match the animation duration
+    }
+    
     // … existující kód …
     // Help toast logic
     const helpBtn = document.getElementById('help-btn');
@@ -423,15 +493,22 @@ activateTab(initial);
       installBtn.hidden = false;     // ukážeme tlačítko
     });
 
-    // 2) Když na tlačítko uživatel klikne, vyvoláme instalaci
-    installBtn.addEventListener('click', async () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();                     // zobrazí dialog Chrome
-      const { outcome } = await deferredPrompt.userChoice;
-      console.log('Instalace:', outcome);          // 'accepted' / 'dismissed'
-      deferredPrompt = null;
-      installBtn.hidden = true;
-    });
+    // 2) Když na tlačítko uživatel klikne, vyvoláme instalaci nebo zobrazíme toast
+installBtn.addEventListener('click', async () => {
+  if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone) {
+    // Aplikace je již nainstalována
+    helpToastBody.innerHTML = 'Aplikace je již nainstalována.';
+    toast.show();
+    return;
+  }
+
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt(); // zobrazí dialog Chrome
+  const { outcome } = await deferredPrompt.userChoice;
+  console.log('Instalace:', outcome); // 'accepted' / 'dismissed'
+  deferredPrompt = null;
+  installBtn.hidden = true;
+});
 
   </script>
 </body>

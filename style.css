@@ -215,11 +215,10 @@ button {
 }
 
 .shortcut {
-border-left: 1px solid #ccc;      margin-left: 5px;
-background-color: #ccc;padding: 2px;z-index: 1;
-    border-radius: 2px;
-  
-    color: #333;
+padding-left: 5px;
+border-top-right-radius: 5px;
+border-bottom-right-radius: 5px;
+padding-right: 5px; 
 }
 
 .tooltip {
@@ -269,5 +268,17 @@ background-color: #ccc;padding: 2px;z-index: 1;
     }
     100% {
         border-color: #ccc;
+    }
+}
+
+@keyframes dynamicPulse {
+    0% {
+        box-shadow: 0px 0px 20px currentColor;
+    }
+    50% {
+        box-shadow: 0px 0px 40px currentColor;
+    }
+    100% {
+        box-shadow: 0px 0px 20px currentColor;
     }
 }

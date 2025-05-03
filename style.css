@@ -217,9 +217,8 @@ button {
 .shortcut {
 padding-left: 5px;
 border-top-right-radius: 5px;
-border-bottom-right-radius: 5px;
-padding-right: 5px; 
-}
+border-bottom-right-radius: 5px;padding:'2px 6px';
+padding-right: 5px;    color : 'white';  font-weight: bold;color: white;}
 
 .tooltip {
     position: absolute;
@@ -271,14 +270,4 @@ padding-right: 5px;
     }
 }
 
-@keyframes dynamicPulse {
-    0% {
-        box-shadow: 0px 0px 20px currentColor;
-    }
-    50% {
-        box-shadow: 0px 0px 40px currentColor;
-    }
-    100% {
-        box-shadow: 0px 0px 20px currentColor;
-    }
-}
+ 

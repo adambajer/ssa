@@ -191,9 +191,7 @@
           span.className = 'shortcut';
           span.textContent = letter.toUpperCase();
           span.style.backgroundColor = colors[i % colors.length];
-          span.style.color = 'white'; // Ensure high contrast text color
-          span.style.padding = '2px 6px'; // Add padding for better readability
-           span.style.fontWeight = 'bold'; // Make the text bold
+   
             btn.parentElement.appendChild(span);
       
           const handler = e => e.key === letter && btn.click();
@@ -209,19 +207,38 @@
         btn.className = 'text-button';
         btn.textContent = text;
       
-        // Use the current button text when clicked
+        // Create the shortcut span
+        const shortcut = document.createElement('span');
+        shortcut.className = 'shortcut';
+        const colors = [
+          '#8B0000', '#006400', '#00008B', '#8B008B', '#2F4F4F', '#4B0082', '#483D8B', '#556B2F', '#6B8E23', '#8B4513',
+          '#A0522D', '#2E8B57', '#4682B4', '#5F9EA0', '#7B68EE', '#6A5ACD', '#708090', '#778899', '#696969', '#808000',
+          '#8B0000', '#8B4513', '#2F4F4F', '#4B0082', '#483D8B'
+        ];
+        const index = container.querySelectorAll('.text-button').length;
+        const color = colors[index % colors.length];
+        shortcut.textContent = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[index % 26]; // Assign a letter
+        shortcut.style.backgroundColor = color;
+ 
+        console.log('Assigned Background Color:', shortcut.style.backgroundColor);
+      
+        // Append the shortcut to the wrapper
+        wrapper.appendChild(shortcut);
+      
+        // Add click event to the button
         btn.addEventListener('click', () => {
           if (!isPlaying) {
             isPlaying = true;
       
-            // Get the shortcut background color
-            const shortcut = wrapper.querySelector('.shortcut');
-            const color = shortcut ? shortcut.style.backgroundColor : 'red';
+            // Use the shortcut's background color for dynamic styles
+            console.log('Shortcut Element:', shortcut);
+            const color = getComputedStyle(shortcut).backgroundColor;
+            console.log('Computed Background Color:', color);
       
             // Apply dynamic styles for animation
             wrapper.style.border = `1px solid ${color}`;
             wrapper.style.boxShadow = `0px 0px 7px 0px ${color}`;
-            wrapper.style.animation = `dynamicPulse 1s infinite`;
+            wrapper.style.animation = 'pulse 0.5s infinite';
       
             // Remove animation after the button stops playing
             speak(btn.textContent, () => {
@@ -233,37 +250,8 @@
           }
         });
       
-        if (!isPredef) {
-          const edit = document.createElement('button');
-          edit.className = 'edit-button';
-          edit.textContent = '✏️';
-          edit.addEventListener('click', () => {
-            const nt = prompt('Upravit text:', btn.textContent);
-            if (!nt) return;
-            btn.textContent = nt;
-            tabsData[tabId] = tabsData[tabId].map(t => (t === text ? nt : t));
-            persist();
-            resetShortcuts(container);
-          });
-      
-          const del = document.createElement('button');
-          del.className = 'delete-button';
-          del.textContent = '🗑️';
-          del.addEventListener('click', () => {
-            tabsData[tabId] = tabsData[tabId].filter(t => t !== btn.textContent);
-            persist();
-            container.innerHTML = '';
-            tabsData[tabId].forEach(t => addTextButton(t, container, tabId, isPredef));
-            resetShortcuts(container);
-          });
-      
-          wrapper.append(del, btn, edit);
-        } else {
-          wrapper.append(btn);
-        }
-      
+        wrapper.appendChild(btn);
         container.appendChild(wrapper);
-        resetShortcuts(container);
       }
       
 

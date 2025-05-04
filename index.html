@@ -161,11 +161,8 @@
         annyang.addCallback('end', () => recBtn.classList.remove('active'));
       }
 
-      const script = document.createElement('script');
-      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js';
-      script.onload = initAnnyang;
-      script.onerror = () => console.warn('annyang se nepodařilo načíst');
-      document.head.appendChild(script);
+      
+
 
       // Globální reference
       const wrap = document.querySelector('.wrap');

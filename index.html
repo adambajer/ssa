@@ -118,21 +118,20 @@
         annyang.setLanguage('cs-CZ');
         annyang.addCommands({
           '*text': txt => {
-            const id = document.querySelector('.tab-button.active').dataset.tab;
+            const id = localStorage.getItem('activeTab');
             const body = document.querySelector(`#${id} .tab-content-body`);
         
-            // always add the button to the UI…
+            // Add the transcription to the UI
             addTextButton(txt, body, id, id === 'predefined');
         
-    // Aktualizace klávesových zkratek
-    resetShortcuts(body);
-            // …but only save for non‐predefined tabs:
+            // Save the transcription to localStorage
             if (id !== 'predefined') {
               tabsData[id] = tabsData[id] || [];
               tabsData[id].push(txt);
               persist();
             }
         
+            // Stop recording
             annyang.abort();
             recBtn.classList.remove('active');
           }

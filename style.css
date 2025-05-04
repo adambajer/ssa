@@ -164,7 +164,8 @@ button {
 #start-recording {
     display: inline-block; /* Nebo inline-flex, pokud chcete zarovnat obsah */
     box-shadow: none; /* Odstranění výchozího box-shadow */
-
+    width: 70px;
+    height: 70px;
     margin: 10px;
     border: 1px solid white;
     background-color: white;
@@ -190,8 +191,7 @@ button {
 
 #start-recording svg,
 #start-sound-capture svg {
-    width: 70px;
-    height: 70px;
+    
     padding: 5px;
     display: block;
 }
@@ -201,11 +201,15 @@ button {
     fill: rgb(164, 164, 164);
     stroke: transparent;
 }
-#start-recording.pulsing svg path {
+#start-recording:hover svg path.mikrofon {
     fill: red;
  
 }
-#start-recording.active svg path {
+#start-recording.pulsing svg path.mikrofon {
+    fill: red;
+ 
+}
+#start-recording.active svg path.mikrofon {
     fill: red;
 }
 

@@ -151,6 +151,12 @@
       const recBtn = document.getElementById('start-recording');
       const shareBtn = document.getElementById('share-btn');
       const helpBtn = document.getElementById('help-btn');
+      const addBtn = document.getElementById('add-tab-btn');
+      const impBtn = document.getElementById('import-tab');
+      const expBtn = document.getElementById('export-tab');
+      const delBtn = document.getElementById('delete-tab');
+      const eraseBtn = document.getElementById('erase-data-btn');
+      const fileInput = document.getElementById('file-input');
     
       // State
       const customTabs = JSON.parse(localStorage.getItem('customTabs') || '[]');
@@ -179,9 +185,10 @@
         btn.className = 'text-button';
         btn.textContent = text;
         btn.addEventListener('click', () => {
-          btn.disabled = true;
-          speak(text, () => { btn.disabled = false; });
-          wrapper.classList.toggle('active');
+          if (!wrapper.classList.contains('activated')) {
+            wrapper.classList.add('activated');
+            speak(text, () => wrapper.classList.remove('activated'));
+          }
         });
         const lbl = document.createElement('span');
         lbl.className = 'shortcut';
@@ -195,115 +202,176 @@
         });
       }
     
-      function createTab(id, name, predef=false) {
+      function createTab(id, name, predef = false) {
         const btn = document.createElement('button');
-        btn.className = 'tab-button'; btn.dataset.tab=id; btn.textContent=name;
+        btn.className = 'tab-button'; btn.dataset.tab = id; btn.textContent = name;
         tabsEl.appendChild(btn);
         const tabDiv = document.createElement('div');
-        tabDiv.className='tab-content'; tabDiv.id=id;
-        const body = document.createElement('div'); body.className='tab-content-body';
+        tabDiv.className = 'tab-content'; tabDiv.id = id;
+        const body = document.createElement('div'); body.className = 'tab-content-body';
         tabDiv.appendChild(body);
         wrapEl.appendChild(tabDiv);
-        const items = tabsData[id] || (predef?['Ahoj','Test']:[]);
-        items.forEach(t=>addButton(t,id));
+        const items = tabsData[id] || (predef ? ['Nende','Vůbec to', 'Nefunguje'] : []);
+        items.forEach(t => addButton(t, id));
         btn.addEventListener('click', () => activateTab(id));
       }
     
       function activateTab(id) {
-        document.querySelectorAll('.tab-button').forEach(b=>b.classList.toggle('active', b.dataset.tab===id));
-        document.querySelectorAll('.tab-content').forEach(c=>c.classList.toggle('active', c.id===id));
+        document.querySelectorAll('.tab-button').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === id));
         localStorage.setItem('activeTab', id);
-        recBtn.style.display = (id===TAB_PREDEFINED?'none':'block');
+        recBtn.style.display = (id === TAB_PREDEFINED ? 'none' : 'block');
+        if (isRecording) stopRec();
       }
     
       function initTabs() {
-        createTab(TAB_PREDEFINED,'1',true);
-        customTabs.forEach(t=>createTab(t.id,t.name));
-        document.getElementById('add-tab-btn').addEventListener('click', ()=>{
-          const id=`tab-${customTabs.length+2}`, name=`${customTabs.length+2}`;
-          customTabs.push({id,name}); tabsData[id]=[]; persist();
-          createTab(id,name); activateTab(id);
+        createTab(TAB_PREDEFINED, '1', true);
+        customTabs.forEach(t => createTab(t.id, t.name));
+        addBtn.addEventListener('click', () => {
+          const id = `tab-${customTabs.length + 2}`, name = `${customTabs.length + 2}`;
+          customTabs.push({ id, name }); tabsData[id] = []; persist();
+          createTab(id, name); activateTab(id);
         });
-        const initial = localStorage.getItem('activeTab')||TAB_PREDEFINED;
+        const initial = localStorage.getItem('activeTab') || TAB_PREDEFINED;
         activateTab(initial);
       }
     
       function onTranscript(text) {
         const tabId = localStorage.getItem('activeTab');
-        addButton(text,tabId);
-        tabsData[tabId] = tabsData[tabId]||[]; tabsData[tabId].push(text);
+        addButton(text, tabId);
+        tabsData[tabId] = tabsData[tabId] || [];
+        tabsData[tabId].push(text);
         persist(); annyang.abort();
       }
     
       function initVoice() {
         if (!window.annyang) return;
         annyang.setLanguage('cs-CZ');
-        annyang.addCommands({'*text': onTranscript});
+        annyang.addCommands({ '*text': onTranscript });
+        annyang.addCallback('end', stopRec);
         recBtn.addEventListener('click', () => {
           const tabId = localStorage.getItem('activeTab');
-          if (tabId===TAB_PREDEFINED) return alert('Nelze v předdefinované záložce.');
-          if (isRecording) stopRec(); else startRec();
+          if (tabId === TAB_PREDEFINED) return alert('Nahrávání není povoleno.');
+          isRecording ? stopRec() : startRec();
         });
       }
     
       async function startRec() {
         try {
-          const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
-          audioCtx = new (window.AudioContext||window.webkitAudioContext)();
-          analyser=audioCtx.createAnalyser();
-          analyser.fftSize=256;
-          dataArray=new Uint8Array(analyser.frequencyBinCount);
-          const src=audioCtx.createMediaStreamSource(stream);
-          src.connect(analyser);
-          isRecording=true; recBtn.classList.add('active');
-          annyang.start({autoRestart:false,continuous:false});
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+          analyser = audioCtx.createAnalyser(); analyser.fftSize = 256;
+          dataArray = new Uint8Array(analyser.frequencyBinCount);
+          const src = audioCtx.createMediaStreamSource(stream); src.connect(analyser);
+          isRecording = true; recBtn.classList.add('active');
+          annyang.start({ autoRestart: false, continuous: false });
           visualize();
-        } catch(e){console.error(e);}
+        } catch (err) { console.error(err); }
       }
     
       function stopRec() {
-        isRecording=false; recBtn.classList.remove('active');
+        if (!isRecording) return;
+        isRecording = false; recBtn.classList.remove('active');
         annyang.abort(); audioCtx?.close(); cancelAnimationFrame(animId);
+        recBtn.style.boxShadow = 'none';
       }
     
       function visualize() {
-        if(!isRecording) return;
+        if (!isRecording) return;
         analyser.getByteFrequencyData(dataArray);
-        const vol=dataArray.reduce((a,b)=>a+b,0)/dataArray.length;
-        const glow=Math.min(vol/256,1);
-        recBtn.style.boxShadow=`0 0 ${100*glow}px rgba(255,0,0,${0.3+glow*0.7})`;
-        animId=requestAnimationFrame(visualize);
+        const vol = dataArray.reduce((sum, v) => sum + v, 0) / dataArray.length;
+        const glow = Math.min(vol / 256, 1);
+        recBtn.style.boxShadow = `0 0 ${100 * glow}px rgba(255,0,0,${0.3 + glow * 0.7})`;
+        animId = requestAnimationFrame(visualize);
+      }
+    
+      function initImport() {
+        impBtn.addEventListener('click', () => {
+          const tabId = localStorage.getItem('activeTab');
+          fileInput.onchange = async e => {
+            const file = e.target.files[0]; if (!file) return;
+            try {
+              const text = await file.text();
+              tabsData[tabId] = JSON.parse(text); persist();
+              const body = document.querySelector(`#${tabId} .tab-content-body`);
+              body.innerHTML = '';
+              tabsData[tabId].forEach(t => addButton(t, tabId));
+            } catch { alert('Neplatný JSON'); }
+            fileInput.value = '';
+          };
+          fileInput.click();
+        });
+      }
+    
+      function initExport() {
+        expBtn.addEventListener('click', () => {
+          const tabId = localStorage.getItem('activeTab');
+          const data = Array.from(document.querySelectorAll(`#${tabId} .text-button`)).map(b => b.textContent);
+          const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a'); a.href = url; a.download = `${tabId}.json`;
+          document.body.append(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+        });
+      }
+    
+      function initDeleteTab() {
+        delBtn.addEventListener('click', () => {
+          const tabId = localStorage.getItem('activeTab');
+          if (tabId === TAB_PREDEFINED) return alert('Nelze smazat výchozí.');
+          if (!confirm('Opravdu smazat záložku?')) return;
+          delete tabsData[tabId];
+          const idx = customTabs.findIndex(t => t.id === tabId); if (idx > -1) customTabs.splice(idx, 1);
+          persist();
+          document.querySelector(`.tab-button[data-tab="${tabId}"]`).remove();
+          document.getElementById(tabId).remove();
+          activateTab(TAB_PREDEFINED);
+        });
+      }
+    
+      function initEraseData() {
+        eraseBtn.addEventListener('click', () => {
+          if (!confirm('Vymazat všechna data?')) return;
+          localStorage.clear();
+          customTabs.length = 0; for (const k in tabsData) delete tabsData[k]; persist();
+          document.querySelectorAll('.tab-button').forEach(b => b.dataset.tab !== TAB_PREDEFINED && b.remove());
+          document.querySelectorAll('.tab-content').forEach(c => c.id !== TAB_PREDEFINED && c.remove());
+          activateTab(TAB_PREDEFINED); location.reload();
+        });
       }
     
       function initShare() {
-        const qrScript=document.createElement('script');
-        qrScript.src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+        const qrScript = document.createElement('script');
+        qrScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
         document.head.appendChild(qrScript);
-        shareBtn.addEventListener('click', ()=>{
-          const modal=new bootstrap.Modal('#qrModal');
-          document.getElementById('qrcode').innerHTML='';
-          new QRCode(document.getElementById('qrcode'),{text:window.location.href,width:200,height:200});
+        shareBtn.addEventListener('click', () => {
+          const modal = new bootstrap.Modal(document.getElementById('qrModal'));
+          document.getElementById('qrcode').innerHTML = '';
+          new QRCode(document.getElementById('qrcode'), { text: window.location.href, width: 200, height: 200 });
           modal.show();
         });
       }
     
       function initHelp() {
-        helpBtn.addEventListener('click', ()=>{
-          const toast=new bootstrap.Toast('#helpToast',{autohide:false});
-          document.getElementById('helpToastBody').innerHTML=`<b>A–Z</b> tlačítka<br><b>Ctrl</b> start/stop`; toast.show();
+        helpBtn.addEventListener('click', () => {
+          const toast = new bootstrap.Toast(document.getElementById('helpToast'), { autohide: false });
+          document.getElementById('helpToastBody').innerHTML = `<b>A–Z</b> tlačítka<br><b>Shift+1–9</b> přepne záložku<br><b>Ctrl</b> start/stop`;
+          toast.show();
         });
       }
     
       function initPWA() {
         let promptEvent;
-        const installBtn=document.getElementById('btn-install');
-        window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();promptEvent=e;installBtn.hidden=false;});
-        installBtn.addEventListener('click',async()=>{ if(!promptEvent) return; promptEvent.prompt(); promptEvent=null; installBtn.hidden=true; });
-        if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
+        const installBtn = document.getElementById('btn-install');
+        window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); promptEvent = e; installBtn.hidden = false; });
+        installBtn.addEventListener('click', async () => {
+          if (!promptEvent) return;
+          promptEvent.prompt(); promptEvent = null; installBtn.hidden = true;
+        });
+        if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
       }
     
-      document.addEventListener('DOMContentLoaded',()=>{
-        initTabs(); initVoice(); initShare(); initHelp(); initPWA();
+      document.addEventListener('DOMContentLoaded', () => {
+        initTabs(); initVoice(); initImport(); initExport(); initDeleteTab(); initEraseData(); initShare(); initHelp(); initPWA();
       });
     })();
     

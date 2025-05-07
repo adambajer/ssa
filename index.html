@@ -360,15 +360,34 @@
       }
     
       function initPWA() {
-        let promptEvent;
+        let deferredPrompt;
         const installBtn = document.getElementById('btn-install');
-        window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); promptEvent = e; installBtn.hidden = false; });
-        installBtn.addEventListener('click', async () => {
-          if (!promptEvent) return;
-          promptEvent.prompt(); promptEvent = null; installBtn.hidden = true;
+      
+        // Zachytíme událost, kdy je PWA možné nainstalovat
+        window.addEventListener('beforeinstallprompt', e => {
+          e.preventDefault();           // zabráníme automatickému banneru
+          deferredPrompt = e;           // uložíme si prompt do proměnné
+          installBtn.hidden = false;    // zobrazíme tlačítko
         });
-        if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
+      
+        // Při kliknutí na tlačítko vyvoláme vlastní dialog
+        installBtn.addEventListener('click', async () => {
+          if (!deferredPrompt) return;
+          deferredPrompt.prompt();      // vykopneme vlastní instalační banner
+          const { outcome } = await deferredPrompt.userChoice;
+          console.log('PWA install choice:', outcome); 
+          deferredPrompt = null;        // vyčistíme prompt
+          installBtn.hidden = true;     // schováme tlačítko
+        });
+      
+        // Registrace service workera
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('Service Worker registered:', reg.scope))
+            .catch(err => console.error('SW registration failed:', err));
+        }
       }
+      
     
       document.addEventListener('DOMContentLoaded', () => {
         initTabs(); initVoice(); initImport(); initExport(); initDeleteTab(); initEraseData(); initShare(); initHelp(); initPWA();

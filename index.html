@@ -365,19 +365,18 @@
       
         // Zachytíme událost, kdy je PWA možné nainstalovat
         window.addEventListener('beforeinstallprompt', e => {
-          e.preventDefault();           // zabráníme automatickému banneru
-          deferredPrompt = e;           // uložíme si prompt do proměnné
-          installBtn.hidden = false;    // zobrazíme tlačítko
+          e.preventDefault();
+          deferredPrompt = e;
+          installBtn.hidden = false;
         });
       
-        // Při kliknutí na tlačítko vyvoláme vlastní dialog
         installBtn.addEventListener('click', async () => {
           if (!deferredPrompt) return;
-          deferredPrompt.prompt();      // vykopneme vlastní instalační banner
+          deferredPrompt.prompt();
           const { outcome } = await deferredPrompt.userChoice;
-          console.log('PWA install choice:', outcome); 
-          deferredPrompt = null;        // vyčistíme prompt
-          installBtn.hidden = true;     // schováme tlačítko
+          console.log('PWA install choice:', outcome);
+          deferredPrompt = null;
+          installBtn.hidden = true;
         });
       
         // Registrace service workera

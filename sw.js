@@ -1,11 +1,11 @@
 const CACHE_NAME = 'ssa-cache-v1';
 const FILES_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/style.css',
-  '/site.webmanifest', // aktualizováno podle HTML
-  '/favicon.ico',      // dle linků ve stránce
-  '/icon.svg'
+  './',
+  './index.html',
+  './style.css',
+  './site.webmanifest', // aktualizováno podle HTML
+  './favicon.ico',      // dle linků ve stránce
+  './icon.svg'
 ];
 
 self.addEventListener('install', event => {

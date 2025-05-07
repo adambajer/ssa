@@ -127,25 +127,25 @@
     
       console.log('[App] Initialization start');
     
-      const TAB_PREDEFINED = 'predefined';
-      const COLORS = ['#8B0000','#006400','#00008B','#8B008B','#2F4F4F','#4B0082','#483D8B','#556B2F','#6B8E23','#8B4513'];
-      let audioCtx, analyser, dataArray, animId;
+      const TAB_PREDEFINED='predefined';
+      const COLORS=['#8B0000','#006400','#00008B','#8B008B','#2F4F4F','#4B0082','#483D8B','#556B2F','#6B8E23','#8B4513'];
+      let audioCtx, analyser, dataArray, animId, recognition;
     
-      const tabsEl    = document.querySelector('.tabs');
-      const wrapEl    = document.querySelector('.wrap');
-      const recBtn    = document.getElementById('start-recording');
-      const shareBtn  = document.getElementById('share-btn');
-      const helpBtn   = document.getElementById('help-btn');
-      const addBtn    = document.getElementById('add-tab-btn');
-      const impBtn    = document.getElementById('import-tab');
-      const expBtn    = document.getElementById('export-tab');
-      const delBtn    = document.getElementById('delete-tab');
-      const eraseBtn  = document.getElementById('erase-data-btn');
-      const fileInput = document.getElementById('file-input');
+      const tabsEl=document.querySelector('.tabs');
+      const wrapEl=document.querySelector('.wrap');
+      const recBtn=document.getElementById('start-recording');
+      const shareBtn=document.getElementById('share-btn');
+      const helpBtn=document.getElementById('help-btn');
+      const addBtn=document.getElementById('add-tab-btn');
+      const impBtn=document.getElementById('import-tab');
+      const expBtn=document.getElementById('export-tab');
+      const delBtn=document.getElementById('delete-tab');
+      const eraseBtn=document.getElementById('erase-data-btn');
+      const fileInput=document.getElementById('file-input');
     
-      const customTabs = JSON.parse(localStorage.getItem('customTabs') || '[]');
-      const tabsData   = JSON.parse(localStorage.getItem('tabsData') || '{}');
-      let isRecording = false;
+      const customTabs=JSON.parse(localStorage.getItem('customTabs')||'[]');
+      const tabsData=JSON.parse(localStorage.getItem('tabsData')||'{}');
+      let isRecording=false;
     
       // Override localStorage
       (function(){ const oSet=Storage.prototype.setItem,oRm=Storage.prototype.removeItem,oClr=Storage.prototype.clear;

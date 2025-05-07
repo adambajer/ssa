@@ -47,7 +47,7 @@
               </button></li>
             <hr class="dropdown-divider">
             </li>
-            
+
             <li><button class="dropdown-item d-flex align-items-center" id="help-btn" title="Nápověda"><span
                   class="material-icons me-2">help_outline</span>Klávesové zkratky</button></li>
 
@@ -64,7 +64,7 @@
                 <span class="material-icons me-2">bug_report</span> Log panel
               </button>
             </li>
-            
+
           </ul>
         </div>
       </div>
@@ -157,68 +157,68 @@
   <script>// SSA Application JavaScript
     (() => {  // --- Draggable & Resizable Log Window ---
       // --- Draggable & Resizable Log Window ---  // --- Draggable & Resizable Log Window ---
-  const logPanel = document.createElement('div');
-  logPanel.id = 'log-panel';
-  Object.assign(logPanel.style, {
-    position: 'fixed', bottom: '10px', left: '10px', width: '800px', height: '200px',
-    background: 'rgba(0,0,0,0.8)', color: '#0f0', fontFamily: 'monospace', fontSize: '12px',
-    padding: '0px', zIndex: '9999', overflow: 'auto', border: '1px solid #0f0',
-    display: 'none' // hidden by default
-  });
-  document.body.append(logPanel);
-  
-  // Title bar for dragging
-  const titleBar = document.createElement('div');
-  titleBar.textContent = 'Log Panel';
-  Object.assign(titleBar.style, {
-    position: 'sticky', cursor: 'move',  top: '0', zIndex: '10000', background: '#222', color: '#0f0', padding: '0px 4px', cursor: 'move', fontWeight: 'bold'
-  });
-  logPanel.prepend(titleBar);
+      const logPanel = document.createElement('div');
+      logPanel.id = 'log-panel';
+      Object.assign(logPanel.style, {
+        position: 'fixed', bottom: '10px', left: '10px', width: '800px', height: '200px',
+        background: 'rgba(0,0,0,0.8)', color: '#0f0', fontFamily: 'monospace', fontSize: '12px',
+        padding: '0px', zIndex: '9999', overflow: 'auto', border: '1px solid #0f0',
+        display: 'none' // hidden by default
+      });
+      document.body.append(logPanel);
 
-  // Toggle button in dropdown
-  const toggleBtn = document.getElementById('toggle-log-btn');
-  toggleBtn.addEventListener('click', () => {
-    logPanel.style.display = logPanel.style.display === 'none' ? 'block' : 'none';
-  });
+      // Title bar for dragging
+      const titleBar = document.createElement('div');
+      titleBar.textContent = 'Log Panel';
+      Object.assign(titleBar.style, {
+        position: 'sticky', cursor: 'move', top: '0', zIndex: '10000', background: '#222', color: '#0f0', padding: '0px 4px', cursor: 'move', fontWeight: 'bold'
+      });
+      logPanel.prepend(titleBar);
 
-  let isDragging = false;
-  let dragOffsetX = 0;
-  let dragOffsetY = 0;
+      // Toggle button in dropdown
+      const toggleBtn = document.getElementById('toggle-log-btn');
+      toggleBtn.addEventListener('click', () => {
+        logPanel.style.display = logPanel.style.display === 'none' ? 'block' : 'none';
+      });
 
-  titleBar.addEventListener('mousedown', e => {
-    isDragging = true;
-    dragOffsetX = e.clientX - logPanel.offsetLeft;
-    dragOffsetY = e.clientY - logPanel.offsetTop;
-    e.preventDefault();
-  });
-  document.addEventListener('mousemove', e => {
-    if (!isDragging) return;
-    logPanel.style.left = `${e.clientX - dragOffsetX}px`;
-    logPanel.style.top = `${e.clientY - dragOffsetY}px`;
-  });
-  document.addEventListener('mouseup', () => { isDragging = false; });
+      let isDragging = false;
+      let dragOffsetX = 0;
+      let dragOffsetY = 0;
 
-  const origLog = console.log.bind(console);
-  const origErr = console.error.bind(console);
-  console.log = (...args) => {
-    origLog(...args);
-    const msg = args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ');
-    const line = document.createElement('div');
-    line.textContent = `[LOG] ${msg}`;
-    logPanel.append(line);
-    logPanel.scrollTop = logPanel.scrollHeight;
-  };
-  console.error = (...args) => {
-    origErr(...args);
-    const msg = args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ');
-    const line = document.createElement('div');
-    line.style.color = '#f55';
-    line.textContent = `[ERROR] ${msg}`;
-    logPanel.append(line);
-    logPanel.scrollTop = logPanel.scrollHeight;
-  };
+      titleBar.addEventListener('mousedown', e => {
+        isDragging = true;
+        dragOffsetX = e.clientX - logPanel.offsetLeft;
+        dragOffsetY = e.clientY - logPanel.offsetTop;
+        e.preventDefault();
+      });
+      document.addEventListener('mousemove', e => {
+        if (!isDragging) return;
+        logPanel.style.left = `${e.clientX - dragOffsetX}px`;
+        logPanel.style.top = `${e.clientY - dragOffsetY}px`;
+      });
+      document.addEventListener('mouseup', () => { isDragging = false; });
 
-  console.log('[App] Initialization start');
+      const origLog = console.log.bind(console);
+      const origErr = console.error.bind(console);
+      console.log = (...args) => {
+        origLog(...args);
+        const msg = args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ');
+        const line = document.createElement('div');
+        line.textContent = `[LOG] ${msg}`;
+        logPanel.append(line);
+        logPanel.scrollTop = logPanel.scrollHeight;
+      };
+      console.error = (...args) => {
+        origErr(...args);
+        const msg = args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ');
+        const line = document.createElement('div');
+        line.style.color = '#f55';
+        line.textContent = `[ERROR] ${msg}`;
+        logPanel.append(line);
+        logPanel.scrollTop = logPanel.scrollHeight;
+      };
+
+      console.log('[App] Initialization start');
 
       const TAB_PREDEFINED = 'predefined';
       const COLORS = ['#8B0000', '#006400', '#00008B', '#8B008B', '#2F4F4F', '#4B0082', '#483D8B', '#556B2F', '#6B8E23', '#8B4513'];
@@ -260,7 +260,7 @@
 
       function speak(text, cb) { console.log('[speak]', text); const u = new SpeechSynthesisUtterance(text); u.lang = 'cs-CZ'; u.onend = () => { console.log('[speak] end'); cb(); }; speechSynthesis.speak(u); }
 
-       function clearKeyHandlers() {
+      function clearKeyHandlers() {
         keyHandlers.forEach(h => document.removeEventListener('keydown', h));
         keyHandlers = [];
       }
@@ -277,25 +277,26 @@
           keyHandlers.push(handler);
         });
       }
-      
 
-      function addButton(text,tabId){ console.log('[addButton]',tabId,text); const container=document.querySelector(`#${tabId} .tab-content-body`); const idx=container.querySelectorAll('.transcription-button').length; const color=COLORS[idx%COLORS.length];
-    const wrap=document.createElement('div'); wrap.className='transcription-button'; wrap.style.borderColor=color;
-    const btn=document.createElement('button'); btn.className='text-button'; btn.textContent=text;
-    btn.addEventListener('click',()=>{ console.log('[btn click]',text); if(!wrap.classList.contains('activated')){ wrap.classList.add('activated'); speak(text,()=>wrap.classList.remove('activated')); }});
-    const lbl=document.createElement('span'); lbl.className='shortcut'; lbl.textContent=String.fromCharCode(65+idx);
-    Object.assign(lbl.style,{ backgroundColor:color, color:'#fff', padding:'2px 6px', borderRadius:'5px', marginLeft:'5px' }); wrap.append(lbl,btn);
-    wrap.addEventListener('contextmenu',e=>{
-      e.preventDefault(); document.querySelectorAll('.context-menu').forEach(m=>m.remove());
-      const menu=document.createElement('div'); menu.className='context-menu'; Object.assign(menu.style,{ position:'absolute',top:`${e.clientY}px`,left:`${e.clientX}px`,background:'#fff',border:'1px solid #ccc',borderRadius:'5px',boxShadow:'0 4px 8px rgba(0,0,0,0.2)',zIndex:'10000' });
-      const edit=document.createElement('button'); edit.textContent='✏️ Edit'; edit.style.display='block'; edit.addEventListener('click',()=>{ const nt=prompt('Upravit text:',btn.textContent); if(nt){ btn.textContent=nt; tabsData[tabId]=tabsData[tabId].map(t=>t===text?nt:t); persist(); } menu.remove(); registerKeyHandlers(tabId); });
-      const del=document.createElement('button'); del.textContent='🗑️ Delete'; del.style.display='block'; del.addEventListener('click',()=>{ tabsData[tabId]=tabsData[tabId].filter(t=>t!==btn.textContent); persist(); wrap.remove(); menu.remove(); registerKeyHandlers(tabId); });
-      menu.append(edit,del); document.body.append(menu);
-      document.addEventListener('click',()=>menu.remove(),{once:true});
-    });
-    container.append(wrap); console.log('[addButton] done');
-    registerKeyHandlers(tabId);
-  }
+
+      function addButton(text, tabId) {
+        console.log('[addButton]', tabId, text); const container = document.querySelector(`#${tabId} .tab-content-body`); const idx = container.querySelectorAll('.transcription-button').length; const color = COLORS[idx % COLORS.length];
+        const wrap = document.createElement('div'); wrap.className = 'transcription-button'; wrap.style.borderColor = color;
+        const btn = document.createElement('button'); btn.className = 'text-button'; btn.textContent = text;
+        btn.addEventListener('click', () => { console.log('[btn click]', text); if (!wrap.classList.contains('activated')) { wrap.classList.add('activated'); speak(text, () => wrap.classList.remove('activated')); } });
+        const lbl = document.createElement('span'); lbl.className = 'shortcut'; lbl.textContent = String.fromCharCode(65 + idx);
+        Object.assign(lbl.style, { backgroundColor: color, color: '#fff', padding: '2px 6px', borderRadius: '5px', marginLeft: '5px' }); wrap.append(lbl, btn);
+        wrap.addEventListener('contextmenu', e => {
+          e.preventDefault(); document.querySelectorAll('.context-menu').forEach(m => m.remove());
+          const menu = document.createElement('div'); menu.className = 'context-menu'; Object.assign(menu.style, { position: 'absolute', top: `${e.clientY}px`, left: `${e.clientX}px`, background: '#fff', border: '1px solid #ccc', borderRadius: '5px', boxShadow: '0 4px 8px rgba(0,0,0,0.2)', zIndex: '10000' });
+          const edit = document.createElement('button'); edit.textContent = '✏️ Edit'; edit.style.display = 'block'; edit.addEventListener('click', () => { const nt = prompt('Upravit text:', btn.textContent); if (nt) { btn.textContent = nt; tabsData[tabId] = tabsData[tabId].map(t => t === text ? nt : t); persist(); } menu.remove(); registerKeyHandlers(tabId); });
+          const del = document.createElement('button'); del.textContent = '🗑️ Delete'; del.style.display = 'block'; del.addEventListener('click', () => { tabsData[tabId] = tabsData[tabId].filter(t => t !== btn.textContent); persist(); wrap.remove(); menu.remove(); registerKeyHandlers(tabId); });
+          menu.append(edit, del); document.body.append(menu);
+          document.addEventListener('click', () => menu.remove(), { once: true });
+        });
+        container.append(wrap); console.log('[addButton] done');
+        registerKeyHandlers(tabId);
+      }
 
 
       function createTab(id, name, predef = false) {
@@ -372,8 +373,10 @@
 
       function initHelp() { console.log('[initHelp]'); helpBtn.addEventListener('click', () => { const toast = new bootstrap.Toast(document.getElementById('helpToast'), { autohide: false }); document.getElementById('helpToastBody').innerHTML = `<b>A–Z</b> tlačítka<br><b>Shift+1–9</b> záložky<br><b>Ctrl</b> start/stop`; toast.show(); }); }
 
-      function initPWA() { console.log('[initPWA]'); let dp; window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); dp = e; installBtn.hidden = false; }); installBtn.addEventListener('click', async () => { if (!dp) return; dp.prompt(); const { outcome } = await dp.userChoice; console.log('[PWA] outcome', outcome); dp = null; installBtn.hidden = true; }); 
-      if ('serviceWorker')navigator.serviceWorker.register('/sw.js').then(r => console.log('[SW] OK', r.scope)).catch(e => console.error('[SW] ERR', e)); }
+      function initPWA() {
+        console.log('[PWA] Disabled: service worker registration skipped');
+      }
+
 
       function enableSwipeNavigation() {
         let startX = 0, endX = 0; const tabs = Array.from(document.querySelectorAll('.tab-button'));

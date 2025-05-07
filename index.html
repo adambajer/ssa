@@ -428,7 +428,13 @@
         const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!SR) { console.error('[initVoice] no SR'); return; }
         recognition = new SR(); recognition.lang = 'cs-CZ'; recognition.interimResults = false; recognition.continuous = false;
-        recognition.onstart = async () => { console.log('[SR] start'); recBtn.classList.add('active'); recordingStatus.textContent = 'Mluvte…'; isRecording = true; startTime = Date.now(); await initAudioVisualization(); recognition.start(); };
+        recognition.onstart = async () => { console.log('[SR] start');
+        recBtn.classList.add('active'); 
+        recordingStatus.textContent = 'Mluvte…'; 
+        isRecording = true;
+       startTime = Date.now();
+      //  await initAudioVisualization(); 
+        recognition.start(); };
         recognition.onresult = e => { const text = e.results[0][0].transcript.trim(); console.log('[SR] result', text); const tabId = localStorage.getItem('activeTab'); addButton(text, tabId); tabsData[tabId] = tabsData[tabId] || []; tabsData[tabId].push(text); persist(); };
         recognition.onerror = e => console.error('[SR] error', e.error);
         recognition.onend = () => { console.log('[SR] end'); recBtn.classList.remove('active'); recordingStatus.textContent = ''; recordingTime.textContent = ''; stopAudioVisualization(); isRecording = false; };

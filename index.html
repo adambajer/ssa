@@ -110,8 +110,7 @@
 
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
-  <script>// SSA Application JavaScript
+   <script>// SSA Application JavaScript
     // Declare global variables
     const customTabs = JSON.parse(localStorage.getItem('customTabs') || '[]');
     const tabsData = JSON.parse(localStorage.getItem('tabsData') || '{}');
@@ -697,6 +696,12 @@
       alert('Všechna data byla úspěšně vymazána. Stránka se nyní znovu načte.');
 
     });
+
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js';
+    script.onload = initAnnyang; // Volání initAnnyang po načtení skriptu
+    script.onerror = () => console.warn('annyang se nepodařilo načíst');
+    document.head.appendChild(script);
 
   </script>
 </body>

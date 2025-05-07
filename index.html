@@ -156,67 +156,69 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
   <script>// SSA Application JavaScript
     (() => {  // --- Draggable & Resizable Log Window ---
-      const logPanel = document.createElement('div');
-      logPanel.id = 'log-panel';
-      Object.assign(logPanel.style, {
-        position: 'fixed', bottom: '10px', left: '10px', width: '300px', height: '200px',
-        background: 'rgba(0,0,0,0.8)', color: '#0f0', fontFamily: 'monospace', fontSize: '12px',
-        padding: '4px', zIndex: '9999', overflow: 'auto', resize: 'both', border: '1px solid #0f0',
-        cursor: 'move', display: 'none' // hidden by default
-      });
-      document.body.append(logPanel);
-      
-      // Title bar for dragging
-      const titleBar = document.createElement('div');
-      titleBar.textContent = 'Log Panel';
-      Object.assign(titleBar.style, {
-        background: '#222', color: '#0f0', padding: '2px 4px', cursor: 'move', fontWeight: 'bold'
-      });
-      logPanel.prepend(titleBar);
-    
-      // Toggle button in dropdown
-      const toggleBtn = document.getElementById('toggle-log-btn');
-      toggleBtn.addEventListener('click', () => {
-        logPanel.style.display = logPanel.style.display === 'none' ? 'block' : 'none';
-      });
-    
-      let isDragging = false;
-      let dragOffsetX = 0;
-      let dragOffsetY = 0;
-    
-      titleBar.addEventListener('mousedown', e => {
-        isDragging = true;
-        dragOffsetX = e.clientX - logPanel.offsetLeft;
-        dragOffsetY = e.clientY - logPanel.offsetTop;
-        e.preventDefault();
-      });
-      document.addEventListener('mousemove', e => {
-        if (!isDragging) return;
-        logPanel.style.left = `${e.clientX - dragOffsetX}px`;
-        logPanel.style.top = `${e.clientY - dragOffsetY}px`;
-      });
-      document.addEventListener('mouseup', () => { isDragging = false; });
-    
-      const origLog = console.log.bind(console);
-      const origErr = console.error.bind(console);
-      console.log = (...args) => {
-        origLog(...args);
-        const msg = args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ');
-        const line = document.createElement('div');
-        line.textContent = `[LOG] ${msg}`;
-        logPanel.append(line);
-        logPanel.scrollTop = logPanel.scrollHeight;
-      };
-      console.error = (...args) => {
-        origErr(...args);
-        const msg = args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ');
-        const line = document.createElement('div');
-        line.style.color = '#f55';
-        line.textContent = `[ERROR] ${msg}`;
-        logPanel.append(line);
-        logPanel.scrollTop = logPanel.scrollHeight;
-      };
-      console.log('[App] Initialization start');
+      // --- Draggable & Resizable Log Window ---  // --- Draggable & Resizable Log Window ---
+  const logPanel = document.createElement('div');
+  logPanel.id = 'log-panel';
+  Object.assign(logPanel.style, {
+    position: 'fixed', bottom: '10px', left: '10px', width: '800px', height: '200px',
+    background: 'rgba(0,0,0,0.8)', color: '#0f0', fontFamily: 'monospace', fontSize: '12px',
+    padding: '0px', zIndex: '9999', overflow: 'auto', border: '1px solid #0f0',
+    display: 'none' // hidden by default
+  });
+  document.body.append(logPanel);
+  
+  // Title bar for dragging
+  const titleBar = document.createElement('div');
+  titleBar.textContent = 'Log Panel';
+  Object.assign(titleBar.style, {
+    position: 'sticky', cursor: 'move',  top: '0', zIndex: '10000', background: '#222', color: '#0f0', padding: '0px 4px', cursor: 'move', fontWeight: 'bold'
+  });
+  logPanel.prepend(titleBar);
+
+  // Toggle button in dropdown
+  const toggleBtn = document.getElementById('toggle-log-btn');
+  toggleBtn.addEventListener('click', () => {
+    logPanel.style.display = logPanel.style.display === 'none' ? 'block' : 'none';
+  });
+
+  let isDragging = false;
+  let dragOffsetX = 0;
+  let dragOffsetY = 0;
+
+  titleBar.addEventListener('mousedown', e => {
+    isDragging = true;
+    dragOffsetX = e.clientX - logPanel.offsetLeft;
+    dragOffsetY = e.clientY - logPanel.offsetTop;
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', e => {
+    if (!isDragging) return;
+    logPanel.style.left = `${e.clientX - dragOffsetX}px`;
+    logPanel.style.top = `${e.clientY - dragOffsetY}px`;
+  });
+  document.addEventListener('mouseup', () => { isDragging = false; });
+
+  const origLog = console.log.bind(console);
+  const origErr = console.error.bind(console);
+  console.log = (...args) => {
+    origLog(...args);
+    const msg = args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ');
+    const line = document.createElement('div');
+    line.textContent = `[LOG] ${msg}`;
+    logPanel.append(line);
+    logPanel.scrollTop = logPanel.scrollHeight;
+  };
+  console.error = (...args) => {
+    origErr(...args);
+    const msg = args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ');
+    const line = document.createElement('div');
+    line.style.color = '#f55';
+    line.textContent = `[ERROR] ${msg}`;
+    logPanel.append(line);
+    logPanel.scrollTop = logPanel.scrollHeight;
+  };
+
+  console.log('[App] Initialization start');
 
       const TAB_PREDEFINED = 'predefined';
       const COLORS = ['#8B0000', '#006400', '#00008B', '#8B008B', '#2F4F4F', '#4B0082', '#483D8B', '#556B2F', '#6B8E23', '#8B4513'];

@@ -139,7 +139,51 @@
   </div>
   <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
 
+ 
   <script>
+    // --- Console UI override (jednou při inicializaci) ---
+    
+const logPanel = document.createElement('div');
+logPanel.id = 'log-panel';
+Object.assign(logPanel.style, {
+  position: 'fixed',
+  bottom: '0',
+  left: '0',
+  right: '0',
+  maxHeight: '30%',
+  overflowY: 'auto',
+  background: 'rgba(0,0,0,0.8)',
+  color: '#0f0',
+  fontFamily: 'monospace',
+  fontSize: '12px',
+  padding: '4px',
+  zIndex: '9999'
+});
+document.body.append(logPanel);
+
+const origLog = console.log.bind(console);
+const origErr = console.error.bind(console);
+
+console.log = (...args) => {
+  origLog(...args);
+  const msg = args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ');
+  const line = document.createElement('div');
+  line.textContent = msg;
+  logPanel.appendChild(line);
+  logPanel.scrollTop = logPanel.scrollHeight;
+};
+
+console.error = (...args) => {
+  origErr(...args);
+  const msg = args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ');
+  const line = document.createElement('div');
+  line.style.color = '#f55';
+  line.textContent = `ERROR: ${msg}`;
+  logPanel.appendChild(line);
+  logPanel.scrollTop = logPanel.scrollHeight;
+};
+// ------------------------------
+
     (() => {
       const TAB_PREDEFINED = 'predefined';
       const COLORS = ['#8B0000','#006400','#00008B','#8B008B','#2F4F4F','#4B0082','#483D8B','#556B2F','#6B8E23','#8B4513'];
@@ -391,50 +435,8 @@
       document.addEventListener('DOMContentLoaded', () => {
         initTabs(); initVoice(); initImport(); initExport(); initDeleteTab(); initEraseData(); initShare(); initHelp(); initPWA();
       });
-    })();
-    // --- Console UI override ---
-const logPanel = document.getElementById('log-panel');
-const origLog = console.log.bind(console);
-const origErr = console.error.bind(console);
-
-console.log = (...args) => {
-  origLog(...args);
-  const msg = args.map(a =>
-    typeof a === 'object' ? JSON.stringify(a) : a
-  ).join(' ');
-  const line = document.createElement('div');
-  line.textContent = msg;
-  logPanel.appendChild(line);
-  logPanel.scrollTop = logPanel.scrollHeight;
-};
-
-console.error = (...args) => {
-  origErr(...args);
-  const msg = args.map(a =>
-    typeof a === 'object' ? JSON.stringify(a) : a
-  ).join(' ');
-  const line = document.createElement('div');
-  line.style.color = '#f55';
-  line.textContent = `ERROR: ${msg}`;
-  logPanel.appendChild(line);
-  logPanel.scrollTop = logPanel.scrollHeight;
-};
-// ------------------------------
-
+    })(); 
   </script>
-  <div id="log-panel" style="
-  position: fixed;
-  bottom: 0; left: 0; right: 0;
-  max-height: 30%;
-  overflow-y: auto;
-  background: rgba(0,0,0,0.8);
-  color: #0f0;
-  font-family: monospace;
-  font-size: 12px;
-  padding: 4px;
-  z-index: 9999;
-"></div>
-
 </body>
 
 </html>

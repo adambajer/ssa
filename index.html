@@ -327,14 +327,22 @@
             edit.addEventListener('click', () => {
               const nt = prompt('Upravit text:', btn.textContent);
               if (nt) {
-                btn.textContent = nt;
-                tabsData[tabId] = tabsData[tabId].map(t => t === text ? nt : t);
-                persist();
+                // Find this button’s position among its siblings
+                const btns = Array.from(container.querySelectorAll('.text-button'));
+                const index = btns.indexOf(btn);
+                if (index > -1) {
+                  // Overwrite exactly that entry in tabsData
+                  tabsData[tabId][index] = nt;
+                  persist();
+                  // Update the visible label
+                  btn.textContent = nt;
+                }
               }
               menu.remove();
+              // Rebind key handlers so shortcuts stay in sync
               registerKeyHandlers(tabId);
             });
-
+            
             const del = document.createElement('button');
             del.textContent = '🗑️ Delete';
             del.style.display = 'block';

@@ -392,8 +392,49 @@
         initTabs(); initVoice(); initImport(); initExport(); initDeleteTab(); initEraseData(); initShare(); initHelp(); initPWA();
       });
     })();
-    
+    // --- Console UI override ---
+const logPanel = document.getElementById('log-panel');
+const origLog = console.log.bind(console);
+const origErr = console.error.bind(console);
+
+console.log = (...args) => {
+  origLog(...args);
+  const msg = args.map(a =>
+    typeof a === 'object' ? JSON.stringify(a) : a
+  ).join(' ');
+  const line = document.createElement('div');
+  line.textContent = msg;
+  logPanel.appendChild(line);
+  logPanel.scrollTop = logPanel.scrollHeight;
+};
+
+console.error = (...args) => {
+  origErr(...args);
+  const msg = args.map(a =>
+    typeof a === 'object' ? JSON.stringify(a) : a
+  ).join(' ');
+  const line = document.createElement('div');
+  line.style.color = '#f55';
+  line.textContent = `ERROR: ${msg}`;
+  logPanel.appendChild(line);
+  logPanel.scrollTop = logPanel.scrollHeight;
+};
+// ------------------------------
+
   </script>
+  <div id="log-panel" style="
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  max-height: 30%;
+  overflow-y: auto;
+  background: rgba(0,0,0,0.8);
+  color: #0f0;
+  font-family: monospace;
+  font-size: 12px;
+  padding: 4px;
+  z-index: 9999;
+"></div>
+
 </body>
 
 </html>

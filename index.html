@@ -1,282 +1,280 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="cs">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SSA</title>
-    <link crossorigin="anonymous" rel="icon" href="fav.svg" sizes="32x32">
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <title>SSA</title>
+  <meta name="theme-color" content="#1976D2">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/svg+xml" href="./fav.svg" />
+  <link rel="apple-touch-icon" href="./fav.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="manifest" href="./site.webmanifest" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+    crossorigin="anonymous"></script>
 </head>
 
 <body>
-    <div class="wrap">
-        <div class="panel">
-            <div id="rec">
-                <button id="start-recording">
-                    <svg version="1.1" viewBox="0 0 210 210" xmlns="http://www.w3.org/2000/svg">
-                        <g transform="translate(0 4.174)">
-                            <path
-                                d="m46.2 87.43c-6.23 0-11.28 4.842-11.28 10.82 0 31.98 24.8 58.5 57.06 64.21v26.81h.047a13.02 12.75 0 00-.046.622 13.02 12.75 0 0013.02 12.75 13.02 12.75 0 0013.02-12.75 13.02 12.75 0 00-.016-.622h.016v-26.81c32.27-5.716 57.07-32.23 57.06-64.21 0-5.973-5.05-10.82-11.28-10.82s-11.28 4.842-11.28 10.82c0 24.09-20.95 43.74-47.52 43.74s-47.52-19.65-47.52-43.74c0-5.973-5.05-10.82-11.28-10.82z" />
-                            <ellipse cx="92.74" cy="205.8" rx=".757" ry=".076" />
-                        </g>
-                        <path
-                            d="m105 0c-17.49 0-32.36 10.78-38.38 26.07h52.21c2.77 0 5 1.973 5 4.425 0 2.451-2.23 4.425-5 4.425h-54.61a41.91 41.91 0 00-.482 6.344v.68h55.09c2.77 0 5 1.974 5 4.426 0 2.451-2.23 4.425-5 4.425h-55.09v7.025h55.09c2.77 0 5 1.973 5 4.425 0 2.451-2.23 4.425-5 4.425h-55.09v29.24c0 22.86 18.4 41.26 41.26 41.26s41.26-18.4 41.26-41.26v-54.65c0-22.86-18.4-41.26-41.26-41.26z"
-                            stroke-linecap="round" stroke-miterlimit="4.1" paint-order="markers fill stroke" />
-                        <text transform="rotate(-90)" x="-79.128105" y="25.294184" xml:space="preserve">
-                            <tspan x="-100" y="20" style="font-size:35.28px;stroke-width:.786">TEXT
-                            </tspan>
-                        </text>
-                    </svg>
+  <div class="wrap container-fluid">
 
-                </button>
-            </div>
-            <div id="rec">
+    <div class="tabs">
+      <!-- Header with tabs and dropdown menu -->
+      <div class="d-flex justify-content-between align-items-center">
 
-                <button id="start-sound-capture">
-                    <svg version="1.1" viewBox="0 0 210 210" xmlns="http://www.w3.org/2000/svg">
-                        <g transform="translate(0 4.174)">
-                            <path
-                                d="m46.2 87.43c-6.23 0-11.28 4.842-11.28 10.82 0 31.98 24.8 58.5 57.06 64.21v26.81h.047a13.02 12.75 0 00-.046.622 13.02 12.75 0 0013.02 12.75 13.02 12.75 0 0013.02-12.75 13.02 12.75 0 00-.016-.622h.016v-26.81c32.27-5.716 57.07-32.23 57.06-64.21 0-5.973-5.05-10.82-11.28-10.82s-11.28 4.842-11.28 10.82c0 24.09-20.95 43.74-47.52 43.74s-47.52-19.65-47.52-43.74c0-5.973-5.05-10.82-11.28-10.82z" />
-                            <ellipse cx="92.74" cy="205.8" rx=".757" ry=".076" />
-                        </g>
-                        <path
-                            d="m105 0c-17.49 0-32.36 10.78-38.38 26.07h52.21c2.77 0 5 1.973 5 4.425 0 2.451-2.23 4.425-5 4.425h-54.61a41.91 41.91 0 00-.482 6.344v.68h55.09c2.77 0 5 1.974 5 4.426 0 2.451-2.23 4.425-5 4.425h-55.09v7.025h55.09c2.77 0 5 1.973 5 4.425 0 2.451-2.23 4.425-5 4.425h-55.09v29.24c0 22.86 18.4 41.26 41.26 41.26s41.26-18.4 41.26-41.26v-54.65c0-22.86-18.4-41.26-41.26-41.26z"
-                            stroke-linecap="round" stroke-miterlimit="4.1" paint-order="markers fill stroke" />
-                        <text transform="rotate(-90)" x="-75.423897" y="25.294184" xml:space="preserve">
-                            <tspan x="-100" y="20" style="font-size:35.28px;stroke-width:.786">RAW
-                            </tspan>
-                        </text>
-                    </svg>
+        <div class="dropdown">
+          <button class="btn btn-link p-2 text-secondary" type="button" id="menuDropdown" data-bs-toggle="dropdown"
+            aria-expanded="false" title="Ovládání">
+            <span class="material-icons">menu</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="menuDropdown">
 
+            <li><button class="dropdown-item d-flex align-items-center" id="add-tab-btn" title="Nová záložka"><span
+                  class="material-icons me-2">add</span>Nová záložka</button></li>
+            <li><button class="dropdown-item d-flex align-items-center" id="import-tab" title="Import"><span
+                  class="material-icons me-2">folder_open</span>Import záložky</button></li>
+            <li><button class="dropdown-item d-flex align-items-center" id="export-tab" title="Export"><span
+                  class="material-icons me-2">save</span>Export záložky</button></li>
+            <li><button class="dropdown-item d-flex align-items-center" id="delete-tab" title="Smazat tab"><span
+                  class="material-icons me-2">delete</span>Smazat záložku</button></li>
+            <li>
+                  <!-- Add this new menu item in the dropdown menu -->
+            <li><button class="dropdown-item d-flex align-items-center" id="erase-data-btn" title="Vymazat všechna data">
+              <span class="material-icons me-2">delete_forever</span>Vymazat všechna data
+            </button></li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><button class="dropdown-item d-flex align-items-center" id="btn-install" hidden
+                title="Instalovat aplikaci"><span class="material-icons me-2">phone_android</span>Instalovat
+                aplikaci</button></li>
+            <li><button class="dropdown-item d-flex align-items-center" id="help-btn" title="Nápověda"><span
+                  class="material-icons me-2">help_outline</span>Klávesové zkratky</button></li>
+        
 
-                </button>
-
-
-            </div>
-            <div id="rec">
-            
+          </ul>
         </div>
-        </div>
-        <br>
-        <div id="transcriptions" class="grid-container"></div>
+      </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    const startRecordingButton = document.getElementById("start-recording");
-    const startSoundCaptureButton = document.getElementById("start-sound-capture");
-    const transcriptionsContainer = document.getElementById("transcriptions");
 
-    const synth = window.speechSynthesis;
-    const shortcuts = "abcdefghijklmnopqrstuvwxyz".split("");
+       <div id="recording-container">
+      
+      <button id="start-recording">
 
-    let isRecording = false;
-    let isPlaying = false;
-    let mediaRecorder;
-    let audioChunks = [];
-    let audioStartTime;
-    let hasSpoken = false; // Added flag to ensure single speech per button click
+       
+      <!-- HTML for the two buttons --> 
+      <svg version="1.1" viewBox="0 0 210 210" xmlns="http://www.w3.org/2000/svg">
+        <g transform="translate(0 4.174)">
+          <path d="m46.2 87.43c-6.23 0-11.28 4.842-11.28 10.82 0 31.98 
+                 24.8 58.5 57.06 64.21v26.81h.047a13.02 12.75 0 00-.046.622 
+                 13.02 12.75 0 0013.02 12.75 13.02 12.75 0 0013.02-12.75 
+                 13.02 12.75 0 00-.016-.622h.016v-26.81c32.27-5.716 
+                 57.07-32.23 57.06-64.21 0-5.973-5.05-10.82-11.28-10.82s-11.28 
+                 4.842-11.28 10.82c0 24.09-20.95 43.74-47.52 43.74s-47.52-19.65-47.52-43.74
+                 c0-5.973-5.05-10.82-11.28-10.82z" />
+          <ellipse cx="92.74" cy="205.8" rx=".757" ry=".076" />
+        </g>
+        <path d="m105 0c-17.49 0-32.36 10.78-38.38 26.07h52.21c2.77 0 
+               5 1.973 5 4.425 0 2.451-2.23 4.425-5 4.425h-54.61a41.91 
+               41.91 0 00-.482 6.344v.68h55.09c2.77 0 5 1.974 5 4.426 
+               0 2.451-2.23 4.425-5 4.425h-55.09v7.025h55.09c2.77 0 
+               5 1.973 5 4.425 0 2.451-2.23 4.425-5 4.425h-55.09v29.24c0 
+               22.86 18.4 41.26 41.26 41.26s41.26-18.4 41.26-41.26v-54.65c0-22.86-18.4-41.26-41.26-41.26z"
+          stroke-linecap="round" stroke-miterlimit="4.1" paint-order="markers fill stroke" />
+       
+      </svg>
+      </button>
+   
+      <!-- Define a reusable microphone icon -->
+      <div id="recording-info">
+        <span id="recording-status"></span>
+        <span id="recording-time"></span>
+      </div>
 
-    const loadTranscriptions = () => {
-        const storedTranscriptions = JSON.parse(localStorage.getItem("transcriptions")) || [];
-        storedTranscriptions.forEach(text => {
-            createTranscriptionButton(text);
-        });
-    };
+    </div> 
+    <input id="file-input" type="file" accept="application/json" style="display:none" />
+    <!-- Toast container -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
+      <div id="helpToast" class="toast align-items-start text-bg-light border-0" role="alert" aria-live="assertive"
+        aria-atomic="true">
+        <div class="toast-header bg-danger text-white">
+          <strong class="me-auto">Klávesové zkratky</strong>
+          <button type="button" class="btn-close text-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="helpToastBody"></div>
+      </div>
 
-    const createTranscriptionButton = (text) => {
-        const buttonWrapper = document.createElement("div");
-        buttonWrapper.className = "transcription-button";
+    </div>
 
-        const button = document.createElement("button");
-        button.className = "text-button";
-        button.textContent = text;
-        button.addEventListener("click", () => {
-            if (!isPlaying && !hasSpoken) { // Check if it hasn't spoken yet
-                isPlaying = true;
-                hasSpoken = true; // Set the flag to true after speaking
-                readTextAloud(text, () => {
-                    isPlaying = false;
-                    hasSpoken = false;
-                });
-            }
-        });
+  </div>
 
-        const shortcut = shortcuts.shift();
-        if (shortcut) {
-            const shortcutSpan = document.createElement("span");
-            shortcutSpan.className = "shortcut";
-            shortcutSpan.textContent = shortcut.toUpperCase();
-            button.appendChild(shortcutSpan);
-
-            document.addEventListener("keydown", (event) => {
-                if (event.key === shortcut) {
-                    button.click();
-                    buttonWrapper.classList.toggle('active');
-                }
-            });
-        }
-
-        const editButton = document.createElement("button");
-        editButton.className = "edit-button";
-        editButton.innerHTML = "✏️";
-        editButton.addEventListener("click", () => {
-            const newText = prompt("Edit transcription:", text);
-            if (newText) {
-                button.textContent = newText;
-                updateTranscription(text, newText);
-            }
-        });
-
-        const deleteButton = document.createElement("button");
-        deleteButton.className = "delete-button";
-        deleteButton.innerHTML = "🗑️";
-        deleteButton.addEventListener("click", () => {
-            buttonWrapper.remove();
-            deleteTranscription(text);
-        });
-
-        buttonWrapper.appendChild(deleteButton);
-        buttonWrapper.appendChild(button);
-        buttonWrapper.appendChild(editButton);
-        transcriptionsContainer.appendChild(buttonWrapper);
-    };
-
-    const saveTranscription = (text) => {
-        let storedTranscriptions = JSON.parse(localStorage.getItem("transcriptions")) || [];
-        storedTranscriptions.push(text);
-        localStorage.setItem("transcriptions", JSON.stringify(storedTranscriptions));
-    };
-
-    const updateTranscription = (oldText, newText) => {
-        let storedTranscriptions = JSON.parse(localStorage.getItem("transcriptions")) || [];
-        const index = storedTranscriptions.indexOf(oldText);
-        if (index !== -1) {
-            storedTranscriptions[index] = newText;
-            localStorage.setItem("transcriptions", JSON.stringify(storedTranscriptions));
-        }
-    };
-
-    const deleteTranscription = (text) => {
-        let storedTranscriptions = JSON.parse(localStorage.getItem("transcriptions")) || [];
-        storedTranscriptions = storedTranscriptions.filter(transcription => transcription !== text);
-        localStorage.setItem("transcriptions", JSON.stringify(storedTranscriptions));
-    };
-
-    startSoundCaptureButton.addEventListener("click", () => {
-        if (mediaRecorder && mediaRecorder.state === "recording") {
-            mediaRecorder.stop();
-            startSoundCaptureButton.classList.remove('active');
-        } else {
-            navigator.mediaDevices.getUserMedia({ audio: true })
-                .then(stream => {
-                    mediaRecorder = new MediaRecorder(stream);
-                    audioStartTime = Date.now();
-
-                    mediaRecorder.ondataavailable = event => {
-                        audioChunks.push(event.data);
-                    };
-
-                    mediaRecorder.onstop = () => {
-                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                        const audioUrl = URL.createObjectURL(audioBlob);
-                        const audioDuration = (Date.now() - audioStartTime) / 1000;
-                        createAudioButton(audioUrl, audioDuration);
-                        audioChunks = [];
-                    };
-
-                    mediaRecorder.start();
-                    startSoundCaptureButton.classList.add('active');
-                })
-                .catch(error => {
-                    console.error("Error accessing microphone: ", error);
-                });
-        }
-    });
-
-    const createAudioButton = (audioUrl, duration) => {
-        const buttonWrapper = document.createElement("div");
-        buttonWrapper.className = "transcription-button";
-
-        const button = document.createElement("button");
-        button.className = "edit-button";
-        button.innerHTML = "&#9654;"; // Triangle icon for play
-        button.addEventListener("click", () => {
-            const audio = new Audio(audioUrl);
-            audio.play();
-        });
-
-        const info = document.createElement("button");
-        info.textContent = `Raw Audio (${duration.toFixed(2)}s)`;
-        info.className = "text-button";
-
-        const deleteButton = document.createElement("button");
-        deleteButton.className = "delete-button";
-        deleteButton.innerHTML = "🗑️";
-        deleteButton.addEventListener("click", () => {
-            buttonWrapper.remove();
-        });
-
-        buttonWrapper.appendChild(deleteButton);
-        buttonWrapper.appendChild(info);
-        buttonWrapper.appendChild(button);
-        transcriptionsContainer.appendChild(buttonWrapper);
-    };
-
-    const readTextAloud = (text, callback) => {
-        const utterThis = new SpeechSynthesisUtterance(text);
-        utterThis.lang = 'cs-CZ';
-        utterThis.onend = callback; // Call the callback function when speech ends
-        window.speechSynthesis.speak(utterThis);
-    };
-
-    if (annyang) {
-        const commands = {
-            '*text': (text) => {
-                createTranscriptionButton(text);
-                saveTranscription(text);
-            }
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
+  <script>// SSA Application JavaScript
+    (() => {
+      // --- Console UI override ---
+      const logPanel = document.createElement('div');
+      logPanel.id = 'log-panel';
+      Object.assign(logPanel.style, {
+        position: 'fixed', bottom: '0', left: '0', right: '0', maxHeight: '30%', overflowY: 'auto',
+        background: 'rgba(0,0,0,0.8)', color: '#0f0', fontFamily: 'monospace', fontSize: '12px', padding: '4px', zIndex: '9999'
+      });
+      document.body.append(logPanel);
+      const origLog = console.log.bind(console);
+      const origErr = console.error.bind(console);
+      console.log = (...args) => {
+        origLog(...args);
+        const msg = args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ');
+        const line = document.createElement('div'); line.textContent = `[LOG] ${msg}`;
+        logPanel.appendChild(line); logPanel.scrollTop = logPanel.scrollHeight;
+      };
+      console.error = (...args) => {
+        origErr(...args);
+        const msg = args.map(a => typeof a === 'object' ? JSON.stringify(a) : a).join(' ');
+        const line = document.createElement('div'); line.style.color = '#f55';
+        line.textContent = `[ERROR] ${msg}`;
+        logPanel.appendChild(line); logPanel.scrollTop = logPanel.scrollHeight;
+      };
+    
+      console.log('[App] Initialization start');
+    
+      const TAB_PREDEFINED = 'predefined';
+      const COLORS = ['#8B0000','#006400','#00008B','#8B008B','#2F4F4F','#4B0082','#483D8B','#556B2F','#6B8E23','#8B4513'];
+      let audioCtx, analyser, dataArray, animId;
+    
+      const tabsEl    = document.querySelector('.tabs');
+      const wrapEl    = document.querySelector('.wrap');
+      const recBtn    = document.getElementById('start-recording');
+      const shareBtn  = document.getElementById('share-btn');
+      const helpBtn   = document.getElementById('help-btn');
+      const addBtn    = document.getElementById('add-tab-btn');
+      const impBtn    = document.getElementById('import-tab');
+      const expBtn    = document.getElementById('export-tab');
+      const delBtn    = document.getElementById('delete-tab');
+      const eraseBtn  = document.getElementById('erase-data-btn');
+      const fileInput = document.getElementById('file-input');
+    
+      const customTabs = JSON.parse(localStorage.getItem('customTabs') || '[]');
+      const tabsData   = JSON.parse(localStorage.getItem('tabsData') || '{}');
+      let isRecording = false;
+    
+      // Override localStorage
+      (function(){
+        const origSet = Storage.prototype.setItem;
+        const origRm  = Storage.prototype.removeItem;
+        const origClr = Storage.prototype.clear;
+        Storage.prototype.setItem = function(key,value){ console.log('[LS] setItem',key,value); try{origSet.apply(this,[key,value]); console.log('[LS] setItem OK',key);}catch(e){console.error('[LS] setItem ERR',key,e);} };
+        Storage.prototype.removeItem = function(key){ console.log('[LS] removeItem',key); try{origRm.apply(this,[key]); console.log('[LS] removeItem OK',key);}catch(e){console.error('[LS] removeItem ERR',key,e);} };
+        Storage.prototype.clear = function(){ console.log('[LS] clear'); try{origClr.apply(this); console.log('[LS] clear OK');}catch(e){console.error('[LS] clear ERR',e);} };
+      })();
+    
+      function persist(){
+        console.log('[persist] Saving state');
+        try{
+          localStorage.setItem('customTabs',JSON.stringify(customTabs));
+          localStorage.setItem('tabsData',JSON.stringify(tabsData));
+          console.log('[persist] OK');
+        }catch(e){ console.error('[persist] ERR',e); }
+      }
+    
+      function speak(text,cb){
+        console.log('[speak]',text);
+        const utt=new SpeechSynthesisUtterance(text);
+        utt.lang='cs-CZ'; utt.onend=()=>{console.log('[speak] end');cb();};
+        speechSynthesis.speak(utt);
+      }
+    
+      function addButton(text,tabId){
+        console.log('[addButton]',tabId,text);
+        const container=document.querySelector(`#${tabId} .tab-content-body`);
+        const idx=container.querySelectorAll('.text-button').length;
+        const color=COLORS[idx%COLORS.length];
+        const wrap=document.createElement('div');wrap.className='transcription-button';wrap.style.borderColor=color;
+        const btn=document.createElement('button');btn.className='text-button';btn.textContent=text;
+        btn.addEventListener('click',()=>{ console.log('[btn] click',text); if(!wrap.classList.contains('activated')){ wrap.classList.add('activated'); speak(text,()=>wrap.classList.remove('activated')); } });
+        const lbl=document.createElement('span');lbl.className='shortcut';lbl.textContent=String.fromCharCode(65+idx);
+        lbl.style.backgroundColor=color;lbl.style.color='#fff';wrap.append(lbl,btn);
+        container.append(wrap);
+        document.addEventListener('keydown',e=>{ if(e.key.toUpperCase()===lbl.textContent) btn.click(); });
+        console.log('[addButton] done');
+      }
+    
+      function createTab(id,name,predef=false){
+        console.log('[createTab]',id,name,predef);
+        const btn=document.createElement('button');btn.className='tab-button';btn.dataset.tab=id;btn.textContent=name;tabsEl.append(btn);
+        const div=document.createElement('div');div.className='tab-content';div.id=id;const bd=document.createElement('div');bd.className='tab-content-body';div.append(bd);wrapEl.append(div);
+        const arr=tabsData[id]|| (predef?['Ahoj','Test']:[]);
+        arr.forEach(t=>addButton(t,id));btn.addEventListener('click',()=>activateTab(id));
+        console.log('[createTab] done');
+      }
+    
+      function activateTab(id){
+        console.log('[activateTab]',id);
+        document.querySelectorAll('.tab-button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id));
+        document.querySelectorAll('.tab-content').forEach(c=>c.classList.toggle('active',c.id===id));
+        localStorage.setItem('activeTab',id);
+        recBtn.style.display=(id===TAB_PREDEFINED?'none':'block');
+        if(isRecording) stopRecognition();
+        console.log('[activateTab] done');
+      }
+    
+      // SpeechRecognition based implementation
+      let recognition;
+      function initVoice(){
+        console.log('[initVoice]');
+        const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+        if(!SR){ console.error('[initVoice] SpeechRecognition not supported'); return; }
+        recognition=new SR(); recognition.lang='cs-CZ'; recognition.interimResults=false; recognition.continuous=false;
+        recognition.onstart=()=>{ console.log('[SR] start'); recBtn.classList.add('active'); isRecording=true; };
+        recognition.onresult=e=>{
+          const text=e.results[0][0].transcript.trim(); console.log('[SR] result',text);
+          const tabId=localStorage.getItem('activeTab'); addButton(text,tabId); tabsData[tabId]=tabsData[tabId]||[]; tabsData[tabId].push(text); persist();
         };
-
-        annyang.addCommands(commands);
-        annyang.setLanguage('cs-CZ');
-
-        const toggleRecording = () => {
-            if (isRecording) {
-                annyang.abort();
-                startRecordingButton.classList.remove('active');
-            } else {
-                annyang.start();
-                startRecordingButton.classList.add('active');
-            }
-            isRecording = !isRecording;
-        };
-
-        startRecordingButton.addEventListener("click", toggleRecording);
-
-        document.addEventListener("keydown", (event) => {
-            if (event.key === "Control") {
-                toggleRecording();
-            }
+        recognition.onerror=e=>{ console.error('[SR] error',e.error); };
+        recognition.onend=()=>{ console.log('[SR] end'); recBtn.classList.remove('active'); isRecording=false; };
+        recBtn.addEventListener('click',()=>{
+          const tabId=localStorage.getItem('activeTab'); if(tabId===TAB_PREDEFINED){ alert('Nelze dikci v této záložce'); return; }
+          if(isRecording) stopRecognition(); else startRecognition();
         });
+        console.log('[initVoice] done');
+      }
+    
+      async function startRecognition(){
+        try{ console.log('[SR] startRecognition'); recognition.start(); }
+        catch(e){ console.error('[SR] startErr',e);}  }
+      function stopRecognition(){ console.log('[SR] stop'); recognition.stop(); }
+    
+      function initImport(){ console.log('[initImport]'); impBtn.addEventListener('click',()=>{
+        const tabId=localStorage.getItem('activeTab'); console.log('[import] tab',tabId);
+        fileInput.onchange=async e=>{ const f=e.target.files[0]; if(!f)return; try{ const txt=await f.text(); tabsData[tabId]=JSON.parse(txt); persist(); const bd=document.querySelector(`#${tabId} .tab-content-body`); bd.innerHTML=''; tabsData[tabId].forEach(t=>addButton(t,tabId)); console.log('[import] ok'); }catch(err){ console.error('[import] err',err); alert('Neplatný JSON'); } e.target.value=''; };
+        fileInput.click(); }); }
+      function initExport(){ console.log('[initExport]'); expBtn.addEventListener('click',()=>{
+        const tabId=localStorage.getItem('activeTab'); console.log('[export] tab',tabId);
+        const arr=Array.from(document.querySelectorAll(`#${tabId} .text-button`)).map(b=>b.textContent);
+        const blob=new Blob([JSON.stringify(arr,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob);
+        const a=document.createElement('a');a.href=url;a.download=`${tabId}.json`;document.body.append(a);a.click();a.remove();URL.revokeObjectURL(url);
+        console.log('[export] done'); }); }
+      function initDeleteTab(){ console.log('[initDeleteTab]'); delBtn.addEventListener('click',()=>{
+        const tabId=localStorage.getItem('activeTab'); console.log('[delTab] tab',tabId);
+        if(tabId===TAB_PREDEFINED){ alert('Nelze smazat'); return;} if(!confirm('Smazat tab?'))return;
+        delete tabsData[tabId]; const idx=customTabs.findIndex(t=>t.id===tabId); if(idx>-1) customTabs.splice(idx,1); persist(); document.querySelector(`.tab-button[data-tab="${tabId}"]`).remove(); document.getElementById(tabId).remove(); activateTab(TAB_PREDEFINED);
+        console.log('[delTab] done'); }); }
+      function initEraseData(){ console.log('[initEraseData]'); eraseBtn.addEventListener('click',()=>{
+        if(!confirm('Vymazat vše?'))return; localStorage.clear(); customTabs.length=0; for(const k in tabsData) delete tabsData[k]; persist(); document.querySelectorAll('.tab-button').forEach(b=>b.dataset.tab!==TAB_PREDEFINED&&b.remove()); document.querySelectorAll('.tab-content').forEach(c=>c.id!==TAB_PREDEFINED&&c.remove()); activateTab(TAB_PREDEFINED); location.reload(); }); }
+    
+      function initShare(){ console.log('[initShare]'); const qrScript=document.createElement('script'); qrScript.src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js'; document.head.append(qrScript);
+        shareBtn.addEventListener('click',()=>{ console.log('[share]'); const modal=new bootstrap.Modal(document.getElementById('qrModal')); document.getElementById('qrcode').innerHTML=''; new QRCode(document.getElementById('qrcode'),{text:window.location.href,width:200,height:200}); modal.show(); }); }
+      function initHelp(){ console.log('[initHelp]'); helpBtn.addEventListener('click',()=>{ const toast=new bootstrap.Toast(document.getElementById('helpToast'),{autohide:false}); document.getElementById('helpToastBody').innerHTML=`<b>A–Z</b> tlačítka<br><b>Shift+1–9</b> záložky<br><b>Ctrl</b> dikce`; toast.show(); }); }
+      function initPWA(){ console.log('[initPWA]'); let dp; const btn=document.getElementById('btn-install'); window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); dp=e; btn.hidden=false; }); btn.addEventListener('click',async()=>{ if(!dp)return; dp.prompt(); const{outcome}=await dp.userChoice; console.log('[PWA]',outcome); dp=null; btn.hidden=true; }); if('serviceWorker'in navigator) navigator.serviceWorker.register('/sw.js').then(r=>console.log('[SW] ok',r.scope)).catch(e=>console.error('[SW] err',e)); }
+    
+      document.addEventListener('DOMContentLoaded',()=>{
+        initTabs(); initVoice(); initImport(); initExport(); initDeleteTab(); initEraseData(); initShare(); initHelp(); initPWA();
+        console.log('[App] Initialization complete');
+      });
+    })();
+    
 
-        annyang.addCallback('end', () => {
-            if (isRecording) {
-                toggleRecording();
-            }
-        });
-
-        annyang.addCallback('error', (event) => {
-            console.error("Speech recognition error", event.error);
-        });
-    }
-
-    loadTranscriptions();
-});
-</script>
-
-
+  </script>
 </body>
 
 </html>

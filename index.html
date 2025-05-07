@@ -279,100 +279,24 @@
       }
       
 
-      function addButton(text, tabId) {
-        console.log('[addButton]', tabId, text);
-        const container = document.querySelector(`#${tabId} .tab-content-body`);
-        const idx = container.querySelectorAll('.transcription-button').length;
-        const color = COLORS[idx % COLORS.length];
-      
-        // wrapper
-        const wrap = document.createElement('div');
-        wrap.className = 'transcription-button';
-        wrap.style.borderColor = color;
-      
-        // main button
-        const btn = document.createElement('button');
-        btn.className = 'text-button';
-        btn.textContent = text;
-        btn.addEventListener('click', () => {
-          console.log('[btn] click', text);
-          if (!wrap.classList.contains('activated')) {
-            wrap.classList.add('activated');
-            speak(text, () => wrap.classList.remove('activated'));
-          }
-        });
-      
-        // shortcut label
-        const lbl = document.createElement('span');
-        lbl.className = 'shortcut';
-        lbl.textContent = String.fromCharCode(65 + idx);
-        Object.assign(lbl.style, {
-          backgroundColor: color,
-          color: '#fff',
-          padding: '2px 6px',
-          borderRadius: '5px',
-          marginLeft: '5px'
-        });
-        wrap.append(lbl, btn);
-      
-        // context-menu
-        wrap.addEventListener('contextmenu', e => {
-          e.preventDefault();
-          // remove existing menus
-          document.querySelectorAll('.context-menu').forEach(m => m.remove());
-      
-          const menu = document.createElement('div');
-          menu.className = 'context-menu';
-          Object.assign(menu.style, {
-            position: 'absolute',
-            top: `${e.clientY}px`,
-            left: `${e.clientX}px`,
-            background: '#fff',
-            border: '1px solid #ccc',
-            borderRadius: '5px',
-            boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
-            zIndex: '10000'
-          });
-      
-          // “Edit” option
-          const edit = document.createElement('button');
-          edit.textContent = '✏️ Edit';
-          edit.style.display = 'block';
-          edit.addEventListener('click', () => {
-            const newText = prompt('Upravit text:', btn.textContent);
-            if (newText) {
-              btn.textContent = newText;
-              tabsData[tabId] = tabsData[tabId].map(t => (t === text ? newText : t));
-              persist();
-            }
-            menu.remove();
-          });
-      
-          // “Delete” option
-          const del = document.createElement('button');
-          del.textContent = '🗑️ Delete';
-          del.style.display = 'block';
-          del.addEventListener('click', () => {
-            tabsData[tabId] = tabsData[tabId].filter(t => t !== btn.textContent);
-            persist();
-            wrap.remove();
-            menu.remove();
-          });
-      
-          menu.append(edit, del);
-          document.body.append(menu);
-      
-          // close on outside click
-          document.addEventListener('click', () => menu.remove(), { once: true });
-        });
-      
-        container.append(wrap);
-        console.log('[addButton] done');
-      
-        // **IMPORTANT**: refresh all shortcuts for this tab
-        registerKeyHandlers(tabId);
-      }
-      
+      function addButton(text,tabId){ console.log('[addButton]',tabId,text); const container=document.querySelector(`#${tabId} .tab-content-body`); const idx=container.querySelectorAll('.transcription-button').length; const color=COLORS[idx%COLORS.length];
+    const wrap=document.createElement('div'); wrap.className='transcription-button'; wrap.style.borderColor=color;
+    const btn=document.createElement('button'); btn.className='text-button'; btn.textContent=text;
+    btn.addEventListener('click',()=>{ console.log('[btn click]',text); if(!wrap.classList.contains('activated')){ wrap.classList.add('activated'); speak(text,()=>wrap.classList.remove('activated')); }});
+    const lbl=document.createElement('span'); lbl.className='shortcut'; lbl.textContent=String.fromCharCode(65+idx);
+    Object.assign(lbl.style,{ backgroundColor:color, color:'#fff', padding:'2px 6px', borderRadius:'5px', marginLeft:'5px' }); wrap.append(lbl,btn);
+    wrap.addEventListener('contextmenu',e=>{
+      e.preventDefault(); document.querySelectorAll('.context-menu').forEach(m=>m.remove());
+      const menu=document.createElement('div'); menu.className='context-menu'; Object.assign(menu.style,{ position:'absolute',top:`${e.clientY}px`,left:`${e.clientX}px`,background:'#fff',border:'1px solid #ccc',borderRadius:'5px',boxShadow:'0 4px 8px rgba(0,0,0,0.2)',zIndex:'10000' });
+      const edit=document.createElement('button'); edit.textContent='✏️ Edit'; edit.style.display='block'; edit.addEventListener('click',()=>{ const nt=prompt('Upravit text:',btn.textContent); if(nt){ btn.textContent=nt; tabsData[tabId]=tabsData[tabId].map(t=>t===text?nt:t); persist(); } menu.remove(); registerKeyHandlers(tabId); });
+      const del=document.createElement('button'); del.textContent='🗑️ Delete'; del.style.display='block'; del.addEventListener('click',()=>{ tabsData[tabId]=tabsData[tabId].filter(t=>t!==btn.textContent); persist(); wrap.remove(); menu.remove(); registerKeyHandlers(tabId); });
+      menu.append(edit,del); document.body.append(menu);
+      document.addEventListener('click',()=>menu.remove(),{once:true});
+    });
+    container.append(wrap); console.log('[addButton] done');
+    registerKeyHandlers(tabId);
+  }
+
 
       function createTab(id, name, predef = false) {
         console.log('[createTab]', id, name, predef);
@@ -394,7 +318,6 @@
         if (isRecording) stopRecognition();
         registerKeyHandlers(id);
         console.log('[activateTab] done');
-        
       }
 
       function initTabs() {

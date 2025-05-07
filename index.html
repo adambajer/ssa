@@ -140,599 +140,173 @@
   <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
 
   <script>
-  
-    window.addEventListener('DOMContentLoaded', () => {
-     
-      if (!window.annyang) return;
-      annyang.setLanguage('cs-CZ');
-      annyang.addCommands({
-        '*text': txt => {
-          const id = document.querySelector('.tab-button.active').dataset.tab;
-          const body = document.querySelector(`#${id} .tab-content-body`);
-
-          // always add the button to the UI…
-          addTextButton(txt, body, id, id === 'predefined');
-
-          // Aktualizace klávesových zkratek
-          resetShortcuts(body);
-          // …but only save for non‐predefined tabs:
-          if (id !== 'predefined') {
-            tabsData[id] = tabsData[id] || [];
-            tabsData[id].push(txt);
-            persist();
-          }
-
-          annyang.abort();
-          recBtn.classList.remove('active');
-        }
-      });
-
-      annyang.addCallback('end', () => recBtn.classList.remove('active'));
-      // Include the QRCode.js library dynamically
-      const qrScript = document.createElement('script');
-      qrScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
-      document.head.appendChild(qrScript);
-
-      const shareBtn = document.getElementById('share-btn');
-      const qrModal = new bootstrap.Modal(document.getElementById('qrModal'));
-
-      shareBtn.addEventListener('click', () => {
-        const qrcodeContainer = document.getElementById('qrcode');
-        qrcodeContainer.innerHTML = ''; // Clear any existing QR code
-
-        // Get the current website URL
-        const url = window.location.href;
-
-        // Generate the QR code
-        new QRCode(qrcodeContainer, {
-          text: url,
-          width: 400,
-          height: 400,
-          colorDark: '#000000',
-          colorLight: '#ffffff',
-          correctLevel: QRCode.CorrectLevel.H,
-        });
-
-        // Show the modal
-        qrModal.show();
-      });
-  
-      
- 
-
-      // Globální reference
-      const wrap = document.querySelector('.wrap');
-      const tabsContainer = document.querySelector('.tabs');
+    (() => {
+      const TAB_PREDEFINED = 'predefined';
+      const COLORS = ['#8B0000','#006400','#00008B','#8B008B','#2F4F4F','#4B0082','#483D8B','#556B2F','#6B8E23','#8B4513'];
+      let audioCtx, analyser, dataArray, animId;
+    
+      // Elements
+      const tabsEl = document.querySelector('.tabs');
+      const wrapEl = document.querySelector('.wrap');
       const recBtn = document.getElementById('start-recording');
-      const impBtn = document.getElementById('import-tab');
-      const expBtn = document.getElementById('export-tab');
-      const delBtn = document.getElementById('delete-tab');
-      const recordingStatus = document.getElementById('recording-status');
-      const recordingTime = document.getElementById('recording-time');
-      let audioContext; // Globální proměnná pro AudioContext
-
-      // Stav a data
-      let isPlaying = false;
-      let isRecording = false;
-      let isSoundRecording = false;
-      let mediaRecorder, audioChunks = [], audioStartTime;
+      const shareBtn = document.getElementById('share-btn');
+      const helpBtn = document.getElementById('help-btn');
+    
+      // State
       const customTabs = JSON.parse(localStorage.getItem('customTabs') || '[]');
       const tabsData = JSON.parse(localStorage.getItem('tabsData') || '{}');
-      let keyHandlers = [];
-
+      let isRecording = false;
+    
       function persist() {
         localStorage.setItem('customTabs', JSON.stringify(customTabs));
         localStorage.setItem('tabsData', JSON.stringify(tabsData));
       }
-
+    
       function speak(text, cb) {
-        const u = new SpeechSynthesisUtterance(text);
-        u.lang = 'cs-CZ';
-        u.onend = cb;
-        speechSynthesis.speak(u);
+        const msg = new SpeechSynthesisUtterance(text);
+        msg.lang = 'cs-CZ';
+        msg.onend = cb;
+        speechSynthesis.speak(msg);
       }
-
-      function resetShortcuts(container) {
-        const colors = [
-          '#8B0000', '#006400', '#00008B', '#8B008B', '#2F4F4F', '#4B0082', '#483D8B', '#556B2F', '#6B8E23', '#8B4513',
-          '#A0522D', '#2E8B57', '#4682B4', '#5F9EA0', '#7B68EE', '#6A5ACD', '#708090', '#778899', '#696969', '#808000',
-          '#8B0000', '#8B4513', '#2F4F4F', '#4B0082', '#483D8B'
-        ]; // Array of darker colors for better contrast
-
-        keyHandlers.forEach(h => document.removeEventListener('keydown', h));
-        keyHandlers = [];
-        container.querySelectorAll('.text-button').forEach((btn, i) => {
-          const letter = 'abcdefghijklmnopqrstuvwxyz'[i];
-          if (!letter) return;
-
-          // Remove any existing shortcut span to avoid duplicates
-          const existingShortcut = btn.parentElement.querySelector('.shortcut');
-          if (existingShortcut) existingShortcut.remove();
-
-          // Create a new shortcut span and append it outside the button
-          const span = document.createElement('span');
-          span.className = 'shortcut';
-          span.textContent = letter.toUpperCase();
-          span.style.backgroundColor = colors[i % colors.length];
-
-          btn.parentElement.appendChild(span);
-
-          const handler = e => e.key === letter && btn.click();
-          document.addEventListener('keydown', handler);
-          keyHandlers.push(handler);
-        });
-      }
-
-      function addTextButton(text, container, tabId, isPredef = false) {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'transcription-button';
+    
+      function addButton(text, tabId) {
+        const container = document.querySelector(`#${tabId} .tab-content-body`);
+        const idx = container.querySelectorAll('.text-button').length;
+        const color = COLORS[idx % COLORS.length];
+        const wrapper = document.createElement('div'); wrapper.className = 'transcription-button';
+        wrapper.style.borderColor = color;
         const btn = document.createElement('button');
         btn.className = 'text-button';
         btn.textContent = text;
-
-        // Create the shortcut span
-        const shortcut = document.createElement('span');
-        shortcut.className = 'shortcut';
-        const colors = [
-          '#8B0000', '#006400', '#00008B', '#8B008B', '#2F4F4F', '#4B0082', '#483D8B', '#556B2F', '#6B8E23', '#8B4513',
-          '#A0522D', '#2E8B57', '#4682B4', '#5F9EA0', '#7B68EE', '#6A5ACD', '#708090', '#778899', '#696969', '#808000',
-          '#8B0000', '#8B4513', '#2F4F4F', '#4B0082', '#483D8B'
-        ];
-        const index = container.querySelectorAll('.text-button').length;
-        const color = colors[index % colors.length];
-        shortcut.textContent = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[index % 26]; // Assign a letter
-        shortcut.style.backgroundColor = color;
-        shortcut.style.color = 'white';
-        shortcut.style.padding = '2px 6px';
-        shortcut.style.borderRadius = '5px';
-        shortcut.style.marginLeft = '5px';
-
-        console.log('Assigned Background Color:', shortcut.style.backgroundColor);
-
-        // Append the shortcut to the wrapper
-        wrapper.appendChild(shortcut);
-
-        // Set the border color of the transcription-button to match the shortcut background color
-        wrapper.style.border = `1px solid ${color}`;
-
-        // Add click event to the button
         btn.addEventListener('click', () => {
-          if (!isPlaying) {
-            isPlaying = true;
-
-            // Add the activated class
-            wrapper.classList.add('activated');
-            wrapper.style.boxShadow = `0px 0px 20px 0px ${color}`; // Dynamically apply the color
-            wrapper.style.animation = 'infinite 0.5s alternate ease-in-out'; // Add animation
-            wrapper.style.transition = 'box-shadow 0.5s ease-in-out, border 0.5s ease-in-out'; // Add transition
-            // Remove the activated class after the button stops playing
-            speak(btn.textContent, () => {
-
-              wrapper.classList.remove('activated');
-              wrapper.style.boxShadow = ''; // Reset the box-shadow           
-              wrapper.style.border = `1px solid ${color}`; // Add border color
-
-              isPlaying = false;
-            });
-          }
+          btn.disabled = true;
+          speak(text, () => { btn.disabled = false; });
+          wrapper.classList.toggle('active');
         });
-
-        // Add context menu (right-click) event
-        wrapper.addEventListener('contextmenu', (e) => {
-          e.preventDefault();
-
-          // Remove any existing context menu
-          const existingMenu = document.querySelector('.context-menu');
-          if (existingMenu) existingMenu.remove();
-
-          // Create the context menu
-          const menu = document.createElement('div');
-          menu.className = 'context-menu';
-          menu.style.position = 'absolute';
-          menu.style.top = `${e.clientY}px`;
-          menu.style.left = `${e.clientX}px`;
-          menu.style.backgroundColor = '#fff';
-          menu.style.border = '1px solid #ccc';
-          menu.style.borderRadius = '5px';
-          menu.style.boxShadow = '0px 4px 6px rgba(0, 0, 0, 0.1)';
-          menu.style.zIndex = '1000';
-
-          // Add edit button to the context menu
-          const edit = document.createElement('button');
-          edit.className = 'edit-button';
-          edit.textContent = '✏️ Edit';
-          edit.style.display = 'block';
-          edit.style.borderBottom = '1px solid #ccc';
-          edit.addEventListener('click', () => {
-            const newText = prompt('Upravit text:', btn.textContent);
-            if (!newText) return;
-            btn.textContent = newText;
-            tabsData[tabId] = tabsData[tabId].map(t => (t === text ? newText : t));
-            persist();
-            menu.remove();
-          });
-
-          // Add delete button to the context menu
-          const del = document.createElement('button');
-          del.className = 'delete-button';
-          del.textContent = '🗑️ Delete';
-          del.style.display = 'block';
-          del.addEventListener('click', () => {
-            tabsData[tabId] = tabsData[tabId].filter(t => t !== btn.textContent);
-            persist();
-            wrapper.remove();
-            menu.remove();
-          });
-
-          menu.appendChild(edit);
-          menu.appendChild(del);
-          document.body.appendChild(menu);
-
-          // Remove the context menu when clicking elsewhere
-          document.addEventListener('click', () => menu.remove(), { once: true });
-        });
-
-        wrapper.appendChild(btn);
+        const lbl = document.createElement('span');
+        lbl.className = 'shortcut';
+        lbl.textContent = String.fromCharCode(65 + idx);
+        lbl.style.backgroundColor = color;
+        lbl.style.color = '#fff';
+        wrapper.append(lbl, btn);
         container.appendChild(wrapper);
+        document.addEventListener('keydown', e => {
+          if (e.key.toUpperCase() === lbl.textContent) btn.click();
+        });
       }
-
-
-      function createTab(id, name, isPredef = false) {
+    
+      function createTab(id, name, predef=false) {
         const btn = document.createElement('button');
-        btn.className = 'tab-button'; btn.dataset.tab = id; btn.textContent = name;
-        tabsContainer.appendChild(btn);
-        const tabDiv = document.createElement('div'); tabDiv.className = 'tab-content'; tabDiv.id = id;
-        const body = document.createElement('div'); body.className = 'tab-content-body'; tabDiv.appendChild(body);
-        wrap.appendChild(tabDiv);
-        const arr = tabsData[id] || (isPredef ? ['Nende', 'Vůbec to nende', 'Nefunguje', 'Zmáčkni si éčko', 'Počkej', 'Ježiši', 'Max nervy'] : []);
-        arr.forEach(t => addTextButton(t, body, id, isPredef));
+        btn.className = 'tab-button'; btn.dataset.tab=id; btn.textContent=name;
+        tabsEl.appendChild(btn);
+        const tabDiv = document.createElement('div');
+        tabDiv.className='tab-content'; tabDiv.id=id;
+        const body = document.createElement('div'); body.className='tab-content-body';
+        tabDiv.appendChild(body);
+        wrapEl.appendChild(tabDiv);
+        const items = tabsData[id] || (predef?['Ahoj','Test']:[]);
+        items.forEach(t=>addButton(t,id));
+        btn.addEventListener('click', () => activateTab(id));
       }
-
-      function toggleMicVisibility() {
-        const activeTab = localStorage.getItem('activeTab');
-        const micButton = document.getElementById('start-recording');
-        if (activeTab === 'predefined') {
-          micButton.style.display = 'none'; // Hide the mic button
-        } else {
-          micButton.style.display = 'block'; // Show the mic button
-        }
-      }
-
-      // Update the `activateTab` function to call `toggleMicVisibility`
+    
       function activateTab(id) {
-        // Reset rec/sound on switch
-        if (isRecording) {
-          window.annyang?.abort();
-          recBtn.classList.remove('active');
-          isRecording = false;
-        }
-
-        document.querySelectorAll('.tab-button').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === id));
+        document.querySelectorAll('.tab-button').forEach(b=>b.classList.toggle('active', b.dataset.tab===id));
+        document.querySelectorAll('.tab-content').forEach(c=>c.classList.toggle('active', c.id===id));
         localStorage.setItem('activeTab', id);
-        const body = document.querySelector(`#${id} .tab-content-body`);
-        if (body) resetShortcuts(body);
-
-        // Toggle mic visibility based on the active tab
-        toggleMicVisibility();
+        recBtn.style.display = (id===TAB_PREDEFINED?'none':'block');
       }
-
-      // Call `toggleMicVisibility` during initialization
-      let initial = localStorage.getItem('activeTab');
-      if (!initial) {
-        initial = 'predefined';
-        localStorage.setItem('activeTab', initial);
+    
+      function initTabs() {
+        createTab(TAB_PREDEFINED,'1',true);
+        customTabs.forEach(t=>createTab(t.id,t.name));
+        document.getElementById('add-tab-btn').addEventListener('click', ()=>{
+          const id=`tab-${customTabs.length+2}`, name=`${customTabs.length+2}`;
+          customTabs.push({id,name}); tabsData[id]=[]; persist();
+          createTab(id,name); activateTab(id);
+        });
+        const initial = localStorage.getItem('activeTab')||TAB_PREDEFINED;
+        activateTab(initial);
       }
-      activateTab(initial);
-      toggleMicVisibility();
-
-      // Event listeners
-      tabsContainer.addEventListener('click', e => {
-        if (e.target.matches('.tab-button')) activateTab(e.target.dataset.tab);
-      });
-      document.addEventListener('keydown', e => {
-        if (e.shiftKey && /^[1-9]$/.test(e.key)) {
-          const idx = parseInt(e.key, 10) - 1;
-          const btns = Array.from(document.querySelectorAll('.tab-button'));
-          if (btns[idx]) activateTab(btns[idx].dataset.tab);
-        }
-        if (e.key === 'Control') recBtn.click();
-      });
-
-      // Initialize tabs 
-      createTab('predefined', '1', true);
-      customTabs.forEach(t => createTab(t.id, t.name, false));
-      const plusBtn = document.querySelector('#add-tab-btn');
-
-      plusBtn.addEventListener('click', () => {
-        const id = `tab-${customTabs.length + 2}`; // Start numbering from 2 (predefined is 1)
-        const name = `${customTabs.length + 2}`;  // Use the sequence number as the name
-        customTabs.push({ id, name });
-        tabsData[id] = [];
-        persist();
-        createTab(id, name, false);
-        activateTab(id);
-      });
-      // ensure we always have an activeTab in LS
-
-      activateTab(initial);
-
-      impBtn.addEventListener('click', () => {
-        const id = document.querySelector('.tab-button.active').dataset.tab;
-        const fileInput = document.getElementById('file-input');
-        fileInput.onchange = async e => {
-          const file = e.target.files[0];
-          if (!file) return;
-          try {
-            const text = await file.text();
-            tabsData[id] = JSON.parse(text);
-            persist();
-            const body = document.querySelector(`#${id} .tab-content-body`);
-            body.innerHTML = '';
-            tabsData[id].forEach(t => addTextButton(t, body, id, id === 'predefined'));
-          } catch (err) {
-            alert('Neplatný JSON soubor');
-          }
-          fileInput.value = '';
-        };
-        fileInput.click();
-      });
-      expBtn.addEventListener('click', () => {
-        const id = document.querySelector('.tab-button.active').dataset.tab;
-        const arr = Array.from(document.querySelectorAll(`#${id} .text-button`))
-          .map(b => b.textContent);
-        const json = JSON.stringify(arr, null, 2);
-        const blob = new Blob([json], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${id}.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      });
-
-      delBtn.addEventListener('click', () => {
-        const id = document.querySelector('.tab-button.active').dataset.tab;
-        if (id === 'predefined') {
-          alert('Předdefinovanou záložku nelze smazat.');
-          return;
-        }
-        if (!confirm('Opravdu smazat tento tab?')) return;
-        delete tabsData[id];
-        const idx = customTabs.findIndex(t => t.id === id);
-        if (idx !== -1) customTabs.splice(idx, 1);
-        persist();
-        document.querySelector(`.tab-button[data-tab="${id}"]`).remove();
-        document.getElementById(id).remove();
-        activateTab('predefined');
-      });
-
-      // Diktování (annyang) handler
-      recBtn.addEventListener('click', async () => {
-        const activeTab = localStorage.getItem('activeTab');
-        if (activeTab === 'predefined') {
-          alert('Nahrávání není povoleno v předdefinované záložce.');
-          return;
-        }
-
-        if (isRecording) {
-          stopRecording();
-        } else {
-          await startRecording();
-        }
-      });
-
-      async function startRecording() {
+    
+      function onTranscript(text) {
+        const tabId = localStorage.getItem('activeTab');
+        addButton(text,tabId);
+        tabsData[tabId] = tabsData[tabId]||[]; tabsData[tabId].push(text);
+        persist(); annyang.abort();
+      }
+    
+      function initVoice() {
+        if (!window.annyang) return;
+        annyang.setLanguage('cs-CZ');
+        annyang.addCommands({'*text': onTranscript});
+        recBtn.addEventListener('click', () => {
+          const tabId = localStorage.getItem('activeTab');
+          if (tabId===TAB_PREDEFINED) return alert('Nelze v předdefinované záložce.');
+          if (isRecording) stopRec(); else startRec();
+        });
+      }
+    
+      async function startRec() {
         try {
-          // Získání přístupu k mikrofonu
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-
-          // Inicializace AudioContext pouze jednou
-          if (!audioContext || audioContext.state === 'closed') {
-            audioContext = new (window.AudioContext || window.webkitAudioContext)();
-          }
-
-          analyser = audioContext.createAnalyser();
-          microphone = audioContext.createMediaStreamSource(stream);
-          microphone.connect(analyser);
-
-          // Nastavení bufferu pro analýzu
-          analyser.fftSize = 256;
-          const bufferLength = analyser.frequencyBinCount;
-          dataArray = new Uint8Array(bufferLength);
-
-          // Spuštění vizualizace
-          isRecording = true;
-          recBtn.classList.add('pulsing');
-          recordingStatus.textContent = 'Mluvte...'; // Aktualizace stavu
-          startTime = Date.now();
-          updateRecordingTime();
-          visualizePulse();
-
-          // Spuštění annyang
-          window.annyang?.start({ autoRestart: false, continuous: false });
-
-          // Callback pro ukončení nahrávání
-          annyang.addCallback('end', () => {
-            stopRecording();
-          });
-        } catch (err) {
-          console.error('Error accessing microphone:', err);
-        }
+          const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+          audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+          analyser=audioCtx.createAnalyser();
+          analyser.fftSize=256;
+          dataArray=new Uint8Array(analyser.frequencyBinCount);
+          const src=audioCtx.createMediaStreamSource(stream);
+          src.connect(analyser);
+          isRecording=true; recBtn.classList.add('active');
+          annyang.start({autoRestart:false,continuous:false});
+          visualize();
+        } catch(e){console.error(e);}
       }
-
-      function stopRecording() {
-        isRecording = false;
-        recBtn.classList.remove('pulsing');
-        recordingStatus.textContent = ''; // Aktualizace stavu
-        recordingTime.textContent = '';
-
-        // Zastavení animace a uvolnění zdrojů
-        cancelAnimationFrame(animationFrameId);
-
-        if (audioContext && audioContext.state !== 'closed') {
-          audioContext.close();
-        }
-
-        window.annyang?.abort();
-
-        // Reset the box-shadow
-        recBtn.style.boxShadow = 'none';
+    
+      function stopRec() {
+        isRecording=false; recBtn.classList.remove('active');
+        annyang.abort(); audioCtx?.close(); cancelAnimationFrame(animId);
       }
-      function visualizePulse() {
-        if (!isRecording) return;
-
-        // Získání dat z analyzéru
+    
+      function visualize() {
+        if(!isRecording) return;
         analyser.getByteFrequencyData(dataArray);
-
-        // Výpočet průměrné hlasitosti
-        const volume = dataArray.reduce((sum, value) => sum + value, 0) / dataArray.length;
-
-        // Dynamická změna efektu "pulse"
-        const intensity = Math.min(volume / 256, 1); // Normalizace hlasitosti (0–1)
-        recBtn.style.boxShadow = `0px 0px ${120 * intensity}px rgba(255, 0, 0, ${0.3 + intensity * 0.7})`;
-
-        // Pokračování animace
-        animationFrameId = requestAnimationFrame(visualizePulse);
+        const vol=dataArray.reduce((a,b)=>a+b,0)/dataArray.length;
+        const glow=Math.min(vol/256,1);
+        recBtn.style.boxShadow=`0 0 ${100*glow}px rgba(255,0,0,${0.3+glow*0.7})`;
+        animId=requestAnimationFrame(visualize);
       }
-
-      function updateRecordingTime() {
-        if (!isRecording) return;
-
-        const elapsed = Math.floor((Date.now() - startTime) / 1000);
-        const minutes = String(Math.floor(elapsed / 60)).padStart(2, '0');
-        const seconds = String(elapsed % 60).padStart(2, '0');
-        recordingTime.textContent = `${minutes}:${seconds}`;
-
-        setTimeout(updateRecordingTime, 1000);
+    
+      function initShare() {
+        const qrScript=document.createElement('script');
+        qrScript.src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+        document.head.appendChild(qrScript);
+        shareBtn.addEventListener('click', ()=>{
+          const modal=new bootstrap.Modal('#qrModal');
+          document.getElementById('qrcode').innerHTML='';
+          new QRCode(document.getElementById('qrcode'),{text:window.location.href,width:200,height:200});
+          modal.show();
+        });
       }
-
-
-      enableSwipeNavigation();
-    });
-
-    function enableSwipeNavigation() {
-      let startX = 0;
-      let endX = 0;
-
-      const tabs = Array.from(document.querySelectorAll('.tab-button'));
-      const tabContents = Array.from(document.querySelectorAll('.tab-content'));
-
-      document.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-      });
-
-      document.addEventListener('touchend', (e) => {
-        endX = e.changedTouches[0].clientX;
-        const activeTabIndex = tabs.findIndex((tab) => tab.classList.contains('active'));
-
-        if (startX - endX > 50 && activeTabIndex < tabs.length - 1) {
-          // Swipe left: Go to the next tab
-          animateTabTransition('left');
-          activateTab(tabs[activeTabIndex + 1].dataset.tab);
-        } else if (endX - startX > 50 && activeTabIndex > 0) {
-          // Swipe right: Go to the previous tab
-          animateTabTransition('right');
-          activateTab(tabs[activeTabIndex - 1].dataset.tab);
-        }
-      });
-    }
-
-    function animateTabTransition(direction) {
-      const activeContent = document.querySelector('.tab-content.active');
-      if (!activeContent) return;
-
-      const animationClass = direction === 'left' ? 'slide-out-left' : 'slide-out-right';
-      activeContent.classList.add(animationClass);
-
-      setTimeout(() => {
-        activeContent.classList.remove(animationClass);
-      }, 300); // Match the animation duration
-    }
-
-    // … existující kód …
-    // Help toast logic
-    const helpBtn = document.getElementById('help-btn');
-    const helpToastEl = document.getElementById('helpToast');
-    const helpToastBody = document.getElementById('helpToastBody');
-    const toast = new bootstrap.Toast(helpToastEl, { autohide: false });
-
-    helpBtn.addEventListener('click', () => {
-      const msgLines = [
-
-        '<b>Písmena A–Z</b><br> Aktivují odpovídající tlačítko<br>',
-        '<b>Shift + 1–9</b> <br> Přepne na záložku číslo 1–9 (pokud existuje)<br>',
-        '<b>Ctrl</b> <br> Spustí / zastaví nahrávání diktování<br>',
-      ];
-      helpToastBody.innerHTML = msgLines.join('<br>');
-      toast.show();
-    });
-
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-          .then(reg => console.log('Service Worker registrován:', reg.scope))
-          .catch(err => console.warn('SW registrace selhala:', err));
-      });
-    }
-    let deferredPrompt;
-    const installBtn = document.getElementById('btn-install');
-
-    // 1) Zachytíme událost, kterou prohlížeč vyvolá, když by byl PWA installable
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();            // zamezíme defaultní prompt
-      deferredPrompt = e;            // uložíme si objekt pro pozdější použití
-      installBtn.hidden = false;     // ukážeme tlačítko
-    });
-
-    // 2) Když na tlačítko uživatel klikne, vyvoláme instalaci nebo zobrazíme toast
-    installBtn.addEventListener('click', async () => {
-      if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone) {
-        // Aplikace je již nainstalována
-        helpToastBody.innerHTML = 'Aplikace je již nainstalována.';
-        toast.show();
-        return;
+    
+      function initHelp() {
+        helpBtn.addEventListener('click', ()=>{
+          const toast=new bootstrap.Toast('#helpToast',{autohide:false});
+          document.getElementById('helpToastBody').innerHTML=`<b>A–Z</b> tlačítka<br><b>Ctrl</b> start/stop`; toast.show();
+        });
       }
-
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt(); // zobrazí dialog Chrome
-      const { outcome } = await deferredPrompt.userChoice;
-      console.log('Instalace:', outcome); // 'accepted' / 'dismissed'
-      deferredPrompt = null;
-      installBtn.hidden = true;
-    });
-
-    const eraseDataBtn = document.getElementById('erase-data-btn');
-
-    eraseDataBtn.addEventListener('click', () => {
-      if (!confirm('Opravdu chcete vymazat všechna data? Tato akce je nevratná.')) return;
-
-      // Vymazání všech dat z localStorage
-      localStorage.clear();
-
-      // Obnovení výchozího stavu
-      customTabs.length = 0; // Vyprázdnění pole vlastních záložek
-      Object.keys(tabsData).forEach(key => delete tabsData[key]); // Vymazání dat záložek
-      persist();
-
-      // Odstranění všech záložek kromě předdefinované
-      document.querySelectorAll('.tab-button').forEach(btn => {
-        if (btn.dataset.tab !== 'predefined') btn.remove();
+    
+      function initPWA() {
+        let promptEvent;
+        const installBtn=document.getElementById('btn-install');
+        window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();promptEvent=e;installBtn.hidden=false;});
+        installBtn.addEventListener('click',async()=>{ if(!promptEvent) return; promptEvent.prompt(); promptEvent=null; installBtn.hidden=true; });
+        if('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js');
+      }
+    
+      document.addEventListener('DOMContentLoaded',()=>{
+        initTabs(); initVoice(); initShare(); initHelp(); initPWA();
       });
-      document.querySelectorAll('.tab-content').forEach(content => {
-        if (content.id !== 'predefined') content.remove();
-      });
-
-      // Aktivace předdefinované záložky
-      activateTab('predefined');
-
-      // Znovu načtení stránky
-      alert('Všechna data byla úspěšně vymazána. Stránka se nyní znovu načte.');
-      location.reload();
-    });
-
+    })();
+    
   </script>
 </body>
 

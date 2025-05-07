@@ -137,12 +137,37 @@
     </div>
 
   </div>
- 
+  <script src="//cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
+
   <script>
-    const script = document.createElement('script');
-    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js';
-    document.head.appendChild(script);// SSA Application JavaScript
+  
     window.addEventListener('DOMContentLoaded', () => {
+     
+      if (!window.annyang) return;
+      annyang.setLanguage('cs-CZ');
+      annyang.addCommands({
+        '*text': txt => {
+          const id = document.querySelector('.tab-button.active').dataset.tab;
+          const body = document.querySelector(`#${id} .tab-content-body`);
+
+          // always add the button to the UI…
+          addTextButton(txt, body, id, id === 'predefined');
+
+          // Aktualizace klávesových zkratek
+          resetShortcuts(body);
+          // …but only save for non‐predefined tabs:
+          if (id !== 'predefined') {
+            tabsData[id] = tabsData[id] || [];
+            tabsData[id].push(txt);
+            persist();
+          }
+
+          annyang.abort();
+          recBtn.classList.remove('active');
+        }
+      });
+
+      annyang.addCallback('end', () => recBtn.classList.remove('active'));
       // Include the QRCode.js library dynamically
       const qrScript = document.createElement('script');
       qrScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
@@ -171,38 +196,9 @@
         // Show the modal
         qrModal.show();
       });
-      // Dynamické načtení annyang
-      function initAnnyang() {
-        if (!window.annyang) return;
-        annyang.setLanguage('cs-CZ');
-        annyang.addCommands({
-          '*text': txt => {
-            const id = document.querySelector('.tab-button.active').dataset.tab;
-            const body = document.querySelector(`#${id} .tab-content-body`);
-
-            // always add the button to the UI…
-            addTextButton(txt, body, id, id === 'predefined');
-
-            // Aktualizace klávesových zkratek
-            resetShortcuts(body);
-            // …but only save for non‐predefined tabs:
-            if (id !== 'predefined') {
-              tabsData[id] = tabsData[id] || [];
-              tabsData[id].push(txt);
-              persist();
-            }
-
-            annyang.abort();
-            recBtn.classList.remove('active');
-          }
-        });
-
-        annyang.addCallback('end', () => recBtn.classList.remove('active'));
-      }
-     
-
-      script.onload = initAnnyang;
-      script.onerror = () => console.warn('annyang se nepodařilo načíst');
+  
+      
+ 
 
       // Globální reference
       const wrap = document.querySelector('.wrap');

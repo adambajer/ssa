@@ -301,7 +301,8 @@
         annyang.setLanguage('cs-CZ');
         annyang.addCommands({'*text': text => {
           console.log('[annyang] result text=', text); onTranscript(text);
-        }});
+        }
+        });
         annyang.addCallback('end', () => console.log('[annyang] end'));
         recBtn.addEventListener('click', () => {
           const tabId = localStorage.getItem('activeTab');

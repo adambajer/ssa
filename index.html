@@ -422,24 +422,89 @@
         activateTab(init);
         console.log('[initTabs] done');
       }
-
       function initVoice() {
         console.log('[initVoice]');
-        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SR) { console.error('[initVoice] no SR'); return; }
-        recognition = new SR(); recognition.lang = 'cs-CZ'; recognition.interimResults = false; recognition.continuous = false;
-        recognition.onstart = async () => { console.log('[SR] start');
-        recBtn.classList.add('active'); 
-        recordingStatus.textContent = 'Mluvte…'; 
-        isRecording = true;
-       startTime = Date.now();
-      //  await initAudioVisualization(); 
-        recognition.start(); };
-        recognition.onresult = e => { const text = e.results[0][0].transcript.trim(); console.log('[SR] result', text); const tabId = localStorage.getItem('activeTab'); addButton(text, tabId); tabsData[tabId] = tabsData[tabId] || []; tabsData[tabId].push(text); persist(); };
-        recognition.onerror = e => console.error('[SR] error', e.error);
-        recognition.onend = () => { console.log('[SR] end'); recBtn.classList.remove('active'); recordingStatus.textContent = ''; recordingTime.textContent = ''; stopAudioVisualization(); isRecording = false; };
-        recBtn.addEventListener('click', () => { const tabId = localStorage.getItem('activeTab'); if (tabId === TAB_PREDEFINED) { alert('Nahrávání není povoleno'); return; } if (isRecording) stopRecognition(); else startRecognition(); });
-        console.log('[initVoice] done');
+        try {
+          const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+          if (!SR) {
+            console.error('[initVoice] SpeechRecognition API not available');
+            return;
+          }
+          try {
+            recognition = new SR();
+            console.log('[initVoice] SpeechRecognition instance created');
+          } catch (e) {
+            console.error('[initVoice] Failed to instantiate SpeechRecognition', e);
+            return;
+          }
+          recognition.lang = 'cs-CZ';
+          recognition.interimResults = false;
+          recognition.continuous = false;
+
+          recognition.onstart = () => {
+            console.log('[SR] onstart');
+            try {
+              recBtn.classList.add('active');
+              recordingStatus.textContent = 'Mluvte…';
+              isRecording = true;
+              startTime = Date.now();
+              console.log('[SR] ready for transcription');
+            } catch (e) {
+              console.error('[SR] onstart error', e);
+            }
+          };
+
+          recognition.onresult = e => {
+            console.log('[SR] onresult event', e);
+            try {
+              const text = e.results[0][0].transcript.trim();
+              console.log('[SR] result transcript', text);
+              const tabId = localStorage.getItem('activeTab');
+              addButton(text, tabId);
+              tabsData[tabId] = tabsData[tabId] || [];
+              tabsData[tabId].push(text);
+              persist();
+            } catch (e) {
+              console.error('[SR] onresult handling error', e);
+            }
+          };
+
+          recognition.onerror = e => {
+            console.error('[SR] error event', e.error);
+          };
+
+          recognition.onend = () => {
+            console.log('[SR] onend');
+            try {
+              recBtn.classList.remove('active');
+              recordingStatus.textContent = '';
+              recordingTime.textContent = '';
+              stopAudioVisualization();
+              isRecording = false;
+            } catch (e) {
+              console.error('[SR] onend error', e);
+            }
+          };
+
+          recBtn.addEventListener('click', () => {
+            const tabId = localStorage.getItem('activeTab');
+            if (tabId === TAB_PREDEFINED) {
+              alert('Nahrávání není povoleno');
+              return;
+            }
+            if (isRecording) {
+              console.log('[SR] click - stopping recognition');
+              try { stopRecognition(); } catch (e) { console.error('[SR] stopRecognition error', e); }
+            } else {
+              console.log('[SR] click - starting recognition');
+              try { startRecognition(); } catch (e) { console.error('[SR] startRecognition error', e); }
+            }
+          });
+
+          console.log('[initVoice] done');
+        } catch (e) {
+          console.error('[initVoice] unexpected error', e);
+        }
       }
       async function initAudioVisualization() {
         try {

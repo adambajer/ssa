@@ -92,36 +92,51 @@
         </div>
       </div>
     </div>
-    <!-- Settings Modal -->
-    <div class="modal fade" id="settingsModal" tabindex="-2" aria-labelledby="settingsModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="settingsModalLabel">Nastavení aplikace</h5>
-          </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <label for="voiceSelect" class="form-label">Hlas TTS</label>
-              <select id="voiceSelect" class="form-select"></select>
-            </div>
-            <div class="mb-3">
-              <label for="rateRange" class="form-label">Rychlost čtení: <span id="rateValue">1</span></label>
-              <input type="range" id="rateRange" min="0.5" max="2" step="0.1" value="1" class="form-range">
-            </div>
-            <div class="form-check mb-2">
-              <input class="form-check-input" type="checkbox" id="ignorePlaying">
-              <label class="form-check-label" for="ignorePlaying">Ignorovat, pokud již probíhá čtení</label>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="allowMultiple">
-              <label class="form-check-label" for="allowMultiple">Povolit více čtení současně</label>
-            </div>
-          </div>
-          <div class="modal-footer">
-          </div>
-        </div>
+ <!-- Toast container (pravý spodní roh) -->
+<div class="position-fixed bottom-0 start-0 p-3" style="z-index: 1080;">
+  <!-- Nastavení (toast) -->
+  <div id="settingsToast"
+       class="toast text-bg-light border-0"
+       role="alert" aria-live="assertive" aria-atomic="true"
+       data-bs-autohide="false">          <!-- autohide = false  -->
+
+    <div class="toast-header bg-danger text-white">
+      <strong class="me-auto">Nastavení aplikace</strong>
+      <button type="button" class="btn-close text-white" data-bs-dismiss="toast" aria-label="Close"></button>
+
+    </div>
+
+    <div class="toast-body">
+      <div class="mb-3">
+        <label for="voiceSelect" class="form-label">Hlas TTS</label>
+        <select id="voiceSelect" class="form-select"></select>
+      </div>
+
+      <div class="mb-3">
+        <label for="rateRange" class="form-label">
+          Rychlost čtení: <span id="rateValue">1</span>
+        </label>
+        <input type="range" id="rateRange"
+               min="0.5" max="2" step="0.1"
+               value="1" class="form-range">
+      </div>
+
+      <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" id="ignorePlaying">
+        <label class="form-check-label" for="ignorePlaying">
+          Ignorovat, pokud již probíhá čtení
+        </label>
+      </div>
+
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="allowMultiple">
+        <label class="form-check-label" for="allowMultiple">
+          Povolit více čtení současně
+        </label>
       </div>
     </div>
+  </div>
+</div>
 
     <!-- Rest of modals, toasts, recording UI etc. -->
 
@@ -169,7 +184,7 @@
 
       <!-- Define a reusable microphone icon -->
       <div id="recording-info">
-        <span id="recording-status"></span>
+        <span id="recording-status">Klikněte pro přepis řeči</span>
         <span id="recording-time"></span>
       </div>
 
@@ -258,7 +273,7 @@
       console.log('[App] Initialization start');
 
       const TAB_PREDEFINED = 'predefined';
-      const COLORS = ['#8B0000', '#006400', '#00008B', '#8B008B', '#2F4F4F', '#4B0082', '#483D8B', '#556B2F', '#6B8E23', '#8B4513'];
+      const COLORS = ['#FF0000', '#006400', '#00008B', '#8B008B', '#2F4F4F', '#4B0082', '#483D8B', '#556B2F', '#6B8E23', '#8B4513'];
       let audioCtx, analyser, dataArray, animId, recognition, startTime;
       let keyHandlers = [];
 
@@ -315,10 +330,13 @@
         });
         ignoreChk.addEventListener('change', () => settings.ignorePlaying = ignoreChk.checked);
         multiChk.addEventListener('change', () => settings.allowMultiple = multiChk.checked);
-
-        document.getElementById('settings-btn').addEventListener('click', () => {
-          new bootstrap.Modal(document.getElementById('settingsModal')).show();
-        });
+        const settingsToast = new bootstrap.Toast(
+          document.getElementById('settingsToast'),
+          { autohide: false }           // trvale otevřené, dokud ho uživatel nezavře
+        );
+        
+        document.getElementById('settings-btn')
+        .addEventListener('click', () => settingsToast.show());
       }
       // Override localStorage
       (function () {
@@ -592,8 +610,14 @@
             try {
               recBtn.classList.remove('active');
               recordingStatus.textContent = '';
-              recordingTime.textContent = '';
+              recordingTime.textContent   = '';
+          
               stopAudioVisualization();
+              const activeTab = localStorage.getItem('activeTab');
+              recordingStatus.textContent =
+                activeTab !== TAB_PREDEFINED ? 'Klikněte pro přepis řeči' : '';
+              recBtn.style.boxShadow = 'none';   // <-- zruší stín úplně
+          
               isRecording = false;
             } catch (e) {
               console.error('[SR] onend error', e);
@@ -629,22 +653,32 @@
           analyser = audioCtx.createAnalyser(); analyser.fftSize = 256;
           dataArray = new Uint8Array(analyser.frequencyBinCount);
           const src = audioCtx.createMediaStreamSource(stream); src.connect(analyser);
-          visualizePulse(); updateRecordingTime();
+          visualizePulse();
+           updateRecordingTime();
         } catch (e) { console.error('[AudioVis] init err', e); }
       }
       function stopAudioVisualization() {
-        cancelAnimationFrame(animId); if (audioCtx) audioCtx.close();
+        cancelAnimationFrame(animId); 
+        if (audioCtx) audioCtx.close();
+        recBtn.style.boxShadow = 'none';     // <-- jistota, že po stop je čistě
+
         audioCtx = null;
         analyser = null;
         dataArray = null;
         console.log('[AudioVis] stopped');
       }
-      function startRecognition() { console.log('[SR] startRecognition'); 
-      try { recognition.start(); } catch (e) { console.error('[SR] startErr', e); } }
+      function startRecognition() { 
+        console.log('[SR] startRecognition'); 
+      try { 
+        recognition.start(); 
+      } 
+      catch (e) { 
+        console.error('[SR] startErr', e); } 
+    }
       function stopRecognition() { 
         console.log('[SR] stopRecognition');
         recognition.stop(); 
-        recBtn.style.boxShadow = `0px 0px 0px 0px rgba(0,0,0,0)`; 
+        recBtn.style.boxShadow = `0px 0px 0px rgba(0,0,0,0)`; 
 
       }
 

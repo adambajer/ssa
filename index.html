@@ -16,7 +16,20 @@
     integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
     crossorigin="anonymous"></script>
 </head>
-
+ <!-- Animation styles -->
+ <style>
+  @keyframes pulse {
+    0% { box-shadow: 0 0 10px rgba(255,0,0,0); }
+    50% { box-shadow: 0 0 20px rgba(255,0,0,0.7); }
+    100% { box-shadow: 0 0 10px rgba(255,0,0,0); }
+  }
+  #start-recording.pulsing {
+    animation: pulse 1s infinite alternate ease-in-out;
+  }
+  .transcription-button.activated {
+    animation: pulse 0.5s infinite alternate ease-in-out;
+  }
+</style>
 <body>
   <div class="wrap container-fluid">
 
@@ -389,8 +402,7 @@
                 wrap.style.transition = 'box-shadow 0.5s ease-in-out, border 0.5s ease-in-out'; // Add transition
                 speak(btn.textContent, () =>
                   wrap.classList.remove('activated'));
-                  wrap.style.boxShadow = ''; // Reset the box-shadow           
-                  wrap.style.border = `1px solid ${color}`; // Add border color
+                   wrap.style.border = `1px solid ${color}`; // Add border color
 
                   isPlaying = false;
               }
@@ -655,7 +667,7 @@
 
       document.addEventListener('DOMContentLoaded', () => {
         initTabs();
-        initVoice();
+        initVoice(); 
         initImport();
         initExport();
         initDeleteTab(); initEraseData();

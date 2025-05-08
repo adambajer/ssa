@@ -64,7 +64,8 @@
                 <span class="material-icons me-2">bug_report</span> Log panel
               </button>
             </li>
-
+            <li><button class="dropdown-item d-flex align-items-center" id="settings-btn" title="Nastavení"><span
+                  class="material-icons me-2">settings</span>Nastavení</button></li>
           </ul>
         </div>
       </div>
@@ -87,6 +88,40 @@
         </div>
       </div>
     </div>
+    <!-- Settings Modal -->
+    <div class="modal fade" id="settingsModal" tabindex="-1" data-bs-backdrop="true" data-bs-keyboard="true" aria-labelledby="settingsModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="settingsModalLabel">Nastavení aplikace</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+          </div>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="voiceSelect" class="form-label">Hlas TTS</label>
+              <select id="voiceSelect" class="form-select"></select>
+            </div>
+            <div class="mb-3">
+              <label for="rateRange" class="form-label">Rychlost čtení: <span id="rateValue">1</span></label>
+              <input type="range" id="rateRange" min="0.5" max="2" step="0.1" value="1" class="form-range">
+            </div>
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="ignorePlaying">
+              <label class="form-check-label" for="ignorePlaying">Ignorovat, pokud již probíhá čtení</label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="allowMultiple">
+              <label class="form-check-label" for="allowMultiple">Povolit více čtení současně</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zavřít</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rest of modals, toasts, recording UI etc. -->
 
 
     <!-- Toast container -->
@@ -243,7 +278,44 @@
       const customTabs = JSON.parse(localStorage.getItem('customTabs') || '[]');
       const tabsData = JSON.parse(localStorage.getItem('tabsData') || '{}');
       let isRecording = false;
+      let voices = [];
+      const settings = {
+        voiceURI: '',
+        rate: 1,
+        ignorePlaying: false,
+        allowMultiple: false
+      };
 
+      function initSettings() {
+        const select = document.getElementById('voiceSelect');
+        const rateRange = document.getElementById('rateRange');
+        const rateValue = document.getElementById('rateValue');
+        const ignoreChk = document.getElementById('ignorePlaying');
+        const multiChk = document.getElementById('allowMultiple');
+
+        // Populate voices
+        voices = speechSynthesis.getVoices();
+        voices.forEach(v => {
+          const opt = document.createElement('option');
+          opt.value = v.voiceURI;
+          opt.textContent = v.name + (v.default ? ' (výchozí)' : '');
+          select.append(opt);
+        });
+        select.value = settings.voiceURI || (voices[0] && voices[0].voiceURI);
+        rateValue.textContent = settings.rate;
+
+        select.addEventListener('change', () => settings.voiceURI = select.value);
+        rateRange.addEventListener('input', () => {
+          settings.rate = rateRange.value;
+          rateValue.textContent = settings.rate;
+        });
+        ignoreChk.addEventListener('change', () => settings.ignorePlaying = ignoreChk.checked);
+        multiChk.addEventListener('change', () => settings.allowMultiple = multiChk.checked);
+
+        document.getElementById('settings-btn').addEventListener('click', () => {
+          new bootstrap.Modal(document.getElementById('settingsModal')).show();
+        });
+      }
       // Override localStorage
       (function () {
         const oSet = Storage.prototype.setItem, oRm = Storage.prototype.removeItem, oClr = Storage.prototype.clear;
@@ -258,7 +330,17 @@
         catch (e) { console.error('[persist] ERR', e); }
       }
 
-      function speak(text, cb) { console.log('[speak]', text); const u = new SpeechSynthesisUtterance(text); u.lang = 'cs-CZ'; u.onend = () => { console.log('[speak] end'); cb(); }; speechSynthesis.speak(u); }
+      // Modified speak to respect settings
+      function speak(text, cb) {
+        if (settings.ignorePlaying && speechSynthesis.speaking) return;
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = 'cs-CZ';
+        utter.rate = settings.rate;
+        const voice = voices.find(v => v.voiceURI === settings.voiceURI);
+        if (voice) utter.voice = voice;
+        utter.onend = cb;
+        speechSynthesis.speak(utter);
+      }
 
       function clearKeyHandlers() {
         keyHandlers.forEach(h => document.removeEventListener('keydown', h));
@@ -283,15 +365,15 @@
         try {
           const container = document.querySelector(`#${tabId} .tab-content-body`);
           if (!container) throw new Error(`Container for tab '${tabId}' not found`);
-   
+
           const idx = container.querySelectorAll('.transcription-button').length;
           const color = COLORS[idx % COLORS.length];
-   
+
           // wrapper div
           const wrap = document.createElement('div');
           wrap.className = 'transcription-button';
           wrap.style.borderColor = color;
-   
+
           // button element
           const btn = document.createElement('button');
           btn.className = 'text-button';
@@ -303,7 +385,7 @@
               speak(btn.textContent, () => wrap.classList.remove('activated'));
             }
           });
-   
+
           // shortcut label
           const lbl = document.createElement('span');
           lbl.className = 'shortcut';
@@ -316,7 +398,7 @@
             marginLeft: '5px'
           });
           wrap.append(lbl, btn);
-   
+
           // context menu for edit/delete
           wrap.addEventListener('contextmenu', e => {
             e.preventDefault();
@@ -333,7 +415,7 @@
               boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
               zIndex: '10000'
             });
-   
+
             // edit button
             const edit = document.createElement('button');
             edit.textContent = '✏️ Edit';
@@ -352,7 +434,7 @@
               menu.remove();
               registerKeyHandlers(tabId);
             });
-   
+
             // delete button
             const del = document.createElement('button');
             del.textContent = '🗑️ Delete';
@@ -368,12 +450,12 @@
               menu.remove();
               registerKeyHandlers(tabId);
             });
-   
+
             menu.append(edit, del);
             document.body.append(menu);
             document.addEventListener('click', () => menu.remove(), { once: true });
           });
-   
+
           container.append(wrap);
           registerKeyHandlers(tabId);
           console.log(`[addButton] Successfully added button to tab='${tabId}' with text='${text}'`);
@@ -381,7 +463,7 @@
           console.error(`[addButton] Failed to add button to tab='${tabId}' with text='${text}'`, e);
         }
       }
-   
+
       function createTab(id, name, predef = false) {
         console.log(`[createTab] id='${id}', name='${name}', predef=${predef}`);
         if (document.getElementById(id)) {
@@ -563,8 +645,20 @@
       function animateTabTransition(dir) { const ac = document.querySelector('.tab-content.active'); if (!ac) return; const cl = dir === 'left' ? 'slide-out-left' : 'slide-out-right'; ac.classList.add(cl); setTimeout(() => ac.classList.remove(cl), 300); }
 
       document.addEventListener('DOMContentLoaded', () => {
-        initTabs(); initVoice(); initImport(); initExport(); initDeleteTab(); initEraseData(); initShare(); initHelp(); initPWA(); enableSwipeNavigation();
+        initTabs(); 
+        initVoice(); 
+        initImport(); 
+        initExport(); 
+        initDeleteTab(); initEraseData();
+         initShare();
+          initHelp(); 
+          initPWA(); 
+          enableSwipeNavigation();
+       
         document.addEventListener('keydown', e => { if (e.shiftKey && /^[1-9]$/.test(e.key)) { const idx = parseInt(e.key) - 1; const btns = Array.from(document.querySelectorAll('.tab-button')); if (btns[idx]) activateTab(btns[idx].dataset.tab); } if (e.key === 'Control') recBtn.click(); });
+        initSettings();
+        // ensure voicesloaded
+        speechSynthesis.onvoiceschanged = initSettings;
         console.log('[App] Initialization complete');
       });
     })();

@@ -16,8 +16,8 @@
     integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
     crossorigin="anonymous"></script>
 </head>
- <!-- Animation styles -->
- 
+<!-- Animation styles -->
+
 <body>
   <div class="wrap container-fluid">
 
@@ -33,40 +33,43 @@
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="menuDropdown">
 
             <li><button class="dropdown-item d-flex align-items-center" id="add-tab-btn" title="Nová záložka"><span
-                  class="material-icons me-2">add</span>Nová záložka</button></li>
+                  class="material-icons me-2">add</span>Nová</button></li>
             <li><button class="dropdown-item d-flex align-items-center" id="import-tab" title="Import"><span
-                  class="material-icons me-2">folder_open</span>Import záložky</button></li>
+                  class="material-icons me-2">folder_open</span>Import</button></li>
             <li><button class="dropdown-item d-flex align-items-center" id="export-tab" title="Export"><span
-                  class="material-icons me-2">save</span>Export záložky</button></li>
+                  class="material-icons me-2">save</span>Export</button></li>
             <li><button class="dropdown-item d-flex align-items-center" id="delete-tab" title="Smazat tab"><span
-                  class="material-icons me-2">delete</span>Smazat záložku</button></li>
+                  class="material-icons me-2">delete</span>Smazat</button></li>
             <li>
               <!-- Add this new menu item in the dropdown menu -->
             <li><button class="dropdown-item d-flex align-items-center" id="erase-data-btn"
                 title="Vymazat všechna data">
-                <span class="material-icons me-2">delete_forever</span>Vymazat všechna data
+                <span class="material-icons me-2">delete_forever</span>Vymazat vše
               </button></li>
             <hr class="dropdown-divider">
             </li>
 
-            <li><button class="dropdown-item d-flex align-items-center" id="help-btn" title="Nápověda"><span
-                  class="material-icons me-2">help_outline</span>Klávesové zkratky</button></li>
-
-            <li><button class="dropdown-item d-flex align-items-center" id="btn-install" hidden
-                title="Instalovat aplikaci"><span class="material-icons me-2">phone_android</span>Instalovat
-                aplikaci</button></li>
-
-            <button class="dropdown-item d-flex align-items-center" id="share-btn" title="Sdílet">
-              <span class="material-icons me-2">share</span> Sdílej aplikaci
-            </button>
-            </li>
             <li>
-              <button class="dropdown-item d-flex align-items-center" id="toggle-log-btn" title="Zobrazit log">
-                <span class="material-icons me-2">bug_report</span> Log panel
+              <button class="dropdown-item d-flex align-items-center" id="share-btn" title="Sdílet">
+                <span class="material-icons me-2">share</span>Sdílej
               </button>
             </li>
+            <li><button class="dropdown-item d-flex align-items-center" id="btn-install" hidden
+                title="Instalovat aplikaci"><span class="material-icons me-2">phone_android</span>Instaluj</button>
+            </li>
+
+            <li>
+              <button class="dropdown-item d-flex align-items-center" id="toggle-log-btn" title="Zobrazit log">
+                <span class="material-icons me-2">bug_report</span>Log
+              </button>
+            </li>
+
+            <li><button class="dropdown-item d-flex align-items-center" id="help-btn" title="Nápověda"><span
+                  class="material-icons me-2">help_outline</span>Ovládání</button>
+            </li>
             <li><button class="dropdown-item d-flex align-items-center" id="settings-btn" title="Nastavení"><span
-                  class="material-icons me-2">settings</span>Nastavení</button></li>
+                  class="material-icons me-2">settings</span>Nastavení</button>
+            </li>
           </ul>
         </div>
       </div>
@@ -76,7 +79,7 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="qrModalLabel">Naskenujte tento QR kód pro sdílení webu.</h5>
+            <h5 class="modal-title" id="qrModalLabel">QR url</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
           </div>
           <div class="modal-body">
@@ -265,7 +268,7 @@
       const recordingStatus = document.getElementById('recording-status');
       const recordingTime = document.getElementById('recording-time');
       let isPlaying = false;
-      
+
       const shareBtn = document.getElementById('share-btn');
       const helpBtn = document.getElementById('help-btn');
       const addBtn = document.getElementById('add-tab-btn');
@@ -381,33 +384,33 @@
           btn.textContent = text;
           btn.addEventListener('click', () => {
             if (isPlaying) return;               // guard
-          
+
             isPlaying = true;
-          
+
             // turn the glow on
             wrap.style.transition = 'box-shadow .5s ease-in-out, border .5s ease-in-out';
-            wrap.style.boxShadow  = `0 0 20px 0 ${color}`;           // full glow
-            wrap.style.transform  = 'all .5s linear'; // keep your pulse
+            wrap.style.boxShadow = `0 0 20px 0 ${color}`;           // full glow
+            wrap.style.transform = 'all .5s linear'; // keep your pulse
             wrap.classList.add('activated');
-          
+
             speak(btn.textContent, () => {
-          
+
               /* ---- WHEN PLAYBACK ENDS ---- */
-          
+
               wrap.classList.remove('activated');
-          
+
               // 1. fade the glow to zero – the transition makes it smooth
               wrap.style.boxShadow = `0 0 0 0 ${color}`;
-          
+
               // 2. optional: wipe the inline style after the fade completes
               wrap.addEventListener('transitionend', () => {
                 wrap.style.boxShadow = '';       // back to clean state
-              }, { once:true });
-          
+              }, { once: true });
+
               isPlaying = false;
             });
           });
-          
+
 
           // shortcut label
           const lbl = document.createElement('span');
@@ -415,7 +418,7 @@
           lbl.textContent = String.fromCharCode(65 + idx);
           Object.assign(lbl.style, {
             backgroundColor: color,
-            color: '#fff', 
+            color: '#fff',
           });
           wrap.append(lbl, btn);
 
@@ -429,8 +432,8 @@
               position: 'absolute',
               top: `${e.clientY}px`,
               left: `${e.clientX}px`,
-               borderRadius: '5px',
-               zIndex: '10000'
+              borderRadius: '5px',
+              zIndex: '10000'
             });
 
             // edit button
@@ -556,11 +559,14 @@
               recordingStatus.textContent = 'Mluvte…';
               isRecording = true;
               startTime = Date.now();
-              console.log('[SR] ready for transcription');
+
+              /* ADD THIS ↓↓↓ */
+              initAudioVisualization();        // start microphone visualiser
             } catch (e) {
               console.error('[SR] onstart error', e);
             }
           };
+
 
           recognition.onresult = e => {
             console.log('[SR] onresult event', e);
@@ -615,6 +621,8 @@
         }
       }
       async function initAudioVisualization() {
+        if (audioCtx && audioCtx.state !== 'closed') return;   // already running
+        console.log('[AudioVis] initAudioVisualization');
         try {
           const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
           audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -624,18 +632,48 @@
           visualizePulse(); updateRecordingTime();
         } catch (e) { console.error('[AudioVis] init err', e); }
       }
-      function stopAudioVisualization() { cancelAnimationFrame(animId); if (audioCtx) audioCtx.close(); }
-      function startRecognition() { console.log('[SR] startRecognition'); try { recognition.start(); } catch (e) { console.error('[SR] startErr', e); } }
-      function stopRecognition() { console.log('[SR] stopRecognition'); recognition.stop(); }
+      function stopAudioVisualization() {
+        cancelAnimationFrame(animId); if (audioCtx) audioCtx.close();
+        audioCtx = null;
+        analyser = null;
+        dataArray = null;
+        console.log('[AudioVis] stopped');
+      }
+      function startRecognition() { console.log('[SR] startRecognition'); 
+      try { recognition.start(); } catch (e) { console.error('[SR] startErr', e); } }
+      function stopRecognition() { 
+        console.log('[SR] stopRecognition');
+        recognition.stop(); 
+        recBtn.style.boxShadow = `0px 0px 0px 0px rgba(0,0,0,0)`; 
 
-      function visualizePulse() { if (!isRecording) return; analyser.getByteFrequencyData(dataArray); const vol = dataArray.reduce((s, v) => s + v, 0) / dataArray.length; const glow = Math.min(vol / 256, 1); recBtn.style.boxShadow = `0 0 ${100 * glow}px rgba(255,0,0,${0.3 + 0.7 * glow})`; animId = requestAnimationFrame(visualizePulse); }
+      }
 
-      function updateRecordingTime() { if (!isRecording) return; const elapsed = Math.floor((Date.now() - startTime) / 1000); const m = String(Math.floor(elapsed / 60)).padStart(2, '0'); const s = String(elapsed % 60).padStart(2, '0'); recordingTime.textContent = `${m}:${s}`; setTimeout(updateRecordingTime, 1000); }
+      function visualizePulse() {
+       if (!isRecording) return; 
+       analyser.getByteFrequencyData(dataArray);
+       const vol = dataArray.reduce((s, v) => s + v, 0) / dataArray.length;
+       const glow = Math.min(vol / 256, 1); 
+       recBtn.style.boxShadow = `0 0 ${100 * glow}px rgba(255,0,0,${0.3 + 0.7 * glow})`; 
+       animId = requestAnimationFrame(visualizePulse); 
+      }
+
+      function updateRecordingTime() { 
+        if (!isRecording) return; 
+        const elapsed = Math.floor((Date.now() - startTime) / 1000); 
+        const m = String(Math.floor(elapsed / 60)).padStart(2, '0');
+         const s = String(elapsed % 60).padStart(2, '0');
+          recordingTime.textContent = `${m}:${s}`; 
+          setTimeout(updateRecordingTime, 1000);
+      }
 
       function initImport() { console.log('[initImport]'); impBtn.addEventListener('click', () => { const tabId = localStorage.getItem('activeTab'); console.log('[import] tab', tabId); fileInput.onchange = async e => { const f = e.target.files[0]; if (!f) return; try { const txt = await f.text(); tabsData[tabId] = JSON.parse(txt); persist(); const bd = document.querySelector(`#${tabId} .tab-content-body`); bd.innerHTML = ''; tabsData[tabId].forEach(t => addButton(t, tabId)); console.log('[import] OK'); } catch (err) { console.error('[import] ERR', err); alert('Neplatný JSON'); } e.target.value = ''; }; fileInput.click(); }); }
 
-      function initExport() { console.log('[initExport]'); expBtn.addEventListener('click', () => { const tabId = localStorage.getItem('activeTab'); console.log('[export] tab', tabId); 
-      const arr = Array.from(document.querySelectorAll(`#${tabId} .text-button`)).map(b => b.textContent); const blob = new Blob([JSON.stringify(arr, null, 2)], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `${tabId}.json`; document.body.append(a); a.click(); a.remove(); URL.revokeObjectURL(url); console.log('[export] done'); }); }
+      function initExport() {
+        console.log('[initExport]'); expBtn.addEventListener('click', () => {
+          const tabId = localStorage.getItem('activeTab'); console.log('[export] tab', tabId);
+          const arr = Array.from(document.querySelectorAll(`#${tabId} .text-button`)).map(b => b.textContent); const blob = new Blob([JSON.stringify(arr, null, 2)], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `${tabId}.json`; document.body.append(a); a.click(); a.remove(); URL.revokeObjectURL(url); console.log('[export] done');
+        });
+      }
 
       function initDeleteTab() { console.log('[initDeleteTab]'); delBtn.addEventListener('click', () => { const tabId = localStorage.getItem('activeTab'); console.log('[delTab] tab', tabId); if (tabId === TAB_PREDEFINED) { alert('Nelze smazat'); return; } if (!confirm('Smazat záložku?')) return; delete tabsData[tabId]; const idx = customTabs.findIndex(t => t.id === tabId); if (idx > -1) customTabs.splice(idx, 1); persist(); document.querySelector(`.tab-button[data-tab="${tabId}"]`).remove(); document.getElementById(tabId).remove(); activateTab(TAB_PREDEFINED); console.log('[delTab] done'); }); }
 
@@ -664,7 +702,7 @@
 
       document.addEventListener('DOMContentLoaded', () => {
         initTabs();
-        initVoice(); 
+        initVoice();
         initImport();
         initExport();
         initDeleteTab(); initEraseData();

@@ -333,4 +333,13 @@ padding-right: 5px;     font-weight: bold;color: white;}
     border: 0px solid transparent; 
     background: rgba(0,0,0,.45);            /* tmavý proužek */
     color: #fff;  
-  } 
+  } .kbd-badge{
+    margin-left:auto;
+    font-size:.65rem;
+    font-weight:600;
+    padding:.15rem .4rem;
+    background:#e5e5e5;
+    border-radius:4px;
+    color:#333;
+  }
+  

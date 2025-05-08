@@ -33,11 +33,11 @@
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="menuDropdown">
 
             <li><button class="dropdown-item d-flex align-items-center" id="add-tab-btn" title="Nová záložka"><span
-                  class="material-icons me-2">add</span>Nová</button></li>
+                  class="material-icons me-2">add</span>Záložka</button></li>
             <li><button class="dropdown-item d-flex align-items-center" id="import-tab" title="Import"><span
-                  class="material-icons me-2">folder_open</span>Import</button></li>
+                  class="material-icons me-2">folder_open</span>Otevřít</button></li>
             <li><button class="dropdown-item d-flex align-items-center" id="export-tab" title="Export"><span
-                  class="material-icons me-2">save</span>Export</button></li>
+                  class="material-icons me-2">save</span>Uložit</button></li>
             <li><button class="dropdown-item d-flex align-items-center" id="delete-tab" title="Smazat tab"><span
                   class="material-icons me-2">delete</span>Smazat</button></li>
             <li>
@@ -47,20 +47,19 @@
                 <span class="material-icons me-2">delete_forever</span>Vymazat vše
               </button></li>
             <hr class="dropdown-divider">
-            </li>
-
+            </li> 
             <li>
               <button class="dropdown-item d-flex align-items-center" id="share-btn" title="Sdílet">
-                <span class="material-icons me-2">share</span>Sdílej
+                <span class="material-icons me-2">share</span>Sdílet
               </button>
             </li>
             <li><button class="dropdown-item d-flex align-items-center" id="btn-install" hidden
-                title="Instalovat aplikaci"><span class="material-icons me-2">phone_android</span>Instaluj</button>
+                title="Instalovat aplikaci"><span class="material-icons me-2">phone_android</span>Instalvat</button>
             </li>
 
             <li>
               <button class="dropdown-item d-flex align-items-center" id="toggle-log-btn" title="Zobrazit log">
-                <span class="material-icons me-2">bug_report</span>Log
+                <span class="material-icons me-2">bug_report</span>Logování
               </button>
             </li>
 
@@ -211,7 +210,9 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
   <script>// SSA Application JavaScript
-    (() => {
+    (() => { 
+
+
       /* === LOG TOAST ======================================================= */
       const logToast = document.createElement('div');
       logToast.id = 'log-toast';
@@ -219,8 +220,8 @@
       Object.assign(logToast.style, {
         position: 'fixed',
         bottom: '1rem',
-        right: '30%',
-        width: '800px',
+        right: '0%',
+        width: 'auto',
         maxHeight: '60vh',        // víc prostoru, ale ne přes celou výšku
         overflow: 'hidden',      // scrolluje jen body
         display: 'none',
@@ -283,6 +284,7 @@
         logToast.style.top = `${e.clientY - offY}px`;
       });
       document.addEventListener('mouseup', () => dragging = false);
+      let menuAwait = false;   // ⇐ globální, viditelná pro oba listenery
 
       /* === Přesměrování console.log / console.error ======================= */
       let logCounter = 0;                      // pořadové číslo řádku
@@ -714,7 +716,7 @@ padChk.addEventListener('change', () => {
       function initVoice() {
         console.log('[initVoice]');
         try {
-          const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+          const SR = window.SpeechRecognition || webkitSpeechRecognition;
           if (!SR) {
             console.error('[initVoice] SpeechRecognition API not available');
             return;
@@ -918,15 +920,28 @@ padChk.addEventListener('change', () => {
         enableSwipeNavigation();
         document.addEventListener('keydown', e => {
 
-          if (e.key === ';') {                     // ← nový semicolon
-            e.preventDefault();
-            bootstrap.Dropdown
-              .getOrCreateInstance(document.getElementById('menuDropdown'))
-              .toggle();
-            return;
-          }
+    /* první úhoz  – ;  *******************************************/
+  if(!menuAwait && e.key === ';'){
+    e.preventDefault();
+    menuAwait = true;          // ← zapneme zámek
+    dd.show();
+    setTimeout(()=> menuAwait = false, 2000);   // auto-reset
+    return;
+  }
 
-          if (/^[1-9]$/.test(e.key)) {             // 1–9 = záložky
+  /* druhý úhoz  – číslo 1-9 ************************************/
+  if(menuAwait && /^[1-9]$/.test(e.key)){
+    e.preventDefault();
+    e.stopImmediatePropagation();   // ← číslo už dál nebublá
+    const btn = mapKey.get(e.key);
+    if(btn) btn.click();
+    dd.hide();
+    menuAwait = false;              // zámek vypneme
+  }
+
+          if (/^[1-9]$/.test(e.key)) { 
+              if (menuAwait) return;              // ← blokuje tab-shortcuts
+            // 1–9 = záložky
             e.preventDefault();
             const idx = parseInt(e.key, 10) - 1;
             const tabs = Array.from(document.querySelectorAll('.tab-button'));

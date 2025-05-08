@@ -17,19 +17,7 @@
     crossorigin="anonymous"></script>
 </head>
  <!-- Animation styles -->
- <style>
-  @keyframes pulse {
-    0% { box-shadow: 0 0 10px rgba(255,0,0,0); }
-    50% { box-shadow: 0 0 20px rgba(255,0,0,0.7); }
-    100% { box-shadow: 0 0 10px rgba(255,0,0,0); }
-  }
-  #start-recording.pulsing {
-    animation: pulse 1s infinite alternate ease-in-out;
-  }
-  .transcription-button.activated {
-    animation: pulse 0.5s infinite alternate ease-in-out;
-  }
-</style>
+ 
 <body>
   <div class="wrap container-fluid">
 
@@ -380,7 +368,7 @@
           if (!container) throw new Error(`Container for tab '${tabId}' not found`);
 
           const idx = container.querySelectorAll('.transcription-button').length;
-          const color = COLORS[idx % COLORS.length];
+          let color = COLORS[idx % COLORS.length];
 
           // wrapper div
           const wrap = document.createElement('div');
@@ -392,23 +380,34 @@
           btn.className = 'text-button';
           btn.textContent = text;
           btn.addEventListener('click', () => {
-            if (!isPlaying) {
-              isPlaying = true;
-              console.log(`[btn click] '${btn.textContent}'`);
-              if (!wrap.classList.contains('activated')) {
-                wrap.classList.add('activated');
-                wrap.style.boxShadow = `0px 0px 20px 0px ${color}`; // Dynamically apply the color
-                wrap.style.animation = 'infinite 0.5s alternate ease-in-out'; // Add animation
-                wrap.style.transition = 'box-shadow 0.5s ease-in-out, border 0.5s ease-in-out'; // Add transition
-                speak(btn.textContent, () =>
-                  wrap.classList.remove('activated'));
-                   wrap.style.border = `1px solid ${color}`; // Add border color
-
-                  isPlaying = false;
-              }
-
-            }
+            if (isPlaying) return;               // guard
+          
+            isPlaying = true;
+          
+            // turn the glow on
+            wrap.style.transition = 'box-shadow .5s ease-in-out, border .5s ease-in-out';
+            wrap.style.boxShadow  = `0 0 20px 0 ${color}`;           // full glow
+            wrap.style.transform  = 'all .5s linear'; // keep your pulse
+            wrap.classList.add('activated');
+          
+            speak(btn.textContent, () => {
+          
+              /* ---- WHEN PLAYBACK ENDS ---- */
+          
+              wrap.classList.remove('activated');
+          
+              // 1. fade the glow to zero – the transition makes it smooth
+              wrap.style.boxShadow = `0 0 0 0 ${color}`;
+          
+              // 2. optional: wipe the inline style after the fade completes
+              wrap.addEventListener('transitionend', () => {
+                wrap.style.boxShadow = '';       // back to clean state
+              }, { once:true });
+          
+              isPlaying = false;
+            });
           });
+          
 
           // shortcut label
           const lbl = document.createElement('span');
@@ -416,9 +415,7 @@
           lbl.textContent = String.fromCharCode(65 + idx);
           Object.assign(lbl.style, {
             backgroundColor: color,
-            color: '#fff',
-            padding: '2px 6px',
-            borderRadius: '5px',
+            color: '#fff', 
           });
           wrap.append(lbl, btn);
 
@@ -427,21 +424,20 @@
             e.preventDefault();
             document.querySelectorAll('.context-menu').forEach(m => m.remove());
             const menu = document.createElement('div');
-            menu.className = 'context-menu';
+            menu.className = 'context-menu shadow-sm';
             Object.assign(menu.style, {
               position: 'absolute',
               top: `${e.clientY}px`,
               left: `${e.clientX}px`,
-              background: '#fff',
-              border: '1px solid #ccc',
-              borderRadius: '5px',
-              boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
-              zIndex: '10000'
+               borderRadius: '5px',
+               zIndex: '10000'
             });
 
             // edit button
             const edit = document.createElement('button');
             edit.textContent = '✏️ Upravit';
+            edit.className = 'border-bottom';
+
             edit.addEventListener('click', () => {
               const nt = prompt('Upravit text:', btn.textContent);
               if (nt) {
@@ -638,7 +634,8 @@
 
       function initImport() { console.log('[initImport]'); impBtn.addEventListener('click', () => { const tabId = localStorage.getItem('activeTab'); console.log('[import] tab', tabId); fileInput.onchange = async e => { const f = e.target.files[0]; if (!f) return; try { const txt = await f.text(); tabsData[tabId] = JSON.parse(txt); persist(); const bd = document.querySelector(`#${tabId} .tab-content-body`); bd.innerHTML = ''; tabsData[tabId].forEach(t => addButton(t, tabId)); console.log('[import] OK'); } catch (err) { console.error('[import] ERR', err); alert('Neplatný JSON'); } e.target.value = ''; }; fileInput.click(); }); }
 
-      function initExport() { console.log('[initExport]'); expBtn.addEventListener('click', () => { const tabId = localStorage.getItem('activeTab'); console.log('[export] tab', tabId); const arr = Array.from(document.querySelectorAll(`#${tabId} .text-button`)).map(b => b.textContent); const blob = new Blob([JSON.stringify(arr, null, 2)], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `${tabId}.json`; document.body.append(a); a.click(); a.remove(); URL.revokeObjectURL(url); console.log('[export] done'); }); }
+      function initExport() { console.log('[initExport]'); expBtn.addEventListener('click', () => { const tabId = localStorage.getItem('activeTab'); console.log('[export] tab', tabId); 
+      const arr = Array.from(document.querySelectorAll(`#${tabId} .text-button`)).map(b => b.textContent); const blob = new Blob([JSON.stringify(arr, null, 2)], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `${tabId}.json`; document.body.append(a); a.click(); a.remove(); URL.revokeObjectURL(url); console.log('[export] done'); }); }
 
       function initDeleteTab() { console.log('[initDeleteTab]'); delBtn.addEventListener('click', () => { const tabId = localStorage.getItem('activeTab'); console.log('[delTab] tab', tabId); if (tabId === TAB_PREDEFINED) { alert('Nelze smazat'); return; } if (!confirm('Smazat záložku?')) return; delete tabsData[tabId]; const idx = customTabs.findIndex(t => t.id === tabId); if (idx > -1) customTabs.splice(idx, 1); persist(); document.querySelector(`.tab-button[data-tab="${tabId}"]`).remove(); document.getElementById(tabId).remove(); activateTab(TAB_PREDEFINED); console.log('[delTab] done'); }); }
 

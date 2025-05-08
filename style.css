@@ -288,3 +288,46 @@ padding-right: 5px;     font-weight: bold;color: white;}
   color: #666;
 }
 
+/* obal .transcription-button */
+.launch-pad {
+    width: 7rem;           /* čtverec */
+    height: 7rem;
+
+    height: 7rem;
+    display: inline-flex;  
+      flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: .25rem;
+    border: 2px solid var(--pad-border,#ccc);
+    border-radius: 0rem;
+  }
+  
+  .launch-pad .shortcut {
+    position: absolute;
+    padding-left: 5px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    padding-right: 5px;
+    font-weight: bold;
+    color: white;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    z-index: 0;
+  }
+  
+  .launch-pad .text-button {
+    font-size: .75rem;
+    z-index: 9;
+    white-space: normal;
+    background: transparent;
+    color: white;
+    font-size: 1rem;
+  }
+  .tab-content-body {
+    display: flex;
+    align-items: flex-start;
+    justify-items: start;
+    justify-content: flex-start;
+}

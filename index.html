@@ -130,14 +130,15 @@
               Povolit více čtení současně
             </label>
           </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="launchPadMode">
+            <label class="form-check-label" for="launchPadMode">
+              Launch-pad vzhled tlačítek
+            </label>
+          </div>
         </div>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="launchPadMode">
-          <label class="form-check-label" for="launchPadMode">
-            Launch-pad vzhled tlačítek
-          </label>
-        </div>
-        
+      
+
       </div>
     </div>
 
@@ -362,7 +363,7 @@
           localStorage.setItem('launchPad', settings.launchPad);   // uložit
           renderAllButtons();                                      // překreslit
         });
-        
+
         /* ---------- Pomocné funkce ----------------------------------------- */
 
         /* IANA->ISO map jen pro nejběžnější zóny (doplň podle potřeby) */
@@ -430,8 +431,7 @@
           /* implicitní výběr */
           select.value = settings.voiceURI || (list[0] && list[0].voiceURI);
         })();
-        settings.launchPad = JSON.parse(localStorage.getItem('launchPad') || 'false');
-        settings.voiceURI = localStorage.getItem('voiceURI') || select.value;
+
         ignoreChk.addEventListener('change', () => settings.ignorePlaying = ignoreChk.checked);
         multiChk.addEventListener('change', () => settings.allowMultiple = multiChk.checked);
         const settingsToast = new bootstrap.Toast(
@@ -498,6 +498,8 @@
           // wrapper div
           const wrap = document.createElement('div');
           wrap.className = 'transcription-button';
+          if (settings.launchPad) wrap.classList.add('launch-pad');   // <—
+
           wrap.style.borderColor = color;
 
           // button element
@@ -604,6 +606,12 @@
         } catch (e) {
           console.error(`[addButton] Failed to add button to tab='${tabId}' with text='${text}'`, e);
         }
+      }
+      function renderAllButtons() {
+        document.querySelectorAll('.transcription-button').forEach(wrap => {
+          if (settings.launchPad) wrap.classList.add('launch-pad');
+          else wrap.classList.remove('launch-pad');
+        });
       }
 
       function createTab(id, name, predef = false) {

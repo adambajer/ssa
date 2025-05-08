@@ -89,12 +89,11 @@
       </div>
     </div>
     <!-- Settings Modal -->
-    <div class="modal fade" id="settingsModal" tabindex="-1" data-bs-backdrop="true" data-bs-keyboard="true" aria-labelledby="settingsModalLabel" aria-hidden="true">
+    <div class="modal fade" id="settingsModal" tabindex="-2" aria-labelledby="settingsModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="settingsModalLabel">Nastavení aplikace</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
           </div>
           <div class="modal-body">
             <div class="mb-3">
@@ -115,7 +114,6 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zavřít</button>
           </div>
         </div>
       </div>
@@ -154,7 +152,7 @@
                  c0-5.973-5.05-10.82-11.28-10.82z" />
             <ellipse cx="92.74" cy="205.8" rx=".757" ry=".076" />
           </g>
-          <path d="m105 0c-17.49 0-32.36 10.78-38.38 26.07h52.21c2.77 0 
+          <path class="mikrofon" d="m105 0c-17.49 0-32.36 10.78-38.38 26.07h52.21c2.77 0 
                5 1.973 5 4.425 0 2.451-2.23 4.425-5 4.425h-54.61a41.91 
                41.91 0 00-.482 6.344v.68h55.09c2.77 0 5 1.974 5 4.426 
                0 2.451-2.23 4.425-5 4.425h-55.09v7.025h55.09c2.77 0 
@@ -265,6 +263,8 @@
       const recBtn = document.getElementById('start-recording');
       const recordingStatus = document.getElementById('recording-status');
       const recordingTime = document.getElementById('recording-time');
+      let isPlaying = false;
+      
       const shareBtn = document.getElementById('share-btn');
       const helpBtn = document.getElementById('help-btn');
       const addBtn = document.getElementById('add-tab-btn');
@@ -379,10 +379,22 @@
           btn.className = 'text-button';
           btn.textContent = text;
           btn.addEventListener('click', () => {
-            console.log(`[btn click] '${btn.textContent}'`);
-            if (!wrap.classList.contains('activated')) {
-              wrap.classList.add('activated');
-              speak(btn.textContent, () => wrap.classList.remove('activated'));
+            if (!isPlaying) {
+              isPlaying = true;
+              console.log(`[btn click] '${btn.textContent}'`);
+              if (!wrap.classList.contains('activated')) {
+                wrap.classList.add('activated');
+                wrap.style.boxShadow = `0px 0px 20px 0px ${color}`; // Dynamically apply the color
+                wrap.style.animation = 'infinite 0.5s alternate ease-in-out'; // Add animation
+                wrap.style.transition = 'box-shadow 0.5s ease-in-out, border 0.5s ease-in-out'; // Add transition
+                speak(btn.textContent, () =>
+                  wrap.classList.remove('activated'));
+                  wrap.style.boxShadow = ''; // Reset the box-shadow           
+                  wrap.style.border = `1px solid ${color}`; // Add border color
+
+                  isPlaying = false;
+              }
+
             }
           });
 
@@ -395,7 +407,6 @@
             color: '#fff',
             padding: '2px 6px',
             borderRadius: '5px',
-            marginLeft: '5px'
           });
           wrap.append(lbl, btn);
 
@@ -418,8 +429,7 @@
 
             // edit button
             const edit = document.createElement('button');
-            edit.textContent = '✏️ Edit';
-            edit.style.display = 'block';
+            edit.textContent = '✏️ Upravit';
             edit.addEventListener('click', () => {
               const nt = prompt('Upravit text:', btn.textContent);
               if (nt) {
@@ -437,8 +447,7 @@
 
             // delete button
             const del = document.createElement('button');
-            del.textContent = '🗑️ Delete';
-            del.style.display = 'block';
+            del.textContent = '🗑️ Smazat';
             del.addEventListener('click', () => {
               const btns = Array.from(container.querySelectorAll('.text-button'));
               const index = btns.indexOf(btn);
@@ -645,16 +654,16 @@
       function animateTabTransition(dir) { const ac = document.querySelector('.tab-content.active'); if (!ac) return; const cl = dir === 'left' ? 'slide-out-left' : 'slide-out-right'; ac.classList.add(cl); setTimeout(() => ac.classList.remove(cl), 300); }
 
       document.addEventListener('DOMContentLoaded', () => {
-        initTabs(); 
-        initVoice(); 
-        initImport(); 
-        initExport(); 
+        initTabs();
+        initVoice();
+        initImport();
+        initExport();
         initDeleteTab(); initEraseData();
-         initShare();
-          initHelp(); 
-          initPWA(); 
-          enableSwipeNavigation();
-       
+        initShare();
+        initHelp();
+        initPWA();
+        enableSwipeNavigation();
+
         document.addEventListener('keydown', e => { if (e.shiftKey && /^[1-9]$/.test(e.key)) { const idx = parseInt(e.key) - 1; const btns = Array.from(document.querySelectorAll('.tab-button')); if (btns[idx]) activateTab(btns[idx].dataset.tab); } if (e.key === 'Control') recBtn.click(); });
         initSettings();
         // ensure voicesloaded

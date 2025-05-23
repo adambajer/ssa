@@ -836,8 +836,7 @@ let visStream = null;          // mikrofon pro vizualizaci
               recordingStatus.textContent = '';
               recordingTime.textContent = '';
 
- startVisualization();    
-               const activeTab = localStorage.getItem('activeTab');
+                const activeTab = localStorage.getItem('activeTab');
               recordingStatus.textContent =
                 activeTab !== TAB_PREDEFINED ? 'Stisknutí mikrofonu nebo klávesy CTRL zahájí přepis řeči' : '';
               recBtn.style.boxShadow = 'none'; // <-- zruší stín úplně

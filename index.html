@@ -9,8 +9,8 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/svg+xml" href="./fav.svg" />
   <link rel="apple-touch-icon" href="./fav.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="manifest" href="./site.webmanifest" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+   <link rel="manifest" href="./site.webmanifest" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
@@ -1071,48 +1071,32 @@ function stopVisualization() {
       }
 
 
-   function enableSwipeNavigation() {
-  let startX = 0, endX = 0;
-  const tabs = Array.from(document.querySelectorAll('.tab-button'));
-  document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
-  document.addEventListener('touchend', e => {
-    endX = e.changedTouches[0].clientX;
-    const activeIdx = tabs.findIndex(t => t.classList.contains('active'));
-    if (startX - endX > 50 && activeIdx < tabs.length - 1) {
-      animateTabTransition('left');
-      activateTab(tabs[activeIdx + 1].dataset.tab);
-    } else if (endX - startX > 50 && activeIdx > 0) {
-      animateTabTransition('right');
-      activateTab(tabs[activeIdx - 1].dataset.tab);
-    }
-  });
-}
+      function enableSwipeNavigation() {
+        let startX = 0,
+          endX = 0;
+        const tabs = Array.from(document.querySelectorAll('.tab-button'));
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+          endX = e.changedTouches[0].clientX;
+          const activeIdx = tabs.findIndex(t => t.classList.contains('active'));
+          if (startX - endX >50 && activeIdx < tabs.length - 1) {
+            animateTabTransition('left');
+            activateTab(tabs[activeIdx + 1].dataset.tab);
+          } else if (endX - startX > 50 && activeIdx > 0) {
+            animateTabTransition('right');
+            activateTab(tabs[activeIdx - 1].dataset.tab);
+          }
+        });
+      }
 
-function animateTabTransition(dir, nextTabId) {
-  const current = document.querySelector('.tab-content.active');
-  const next = document.getElementById(nextTabId);
-  if (!current || !next) return;
+      function animateTabTransition(dir) {
+        const ac = document.querySelector('.tab-content.active');
+        if (!ac) return;
+        const cl = dir === 'left' ? 'slide-out-left' : 'slide-out-right';
+        ac.classList.add(cl);
+        setTimeout(() => ac.classList.remove(cl), 300);
+      }
 
-  // Prepare next tab for animation
-  next.classList.add(dir === 'left' ? 'slide-in-right' : 'slide-in-left');
-  next.style.display = 'block';
-
-  // Animate current tab out
-  current.classList.add(dir === 'left' ? 'slide-out-left' : 'slide-out-right');
-
-  setTimeout(() => {
-    // Remove active from current, add to next
-    current.classList.remove('active', 'slide-out-left', 'slide-out-right');
-    current.style.display = '';
-    next.classList.remove('slide-in-left', 'slide-in-right');
-    next.classList.add('active');
-  }, 300);
-}
-
-// In enableSwipeNavigation, call:
-animateTabTransition('left', tabs[activeIdx + 1].dataset.tab);
-// or
-animateTabTransition('right', tabs[activeIdx - 1].dataset.tab);
       document.addEventListener('DOMContentLoaded', () => {
         initTabs();
         initVoice();

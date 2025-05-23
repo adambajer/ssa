@@ -356,7 +356,7 @@ padding-right: 5px;     font-weight: bold;color: white;}
 .slide-out-left  { transform: translateX(-100%); }
 .slide-out-right { transform: translateX( 100%); }
 .wrap {
-  position: relative;                /* ukotví absolutní panely */
+  position: absolute;                /* ukotví absolutní panely */
   overflow: hidden;       width:100%;height:100%;           /* nic nevyčuhuje ven */
 }
 

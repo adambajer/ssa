@@ -1071,48 +1071,23 @@ function stopVisualization() {
       }
 
 
-    function enableSwipeNavigation() {
-  let startX = 0, endX = 0;
-  const tabs = Array.from(document.querySelectorAll('.tab-button'));
-
-  document.addEventListener('touchstart',
-    e => startX = e.touches[0].clientX);
-
-  document.addEventListener('touchend', e => {
-    endX = e.changedTouches[0].clientX;
-    const activeIdx = tabs.findIndex(t => t.classList.contains('active'));
-
-    const goLeft  = startX - endX > 50 && activeIdx < tabs.length - 1;
-    const goRight = endX - startX > 50 && activeIdx > 0;
-
-    if (goLeft || goRight) {
-      const dir   = goLeft ? 'left' : 'right';
-      const next  = goLeft ? tabs[activeIdx + 1] : tabs[activeIdx - 1];
-
-      // ➊ Pusť animaci a počkej na její konec
-      animateTabTransition(dir, () => activateTab(next.dataset.tab));
-    }
-  });
-}
-
-/* animateTabTransition nyní přijímá callback ------------- */
-function animateTabTransition(dir, done) {
-  const panel = document.querySelector('.tab-content.active');
-  if (!panel) return done?.();
-
-  const cls = dir === 'left' ? 'slide-out-left' : 'slide-out-right';
-  panel.classList.add(cls);
-
-  // transitionend = jistota i kdyby uživatel změnil duration
-  panel.addEventListener('transitionend', cleanup, { once: true });
-  panel.addEventListener('animationend',  cleanup, { once: true });
-
-  function cleanup() {
-    panel.classList.remove(cls);
-    done?.();                        // ➋ teprve teď aktivuj druhou záložku
-  }
-}
-
+      function enableSwipeNavigation() {
+        let startX = 0,
+          endX = 0;
+        const tabs = Array.from(document.querySelectorAll('.tab-button'));
+        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+        document.addEventListener('touchend', e => {
+          endX = e.changedTouches[0].clientX;
+          const activeIdx = tabs.findIndex(t => t.classList.contains('active'));
+          if (startX - endX >50 && activeIdx < tabs.length - 1) {
+            animateTabTransition('left');
+            activateTab(tabs[activeIdx + 1].dataset.tab);
+          } else if (endX - startX > 50 && activeIdx > 0) {
+            animateTabTransition('right');
+            activateTab(tabs[activeIdx - 1].dataset.tab);
+          }
+        });
+      }
 
       function animateTabTransition(dir) {
         const ac = document.querySelector('.tab-content.active');

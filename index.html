@@ -324,6 +324,7 @@
       const COLORS = ['#FF0000', '#006400', '#00008B', '#8B008B', '#2F4F4F', '#4B0082', '#483D8B', '#556B2F', '#6B8E23', '#8B4513'];
       let audioCtx, analyser, dataArray, animId, recognition, startTime;
       let keyHandlers = [];
+let visStream = null;          // mikrofon pro vizualizaci 
 
       const tabsEl = document.querySelector('.tabs');
       const wrapEl = document.querySelector('.wrap');
@@ -803,8 +804,7 @@
               startTime = Date.now();
 
               /* ADD THIS ↓↓↓ */
-              initAudioVisualization(); // start microphone visualiser
-            } catch (e) {
+             } catch (e) {
               console.error('[SR] onstart error', e);
             }
           };
@@ -836,8 +836,8 @@
               recordingStatus.textContent = '';
               recordingTime.textContent = '';
 
-              stopAudioVisualization();
-              const activeTab = localStorage.getItem('activeTab');
+ startVisualization();    
+               const activeTab = localStorage.getItem('activeTab');
               recordingStatus.textContent =
                 activeTab !== TAB_PREDEFINED ? 'Stisknutí mikrofonu nebo klávesy CTRL zahájí přepis řeči' : '';
               recBtn.style.boxShadow = 'none'; // <-- zruší stín úplně
@@ -876,40 +876,45 @@
           console.error('[initVoice] unexpected error', e);
         }
       }
+/* === NOVÁ FUNKCE místo initAudioVisualization ================= */
+async function startVisualization() {
+  if (visStream) return;                               // už běží
 
-      async function initAudioVisualization() {
-        if (audioCtx && audioCtx.state !== 'closed') return; // already running
-        console.log('[AudioVis] initAudioVisualization');
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({
-            audio: true
-          });
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-          analyser = audioCtx.createAnalyser();
-          analyser.fftSize = 256;
-          dataArray = new Uint8Array(analyser.frequencyBinCount);
-          const src = audioCtx.createMediaStreamSource(stream);
-          src.connect(analyser);
-          visualizePulse();
-          updateRecordingTime();
-        } catch (e) {
-          console.error('[AudioVis] init err', e);
-        }
-      }
+  try {
+    visStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    audioCtx  = new (window.AudioContext || window.webkitAudioContext)();
+    analyser  = audioCtx.createAnalyser();
+    analyser.fftSize = 256;
+    dataArray = new Uint8Array(analyser.frequencyBinCount);
+    audioCtx.createMediaStreamSource(visStream).connect(analyser);
+    visualizePulse();                                  // stávající funkce
+  } catch (e) {
+    console.error('[AudioVis] init error', e);
+  }
+}
 
-      function stopAudioVisualization() {
-        cancelAnimationFrame(animId);
-        if (audioCtx) audioCtx.close();
-        recBtn.style.boxShadow = 'none'; // <-- jistota, že po stop je čistě
+/* === STARÁ stopAudioVisualization() → nahradí se tímto ========= */
+function stopVisualization() {
+  cancelAnimationFrame(animId);
 
-        audioCtx = null;
-        analyser = null;
-        dataArray = null;
-        console.log('[AudioVis] stopped');
-      }
+  if (visStream) {
+    visStream.getTracks().forEach(t => t.stop());      // uvolní mikrofon
+    visStream = null;
+  }
+  if (audioCtx) {
+    audioCtx.close();
+    audioCtx = null;
+  }
+  recBtn.style.boxShadow = 'none';
+  analyser  = null;
+  dataArray = null;
+  console.log('[AudioVis] stopped');
+}
+
 
       function startRecognition() {
         console.log('[SR] startRecognition');
+        stopVisualization();          // ⚠️ uvolní mikrofon
         try {
           recognition.start();
         } catch (e) {

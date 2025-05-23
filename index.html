@@ -1070,28 +1070,79 @@ function stopVisualization() {
         console.log('[PWA] Disabled: service worker registration skipped');
       }
 
+function enableSwipeNavigation() {
+  const paneEls = () => Array.from(document.querySelectorAll('.tab-content'));
+  const btnEls  = () => Array.from(document.querySelectorAll('.tab-button'));
 
-    function enableSwipeNavigation() {
-  let x0 = 0, x1 = 0;
-  const btns = Array.from(document.querySelectorAll('.tab-button'));
+  let startX = 0, delta = 0;
+  let dragging = false;
+  let activeIdx = 0;                 // index aktuálního panelu
 
-  document.addEventListener('touchstart',
-    e => x0 = e.touches[0].clientX);
+  const wrap = document.querySelector('.wrap');
 
-  document.addEventListener('touchend', e => {
-    x1 = e.changedTouches[0].clientX;
-    const iActive = btns.findIndex(b => b.classList.contains('active'));
+  wrap.addEventListener('touchstart', e => {
+    if (e.touches.length !== 1) return;      // jen jeden prst
+    startX   = e.touches[0].clientX;
+    delta    = 0;
+    dragging = true;
+    activeIdx = btnEls().findIndex(b => b.classList.contains('active'));
 
-    const left  = x0 - x1 > 50 && iActive < btns.length - 1;
-    const right = x1 - x0 > 50 && iActive > 0;
-    if (!left && !right) return;
+    // vypneme transition, ať je tah naživo
+    paneEls().forEach(p => p.style.transition = 'none');
+  }, { passive:true });
 
-    const dir  = left ? 'left' : 'right';
-    const next = left ? btns[iActive + 1] : btns[iActive - 1];
+  wrap.addEventListener('touchmove', e => {
+    if (!dragging) return;
+    delta = e.touches[0].clientX - startX;
 
-    animateOut(dir).then(() => activateTab(next.dataset.tab));
-  });
+    const panes = paneEls();
+    const w     = wrap.clientWidth;
+
+    /* aktivní panel kopíruje prst */
+    panes[activeIdx].style.transform = `translateX(${delta}px)`;
+
+    /* sousední panel posouváme, aby byl vidět pod prstem */
+    if (delta < 0 && panes[activeIdx + 1]) {            // swipe vlevo
+      panes[activeIdx + 1].style.transform =
+        `translateX(${w + delta}px)`;
+    }
+    if (delta > 0 && panes[activeIdx - 1]) {            // swipe vpravo
+      panes[activeIdx - 1].style.transform =
+        `translateX(${-w + delta}px)`;
+    }
+  }, { passive:true });
+
+  wrap.addEventListener('touchend', () => {
+    if (!dragging) return;
+    dragging = false;
+
+    const panes = paneEls();
+    const w     = wrap.clientWidth;
+    const threshold = w * 0.3;        // kolik musí panel překonat
+
+    /* obnovíme transition pro plynulý dojezd */
+    panes.forEach(p => p.style.transition = '');
+
+    if (delta < -threshold && panes[activeIdx + 1]) {        // na další
+      panes[activeIdx].style.transform = `translateX(-${w}px)`;
+      panes[activeIdx + 1].style.transform = 'translateX(0)';
+      activateTab(btnEls()[activeIdx + 1].dataset.tab);
+
+    } else if (delta > threshold && panes[activeIdx - 1]) {  // na předchozí
+      panes[activeIdx].style.transform = `translateX(${w}px)`;
+      panes[activeIdx - 1].style.transform = 'translateX(0)';
+      activateTab(btnEls()[activeIdx - 1].dataset.tab);
+
+    } else {                                                 // návrat zpět
+      panes[activeIdx].style.transform = 'translateX(0)';
+      if (delta < 0 && panes[activeIdx + 1])
+        panes[activeIdx + 1].style.transform = `translateX(${w}px)`;
+      if (delta > 0 && panes[activeIdx - 1])
+        panes[activeIdx - 1].style.transform = `translateX(-${w}px)`;
+    }
+  }, { passive:true });
 }
+
 
 /* ---------- animace odchozího panelu, vrací Promise ---------- */
 function animateOut(dir) {

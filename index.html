@@ -802,7 +802,7 @@ let visStream = null;          // mikrofon pro vizualizaci
               recordingStatus.textContent = 'Poslouchám...';
               isRecording = true;
               startTime = Date.now();
-
+ updateRecordingTime();    
               /* ADD THIS ↓↓↓ */
              } catch (e) {
               console.error('[SR] onstart error', e);
@@ -819,7 +819,7 @@ let visStream = null;          // mikrofon pro vizualizaci
               addButton(text, tabId);
               tabsData[tabId] = tabsData[tabId] || [];
               tabsData[tabId].push(text);
-              persist();
+              persist();stopVisualization();
             } catch (e) {
               console.error('[SR] onresult handling error', e);
             }

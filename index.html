@@ -54,7 +54,7 @@
               </button>
             </li>
             <li><button class="dropdown-item d-flex align-items-center" id="btn-install" hidden
-                title="Instalovat aplikaci"><span class="material-icons me-2">phone_android</span>Instalvat</button>
+                title="Instalovat aplikaci"><span class="material-icons me-2">phone_android</span>Instalovat</button>
             </li>
 
             <li>
@@ -74,11 +74,11 @@
       </div>
     </div>
     <!-- Modal for displaying the QR code -->
-    <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+    <div class="modal modal-sm fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="qrModalLabel">Sdílej aplikaci</h5>
+            <h5 class="modal-title" id="qrModalLabel">Sdílet aplikaci</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
           </div>
           <div class="modal-body">
@@ -595,7 +595,7 @@
           const btn = document.createElement('button');
           btn.className = 'text-button';
           btn.textContent = text;
-          btn.addEventListener('click', () => {
+          wrap.addEventListener('click', () => {
             if (isPlaying) return; // guard
 
             isPlaying = true;
@@ -728,7 +728,7 @@
         div.append(bd);
         wrapEl.append(div);
 
-        const defaults = predef ? ['Nende', 'Vůbec to', 'Nefunguje'] : ['Nové tlačítko'];
+        const defaults = predef ? ['Nende', 'Vůbec to', 'Nefunguje'] : [''];
         const arr = tabsData[id] || defaults;
         console.log(`[createTab] Will add ${arr.length} buttons for tab='${id}'`);
         arr.forEach(t => addButton(t, id));
@@ -741,7 +741,7 @@
         console.log('[activateTab]', id);
         if (!isRecording) {
           recordingStatus.textContent =
-            id === TAB_PREDEFINED ? '' : 'Stisknutí mikrofonu nebo klávesy CTRL zahájí přepis řeči';
+            id === TAB_PREDEFINED ? '' : 'Tlačítko mikrofonu nebo stisk klávesy CTRL zahájí přepis řeči';
         }
         document.querySelectorAll('.tab-button').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
         document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === id));
@@ -1036,8 +1036,8 @@
           document.getElementById('qrcode').innerHTML = '';
           new QRCode(document.getElementById('qrcode'), {
             text: window.location.href,
-            width: 200,
-            height: 200,
+            width: 260,
+            height: 260,
             colorDark: '#000',
             colorLight: '#fff',
             correctLevel: QRCode.CorrectLevel.H

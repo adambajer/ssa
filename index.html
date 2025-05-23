@@ -1071,22 +1071,52 @@ function stopVisualization() {
       }
 
 
-      function enableSwipeNavigation() {
-        let startX = 0,
-          endX = 0;
-        const tabs = Array.from(document.querySelectorAll('.tab-button'));
-        document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
-        document.addEventListener('touchend', e => {
-          endX = e.changedTouches[0].clientX;
-          const activeIdx = tabs.findIndex(t => t.classList.contains('active'));
-          if (startX - endX >50 && activeIdx < tabs.length - 1) {
-            animateTabTransition('left');
-            activateTab(tabs[activeIdx + 1].dataset.tab);
-          } else if (endX - startX > 50 && activeIdx > 0) {
-            animateTabTransition('right');
-            activateTab(tabs[activeIdx - 1].dataset.tab);
-          }
-        });
+    function enableSwipeNavigation() {
+  let x0 = 0, x1 = 0;
+  const btns = Array.from(document.querySelectorAll('.tab-button'));
+
+  document.addEventListener('touchstart',
+    e => x0 = e.touches[0].clientX);
+
+  document.addEventListener('touchend', e => {
+    x1 = e.changedTouches[0].clientX;
+    const iActive = btns.findIndex(b => b.classList.contains('active'));
+
+    const left  = x0 - x1 > 50 && iActive < btns.length - 1;
+    const right = x1 - x0 > 50 && iActive > 0;
+    if (!left && !right) return;
+
+    const dir  = left ? 'left' : 'right';
+    const next = left ? btns[iActive + 1] : btns[iActive - 1];
+
+    animateOut(dir).then(() => activateTab(next.dataset.tab));
+  });
+}
+
+/* ---------- animace odchozího panelu, vrací Promise ---------- */
+function animateOut(dir) {
+  return new Promise(resolve => {
+    const pane = document.querySelector('.tab-content.active');
+    if (!pane) return resolve();          // jistota
+
+    const cls = dir === 'left' ? 'slide-out-left' : 'slide-out-right';
+    pane.classList.add(cls);
+
+    /* počkáme, až přejde transition/animation – pak panel pustíme */
+    const done = () => {
+      pane.classList.remove(cls);
+      resolve();
+    };
+    pane.addEventListener('transitionend', done, { once:true });
+    pane.addEventListener('animationend',  done, { once:true });
+  });
+}
+      function animateIn(dir) {
+        const pane = document.querySelector('.tab-content.active');
+        if (!pane) return;
+        const cls = dir === 'left' ? 'slide-in-left' : 'slide-in-right';
+        pane.classList.add(cls);
+        setTimeout(() => pane.classList.remove(cls), 300);
       }
 
       function animateTabTransition(dir) {

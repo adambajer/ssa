@@ -1095,24 +1095,38 @@ function stopVisualization() {
       p.style.transform =
         `translateX(${(i - activeIdx) * w + delta}px)`);
   });
+wrap.addEventListener('touchend', () => {
+  if (!dragging) return;
+  dragging = false;
 
-  wrap.addEventListener('touchend', () => {
-    if (!dragging) return;
-    dragging = false;
-    const w = window.innerWidth;
-    const goRight =  delta >  w * thr && activeIdx > 0;
-    const goLeft  = -delta >  w * thr && activeIdx < panes().length - 1;
+  const w = window.innerWidth;
+  const goRight =  delta >  w * thr && activeIdx > 0;
+  const goLeft  = -delta >  w * thr && activeIdx < panes().length - 1;
 
-    if (goRight)      activeIdx--;
-    else if (goLeft)  activeIdx++;
+  let newIdx = activeIdx;
+  if (goRight)      newIdx--;
+  else if (goLeft)  newIdx++;
 
-    panes().forEach((p,i) => {
-      p.style.transition = 'transform .25s ease';
-      p.style.transform  = `translateX(${(i - activeIdx) * w}px)`;
-    });
-    activateTab(tabs()[activeIdx].dataset.tab);      // zůstává tvůj kód
+  panes().forEach((p, i) => {
+    p.style.transition = 'transform .25s ease';
+    p.style.transform  = `translateX(${(i - newIdx) * w}px)`;
   });
-}
+
+  const onDone = () => {
+    activeIdx = newIdx;
+    activateTab(tabs()[activeIdx].dataset.tab);
+    panes()[newIdx].removeEventListener('transitionend', onDone);
+  };
+  panes()[newIdx].addEventListener('transitionend', onDone, { once: true });
+});
+  }
+      function animateOut(dir) {
+        const pane = document.querySelector('.tab-content.active');
+        if (!pane) return;
+        const cls = dir === 'left' ? 'slide-out-left' : 'slide-out-right';
+        pane.classList.add(cls);
+        setTimeout(() => pane.classList.remove(cls), 300);
+      }
 
       function animateIn(dir) {
         const pane = document.querySelector('.tab-content.active');

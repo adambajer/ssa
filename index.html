@@ -410,7 +410,8 @@
             } = pos.coords;
             /* bezplatné reverse-geo API (≈1 KB odpověď) */
             const resp = await fetch(
-              `https://api.open-meteo.com/v1/geocode?latitude=${lat}&longitude=${lon}`
+              `https://geocoding-api.open-meteo.com/v1/search` +
+            `?name=${encodeURIComponent(cityOrPostcode)}&count=1`
             );
             const js = await resp.json();
             if (js && js.country_code) return js.country_code.toUpperCase();

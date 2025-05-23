@@ -777,7 +777,8 @@
       function initVoice() {
         console.log('[initVoice]');
         try {
-          const SR = window.SpeechRecognition || webkitSpeechRecognition;
+// current line
+const SR = window.SpeechRecognition || webkitSpeechRecognition;
           if (!SR) {
             console.error('[initVoice] SpeechRecognition API not available');
             return;

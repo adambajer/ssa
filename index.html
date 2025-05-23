@@ -727,7 +727,7 @@
         div.append(bd);
         wrapEl.append(div);
 
-        const defaults = predef ? ['Nende', 'Vůbec to', 'Nefunguje'] : [];
+        const defaults = predef ? ['Nende', 'Vůbec to', 'Nefunguje'] : ['Nové tlačítko'];
         const arr = tabsData[id] || defaults;
         console.log(`[createTab] Will add ${arr.length} buttons for tab='${id}'`);
         arr.forEach(t => addButton(t, id));

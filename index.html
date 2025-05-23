@@ -1069,99 +1069,51 @@ function stopVisualization() {
       function initPWA() {
         console.log('[PWA] Disabled: service worker registration skipped');
       }
+ function enableSwipeNavigation() {
+  const wrap  = document.querySelector('.wrap');
+  const panes = () => [...document.querySelectorAll('.tab-content')];
+  const tabs  = () => [...document.querySelectorAll('.tab-button')];
 
-function enableSwipeNavigation() {
-  const paneEls = () => Array.from(document.querySelectorAll('.tab-content'));
-  const btnEls  = () => Array.from(document.querySelectorAll('.tab-button'));
-
-  let startX = 0, delta = 0;
-  let dragging = false;
-  let activeIdx = 0;                 // index aktuálního panelu
-
-  const wrap = document.querySelector('.wrap');
+  let startX = 0, delta = 0, activeIdx = 0, dragging = false;
+  const thr   = 0.3;                               // 30 % šířky
 
   wrap.addEventListener('touchstart', e => {
-    if (e.touches.length !== 1) return;      // jen jeden prst
-    startX   = e.touches[0].clientX;
-    delta    = 0;
+    if (e.touches.length !== 1) return;
+    startX = e.touches[0].clientX;
     dragging = true;
-    activeIdx = btnEls().findIndex(b => b.classList.contains('active'));
-
-    // vypneme transition, ať je tah naživo
-    paneEls().forEach(p => p.style.transition = 'none');
-  }, { passive:true });
+    activeIdx = tabs().findIndex(b => b.classList.contains('active'));
+    panes().forEach(p => p.style.transition = 'none');
+  });
 
   wrap.addEventListener('touchmove', e => {
     if (!dragging) return;
     delta = e.touches[0].clientX - startX;
+    const w = window.innerWidth;
 
-    const panes = paneEls();
-    const w     = wrap.clientWidth;
-
-    /* aktivní panel kopíruje prst */
-    panes[activeIdx].style.transform = `translateX(${delta}px)`;
-
-    /* sousední panel posouváme, aby byl vidět pod prstem */
-    if (delta < 0 && panes[activeIdx + 1]) {            // swipe vlevo
-      panes[activeIdx + 1].style.transform =
-        `translateX(${w + delta}px)`;
-    }
-    if (delta > 0 && panes[activeIdx - 1]) {            // swipe vpravo
-      panes[activeIdx - 1].style.transform =
-        `translateX(${-w + delta}px)`;
-    }
-  }, { passive:true });
+    /* posuneme VŠECHNY panely – žádné mezery ani přeskoky */
+    panes().forEach((p,i)=>
+      p.style.transform =
+        `translateX(${(i - activeIdx) * w + delta}px)`);
+  });
 
   wrap.addEventListener('touchend', () => {
     if (!dragging) return;
     dragging = false;
+    const w = window.innerWidth;
+    const goRight =  delta >  w * thr && activeIdx > 0;
+    const goLeft  = -delta >  w * thr && activeIdx < panes().length - 1;
 
-    const panes = paneEls();
-    const w     = wrap.clientWidth;
-    const threshold = w * 0.3;        // kolik musí panel překonat
+    if (goRight)      activeIdx--;
+    else if (goLeft)  activeIdx++;
 
-    /* obnovíme transition pro plynulý dojezd */
-    panes.forEach(p => p.style.transition = '');
-
-    if (delta < -threshold && panes[activeIdx + 1]) {        // na další
-      panes[activeIdx].style.transform = `translateX(-${w}px)`;
-      panes[activeIdx + 1].style.transform = 'translateX(0)';
-      activateTab(btnEls()[activeIdx + 1].dataset.tab);
-
-    } else if (delta > threshold && panes[activeIdx - 1]) {  // na předchozí
-      panes[activeIdx].style.transform = `translateX(${w}px)`;
-      panes[activeIdx - 1].style.transform = 'translateX(0)';
-      activateTab(btnEls()[activeIdx - 1].dataset.tab);
-
-    } else {                                                 // návrat zpět
-      panes[activeIdx].style.transform = 'translateX(0)';
-      if (delta < 0 && panes[activeIdx + 1])
-        panes[activeIdx + 1].style.transform = `translateX(${w}px)`;
-      if (delta > 0 && panes[activeIdx - 1])
-        panes[activeIdx - 1].style.transform = `translateX(-${w}px)`;
-    }
-  }, { passive:true });
-}
-
-
-/* ---------- animace odchozího panelu, vrací Promise ---------- */
-function animateOut(dir) {
-  return new Promise(resolve => {
-    const pane = document.querySelector('.tab-content.active');
-    if (!pane) return resolve();          // jistota
-
-    const cls = dir === 'left' ? 'slide-out-left' : 'slide-out-right';
-    pane.classList.add(cls);
-
-    /* počkáme, až přejde transition/animation – pak panel pustíme */
-    const done = () => {
-      pane.classList.remove(cls);
-      resolve();
-    };
-    pane.addEventListener('transitionend', done, { once:true });
-    pane.addEventListener('animationend',  done, { once:true });
+    panes().forEach((p,i) => {
+      p.style.transition = 'transform .25s ease';
+      p.style.transform  = `translateX(${(i - activeIdx) * w}px)`;
+    });
+    activateTab(tabs()[activeIdx].dataset.tab);      // zůstává tvůj kód
   });
 }
+
       function animateIn(dir) {
         const pane = document.querySelector('.tab-content.active');
         if (!pane) return;

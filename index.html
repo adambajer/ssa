@@ -10,7 +10,7 @@
   <link rel="icon" type="image/svg+xml" href="./fav.svg" />
   <link rel="apple-touch-icon" href="./fav.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <link rel="manifest" href="./site.webmanifest" />
+   <link rel="manifest" href="./site.webmanifest" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
@@ -19,7 +19,7 @@
 <!-- Animation styles -->
 
 <body>
-  <div class="wrap ">
+  <div class="wrap container-fluid">
 
     <div class="tabs">
       <!-- Header with tabs and dropdown menu -->
@@ -47,7 +47,7 @@
                 <span class="material-icons me-2">delete_forever</span>Vymazat vše
               </button></li>
             <hr class="dropdown-divider">
-            </li>
+            </li> 
             <li>
               <button class="dropdown-item d-flex align-items-center" id="share-btn" title="Sdílet">
                 <span class="material-icons me-2">share</span>Sdílet
@@ -73,141 +73,140 @@
         </div>
       </div>
     </div>
+    
+      <button id="start-recording">
 
-    <button id="start-recording">
 
-
-      <!-- HTML for the two buttons -->
-      <svg version="1.1" viewBox="0 0 210 210" xmlns="http://www.w3.org/2000/svg">
-        <g transform="translate(0 4.174)">
-          <path d="m46.2 87.43c-6.23 0-11.28 4.842-11.28 10.82 0 31.98 
+        <!-- HTML for the two buttons -->
+        <svg version="1.1" viewBox="0 0 210 210" xmlns="http://www.w3.org/2000/svg">
+          <g transform="translate(0 4.174)">
+            <path d="m46.2 87.43c-6.23 0-11.28 4.842-11.28 10.82 0 31.98 
                  24.8 58.5 57.06 64.21v26.81h.047a13.02 12.75 0 00-.046.622 
                  13.02 12.75 0 0013.02 12.75 13.02 12.75 0 0013.02-12.75 
                  13.02 12.75 0 00-.016-.622h.016v-26.81c32.27-5.716 
                  57.07-32.23 57.06-64.21 0-5.973-5.05-10.82-11.28-10.82s-11.28 
                  4.842-11.28 10.82c0 24.09-20.95 43.74-47.52 43.74s-47.52-19.65-47.52-43.74
-                 c0-5.973-5.05-10.82-11.28-10.82z" fill="#000000" />
-          <ellipse cx="92.74" cy="205.8" rx=".757" ry=".076" />
-        </g>
-        <path class="mikrofon" d="m105 0c-17.49 0-32.36 10.78-38.38 26.07h52.21c2.77 0 
+                 c0-5.973-5.05-10.82-11.28-10.82z" fill="#000000"/>
+            <ellipse cx="92.74" cy="205.8" rx=".757" ry=".076" />
+          </g>
+          <path class="mikrofon" d="m105 0c-17.49 0-32.36 10.78-38.38 26.07h52.21c2.77 0 
                5 1.973 5 4.425 0 2.451-2.23 4.425-5 4.425h-54.61a41.91 
                41.91 0 00-.482 6.344v.68h55.09c2.77 0 5 1.974 5 4.426 
                0 2.451-2.23 4.425-5 4.425h-55.09v7.025h55.09c2.77 0 
                5 1.973 5 4.425 0 2.451-2.23 4.425-5 4.425h-55.09v29.24c0 
                22.86 18.4 41.26 41.26 41.26s41.26-18.4 41.26-41.26v-54.65c0-22.86-18.4-41.26-41.26-41.26z"
-          stroke-linecap="round" stroke-miterlimit="4.1" fill="rgb(164, 164, 164)" ;
-          paint-order="markers fill stroke" />
+            stroke-linecap="round" stroke-miterlimit="4.1" fill="rgb(164, 164, 164)"; paint-order="markers fill stroke" />
 
-      </svg>
-    </button>
+        </svg>
+      </button>
 
-    <!-- Define a reusable microphone icon -->
-    <div id="recording-info">
-      <span id="recording-status"></span>
-      <span id="recording-time"></span>
-    </div>
+      <!-- Define a reusable microphone icon -->
+      <div id="recording-info">
+        <span id="recording-status"></span>
+        <span id="recording-time"></span>
+      </div>
 
   </div>
 
-  <!-- Modal for displaying the QR code -->
-  <div class="modal modal-sm fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="qrModalLabel">Sdílet aplikaci</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
-        </div>
-        <div class="modal-body">
-          <div id="qrcode"></div> <!-- QR code will be generated here -->
-          <p class="mt-3">https://adambajer.github.io/ssa/</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zavřít</button>
+    <!-- Modal for displaying the QR code -->
+    <div class="modal modal-sm fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="qrModalLabel">Sdílet aplikaci</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+          </div>
+          <div class="modal-body">
+            <div id="qrcode"></div> <!-- QR code will be generated here -->
+            <p class="mt-3">https://adambajer.github.io/ssa/</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zavřít</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- Toast container (pravý spodní roh) -->
-  <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 1080;">
-    <!-- Nastavení (toast) -->
-    <div id="settingsToast" class="toast text-bg-light border-0" role="alert" aria-live="assertive" aria-atomic="true"
-      data-bs-autohide="false"> <!-- autohide = false  -->
+    <!-- Toast container (pravý spodní roh) -->
+    <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 1080;">
+      <!-- Nastavení (toast) -->
+      <div id="settingsToast" class="toast text-bg-light border-0" role="alert" aria-live="assertive" aria-atomic="true"
+        data-bs-autohide="false"> <!-- autohide = false  -->
 
-      <div class="toast-header bg-danger text-white">
-        <strong class="me-auto">Nastavení aplikace</strong>
-        <button type="button" class="btn-close text-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        <div class="toast-header bg-danger text-white">
+          <strong class="me-auto">Nastavení aplikace</strong>
+          <button type="button" class="btn-close text-white" data-bs-dismiss="toast" aria-label="Close"></button>
+
+        </div>
+
+        <div class="toast-body">
+          <div class="mb-3">
+            <label for="voiceSelect" class="form-label">Hlas TTS</label>
+            <select id="voiceSelect" class="form-select"></select>
+          </div>
+
+          <div class="mb-3">
+            <label for="rateRange" class="form-label">
+              Rychlost čtení: <span id="rateValue">1</span>
+            </label>
+            <input type="range" id="rateRange" min="0.5" max="2" step="0.1" value="1" class="form-range">
+          </div>
+
+          <div class="form-check mb-2">
+            <input class="form-check-input" type="checkbox" id="ignorePlaying">
+            <label class="form-check-label" for="ignorePlaying">
+              Ignorovat, pokud již probíhá čtení
+            </label>
+          </div>
+
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="allowMultiple">
+            <label class="form-check-label" for="allowMultiple">
+              Povolit více čtení současně
+            </label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="launchPadMode">
+            <label class="form-check-label" for="launchPadMode">
+              Launch-pad vzhled tlačítek
+            </label>
+          </div>
+        </div>
+      
 
       </div>
-
-      <div class="toast-body">
-        <div class="mb-3">
-          <label for="voiceSelect" class="form-label">Hlas TTS</label>
-          <select id="voiceSelect" class="form-select"></select>
-        </div>
-
-        <div class="mb-3">
-          <label for="rateRange" class="form-label">
-            Rychlost čtení: <span id="rateValue">1</span>
-          </label>
-          <input type="range" id="rateRange" min="0.5" max="2" step="0.1" value="1" class="form-range">
-        </div>
-
-        <div class="form-check mb-2">
-          <input class="form-check-input" type="checkbox" id="ignorePlaying">
-          <label class="form-check-label" for="ignorePlaying">
-            Ignorovat, pokud již probíhá čtení
-          </label>
-        </div>
-
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="allowMultiple">
-          <label class="form-check-label" for="allowMultiple">
-            Povolit více čtení současně
-          </label>
-        </div>
-        <div class="form-check">
-          <input class="form-check-input" type="checkbox" id="launchPadMode">
-          <label class="form-check-label" for="launchPadMode">
-            Launch-pad vzhled tlačítek
-          </label>
-        </div>
-      </div>
-
-
-    </div>
-  </div>
-
-  <!-- Rest of modals, toasts, recording UI etc. -->
-
-
-  <!-- Toast container -->
-  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
-    <div id="helpToast" class="toast align-items-start text-bg-light border-0" role="alert" aria-live="assertive"
-      aria-atomic="true">
-      <div class="toast-header bg-danger text-white">
-        <strong class="me-auto">Ovládání aplikace</strong>
-        <button type="button" class="btn-close text-white" data-bs-dismiss="toast" aria-label="Close"></button>
-      </div>
-      <div class="toast-body" id="helpToastBody"></div>
     </div>
 
-  </div>
+    <!-- Rest of modals, toasts, recording UI etc. -->
 
-  <input id="file-input" type="file" accept="application/json" style="display:none" />
-  <!-- Toast container -->
-  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
-    <div id="helpToast" class="toast align-items-start text-bg-light border-0" role="alert" aria-live="assertive"
-      aria-atomic="true">
-      <div class="toast-header bg-danger text-white">
-        <strong class="me-auto">Klávesové zkratky</strong>
-        <button type="button" class="btn-close text-white" data-bs-dismiss="toast" aria-label="Close"></button>
+
+    <!-- Toast container -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
+      <div id="helpToast" class="toast align-items-start text-bg-light border-0" role="alert" aria-live="assertive"
+        aria-atomic="true">
+        <div class="toast-header bg-danger text-white">
+          <strong class="me-auto">Ovládání aplikace</strong>
+          <button type="button" class="btn-close text-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="helpToastBody"></div>
       </div>
-      <div class="toast-body" id="helpToastBody"></div>
-    </div>
 
-  </div>
+    </div>
+ 
+    <input id="file-input" type="file" accept="application/json" style="display:none" />
+    <!-- Toast container -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
+      <div id="helpToast" class="toast align-items-start text-bg-light border-0" role="alert" aria-live="assertive"
+        aria-atomic="true">
+        <div class="toast-header bg-danger text-white">
+          <strong class="me-auto">Klávesové zkratky</strong>
+          <button type="button" class="btn-close text-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="helpToastBody"></div>
+      </div>
+
+    </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
-  <script>
+ <script>
     // SSA Application JavaScript
     (() => {
 
@@ -322,7 +321,7 @@
       const COLORS = ['#FF0000', '#006400', '#00008B', '#8B008B', '#2F4F4F', '#4B0082', '#483D8B', '#556B2F', '#6B8E23', '#8B4513'];
       let audioCtx, analyser, dataArray, animId, recognition, startTime;
       let keyHandlers = [];
-      let visStream = null;          // mikrofon pro vizualizaci 
+let visStream = null;          // mikrofon pro vizualizaci 
 
       const tabsEl = document.querySelector('.tabs');
       const wrapEl = document.querySelector('.wrap');
@@ -410,7 +409,7 @@
             /* bezplatné reverse-geo API (≈1 KB odpověď) */
             const resp = await fetch(
               `https://geocoding-api.open-meteo.com/v1/search` +
-              `?name=${encodeURIComponent(cityOrPostcode)}&count=1`
+            `?name=${encodeURIComponent(cityOrPostcode)}&count=1`
             );
             const js = await resp.json();
             if (js && js.country_code) return js.country_code.toUpperCase();
@@ -423,7 +422,7 @@
           } catch (_) { /* fall-through */ }
 
           /* 3) poslední záchrana – jazykové nastavení prohlížeče */
-          return (navigator.language || 'en-US').split('-')[1]?.toUpperCase() || 'US';
+          return (navigator.language || 'en-US').split('-')[1] ?.toUpperCase() || 'US';
         }
 
         /* ---------- Přidat do initSettings() místo původního Populate voices */
@@ -436,7 +435,7 @@
           voices = speechSynthesis.getVoices();
           /* filtrujeme podle stejné země */
           const countryVoices = voices.filter(v => {
-            const vCountry = v.lang.split('-')[1]?.toUpperCase();
+            const vCountry = v.lang.split('-')[1] ?.toUpperCase();
             return vCountry === browserCountry;
           });
 
@@ -455,8 +454,8 @@
           select.value = settings.voiceURI || (list[0] && list[0].voiceURI);
         })(); const settingsToast = new bootstrap.Toast(
           document.getElementById('settingsToast'), {
-          autohide: false
-        } // trvale otevřené, dokud ho uživatel nezavře
+            autohide: false
+          } // trvale otevřené, dokud ho uživatel nezavře
         );
         /* select hlasu */
         select.value = settings.voiceURI;
@@ -499,11 +498,11 @@
           .addEventListener('click', () => settingsToast.show());
       }
       // Override localStorage
-      (function () {
+      (function() {
         const oSet = Storage.prototype.setItem,
           oRm = Storage.prototype.removeItem,
           oClr = Storage.prototype.clear;
-        Storage.prototype.setItem = function (k, v) {
+        Storage.prototype.setItem = function(k, v) {
           console.log('[LS] setItem', k, v);
           try {
             oSet.apply(this, [k, v]);
@@ -512,7 +511,7 @@
             console.error('[LS] setItem ERR', k, e);
           }
         };
-        Storage.prototype.removeItem = function (k) {
+        Storage.prototype.removeItem = function(k) {
           console.log('[LS] removeItem', k);
           try {
             oRm.apply(this, [k]);
@@ -521,7 +520,7 @@
             console.error('[LS] removeItem ERR', k, e);
           }
         };
-        Storage.prototype.clear = function () {
+        Storage.prototype.clear = function() {
           console.log('[LS] clear');
           try {
             oClr.apply(this);
@@ -800,9 +799,9 @@
               recordingStatus.textContent = 'Poslouchám...';
               isRecording = true;
               startTime = Date.now();
-              updateRecordingTime();
+ updateRecordingTime();    
               /* ADD THIS ↓↓↓ */
-            } catch (e) {
+             } catch (e) {
               console.error('[SR] onstart error', e);
             }
           };
@@ -817,7 +816,7 @@
               addButton(text, tabId);
               tabsData[tabId] = tabsData[tabId] || [];
               tabsData[tabId].push(text);
-              persist(); stopVisualization();
+              persist();stopVisualization();
             } catch (e) {
               console.error('[SR] onresult handling error', e);
             }
@@ -834,7 +833,7 @@
               recordingStatus.textContent = '';
               recordingTime.textContent = '';
 
-              const activeTab = localStorage.getItem('activeTab');
+                const activeTab = localStorage.getItem('activeTab');
               recordingStatus.textContent =
                 activeTab !== TAB_PREDEFINED ? 'Stisknutí mikrofonu nebo klávesy CTRL zahájí přepis řeči' : '';
               recBtn.style.boxShadow = 'none'; // <-- zruší stín úplně
@@ -873,40 +872,40 @@
           console.error('[initVoice] unexpected error', e);
         }
       }
-      /* === NOVÁ FUNKCE místo initAudioVisualization ================= */
-      async function startVisualization() {
-        if (visStream) return;                               // už běží
+/* === NOVÁ FUNKCE místo initAudioVisualization ================= */
+async function startVisualization() {
+  if (visStream) return;                               // už běží
 
-        try {
-          visStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-          analyser = audioCtx.createAnalyser();
-          analyser.fftSize = 256;
-          dataArray = new Uint8Array(analyser.frequencyBinCount);
-          audioCtx.createMediaStreamSource(visStream).connect(analyser);
-          visualizePulse();                                  // stávající funkce
-        } catch (e) {
-          console.error('[AudioVis] init error', e);
-        }
-      }
+  try {
+    visStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    audioCtx  = new (window.AudioContext || window.webkitAudioContext)();
+    analyser  = audioCtx.createAnalyser();
+    analyser.fftSize = 256;
+    dataArray = new Uint8Array(analyser.frequencyBinCount);
+    audioCtx.createMediaStreamSource(visStream).connect(analyser);
+    visualizePulse();                                  // stávající funkce
+  } catch (e) {
+    console.error('[AudioVis] init error', e);
+  }
+}
 
-      /* === STARÁ stopAudioVisualization() → nahradí se tímto ========= */
-      function stopVisualization() {
-        cancelAnimationFrame(animId);
+/* === STARÁ stopAudioVisualization() → nahradí se tímto ========= */
+function stopVisualization() {
+  cancelAnimationFrame(animId);
 
-        if (visStream) {
-          visStream.getTracks().forEach(t => t.stop());      // uvolní mikrofon
-          visStream = null;
-        }
-        if (audioCtx) {
-          audioCtx.close();
-          audioCtx = null;
-        }
-        recBtn.style.boxShadow = 'none';
-        analyser = null;
-        dataArray = null;
-        console.log('[AudioVis] stopped');
-      }
+  if (visStream) {
+    visStream.getTracks().forEach(t => t.stop());      // uvolní mikrofon
+    visStream = null;
+  }
+  if (audioCtx) {
+    audioCtx.close();
+    audioCtx = null;
+  }
+  recBtn.style.boxShadow = 'none';
+  analyser  = null;
+  dataArray = null;
+  console.log('[AudioVis] stopped');
+}
 
 
       function startRecognition() {
@@ -1067,57 +1066,57 @@
       function initPWA() {
         console.log('[PWA] Disabled: service worker registration skipped');
       }
-      function enableSwipeNavigation() {
-        const wrap = document.querySelector('.wrap');
-        const panes = () => [...document.querySelectorAll('.tab-content')];
-        const tabs = () => [...document.querySelectorAll('.tab-button')];
+ function enableSwipeNavigation() {
+  const wrap  = document.querySelector('.wrap');
+  const panes = () => [...document.querySelectorAll('.tab-content')];
+  const tabs  = () => [...document.querySelectorAll('.tab-button')];
 
-        let startX = 0, delta = 0, activeIdx = 0, dragging = false;
-        const thr = 0.3;                               // 30 % šířky
+  let startX = 0, delta = 0, activeIdx = 0, dragging = false;
+  const thr   = 0.3;                               // 30 % šířky
 
-        wrap.addEventListener('touchstart', e => {
-          if (e.touches.length !== 1) return;
-          startX = e.touches[0].clientX;
-          dragging = true;
-          activeIdx = tabs().findIndex(b => b.classList.contains('active'));
-          panes().forEach(p => p.style.transition = 'none');
-        });
+  wrap.addEventListener('touchstart', e => {
+    if (e.touches.length !== 1) return;
+    startX = e.touches[0].clientX;
+    dragging = true;
+    activeIdx = tabs().findIndex(b => b.classList.contains('active'));
+    panes().forEach(p => p.style.transition = 'none');
+  });
 
-        wrap.addEventListener('touchmove', e => {
-          if (!dragging) return;
-          delta = e.touches[0].clientX - startX;
-          const w = window.innerWidth;
+  wrap.addEventListener('touchmove', e => {
+    if (!dragging) return;
+    delta = e.touches[0].clientX - startX;
+    const w = window.innerWidth;
 
-          /* posuneme VŠECHNY panely – žádné mezery ani přeskoky */
-          panes().forEach((p, i) =>
-            p.style.transform =
-            `translateX(${(i - activeIdx) * w + delta}px)`);
-        });
-        wrap.addEventListener('touchend', () => {
-          if (!dragging) return;
-          dragging = false;
+    /* posuneme VŠECHNY panely – žádné mezery ani přeskoky */
+    panes().forEach((p,i)=>
+      p.style.transform =
+        `translateX(${(i - activeIdx) * w + delta}px)`);
+  });
+wrap.addEventListener('touchend', () => {
+  if (!dragging) return;
+  dragging = false;
 
-          const w = window.innerWidth;
-          const goRight = delta > w * thr && activeIdx > 0;
-          const goLeft = -delta > w * thr && activeIdx < panes().length - 1;
+  const w = window.innerWidth;
+  const goRight =  delta >  w * thr && activeIdx > 0;
+  const goLeft  = -delta >  w * thr && activeIdx < panes().length - 1;
 
-          let newIdx = activeIdx;
-          if (goRight) newIdx--;
-          else if (goLeft) newIdx++;
+  let newIdx = activeIdx;
+  if (goRight)      newIdx--;
+  else if (goLeft)  newIdx++;
 
-          panes().forEach((p, i) => {
-            p.style.transition = 'transform .25s ease';
-            p.style.transform = `translateX(${(i - newIdx) * w}px)`;
-          });
+  panes().forEach((p, i) => {
+    p.style.transition = 'transform .25s ease';
+    p.style.transform  = `translateX(${(i - newIdx) * w}px)`;
+  });
 
-          const onDone = () => {
-            activeIdx = newIdx;
-            activateTab(tabs()[activeIdx].dataset.tab);
-            panes()[newIdx].removeEventListener('transitionend', onDone);
-          };
-          panes()[newIdx].addEventListener('transitionend', onDone, { once: true });
-        });
-      }
+  const onDone = () => {
+    activeIdx = newIdx;
+    activateTab(tabs()[activeIdx].dataset.tab);
+    panes()[newIdx].removeEventListener('transitionend', onDone);
+  };
+  panes()[newIdx].addEventListener('transitionend', onDone, { once: true });
+});
+  }
 
       function animateIn(dir) {
         const pane = document.querySelector('.tab-content.active');

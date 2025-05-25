@@ -73,41 +73,6 @@
         </div>
       </div>
     </div>
-    
-      <button id="start-recording">
-
-
-        <!-- HTML for the two buttons -->
-        <svg version="1.1" viewBox="0 0 210 210" xmlns="http://www.w3.org/2000/svg">
-          <g transform="translate(0 4.174)">
-            <path d="m46.2 87.43c-6.23 0-11.28 4.842-11.28 10.82 0 31.98 
-                 24.8 58.5 57.06 64.21v26.81h.047a13.02 12.75 0 00-.046.622 
-                 13.02 12.75 0 0013.02 12.75 13.02 12.75 0 0013.02-12.75 
-                 13.02 12.75 0 00-.016-.622h.016v-26.81c32.27-5.716 
-                 57.07-32.23 57.06-64.21 0-5.973-5.05-10.82-11.28-10.82s-11.28 
-                 4.842-11.28 10.82c0 24.09-20.95 43.74-47.52 43.74s-47.52-19.65-47.52-43.74
-                 c0-5.973-5.05-10.82-11.28-10.82z" fill="#000000"/>
-            <ellipse cx="92.74" cy="205.8" rx=".757" ry=".076" />
-          </g>
-          <path class="mikrofon" d="m105 0c-17.49 0-32.36 10.78-38.38 26.07h52.21c2.77 0 
-               5 1.973 5 4.425 0 2.451-2.23 4.425-5 4.425h-54.61a41.91 
-               41.91 0 00-.482 6.344v.68h55.09c2.77 0 5 1.974 5 4.426 
-               0 2.451-2.23 4.425-5 4.425h-55.09v7.025h55.09c2.77 0 
-               5 1.973 5 4.425 0 2.451-2.23 4.425-5 4.425h-55.09v29.24c0 
-               22.86 18.4 41.26 41.26 41.26s41.26-18.4 41.26-41.26v-54.65c0-22.86-18.4-41.26-41.26-41.26z"
-            stroke-linecap="round" stroke-miterlimit="4.1" fill="rgb(164, 164, 164)"; paint-order="markers fill stroke" />
-
-        </svg>
-      </button>
-
-      <!-- Define a reusable microphone icon -->
-      <div id="recording-info">
-        <span id="recording-status"></span>
-        <span id="recording-time"></span>
-      </div>
-
-  </div>
-
     <!-- Modal for displaying the QR code -->
     <div class="modal modal-sm fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
@@ -191,7 +156,42 @@
       </div>
 
     </div>
- 
+
+    <div id="recording-container">
+
+      <button id="start-recording">
+
+
+        <!-- HTML for the two buttons -->
+        <svg version="1.1" viewBox="0 0 210 210" xmlns="http://www.w3.org/2000/svg">
+          <g transform="translate(0 4.174)">
+            <path d="m46.2 87.43c-6.23 0-11.28 4.842-11.28 10.82 0 31.98 
+                 24.8 58.5 57.06 64.21v26.81h.047a13.02 12.75 0 00-.046.622 
+                 13.02 12.75 0 0013.02 12.75 13.02 12.75 0 0013.02-12.75 
+                 13.02 12.75 0 00-.016-.622h.016v-26.81c32.27-5.716 
+                 57.07-32.23 57.06-64.21 0-5.973-5.05-10.82-11.28-10.82s-11.28 
+                 4.842-11.28 10.82c0 24.09-20.95 43.74-47.52 43.74s-47.52-19.65-47.52-43.74
+                 c0-5.973-5.05-10.82-11.28-10.82z" fill="#000000"/>
+            <ellipse cx="92.74" cy="205.8" rx=".757" ry=".076" />
+          </g>
+          <path class="mikrofon" d="m105 0c-17.49 0-32.36 10.78-38.38 26.07h52.21c2.77 0 
+               5 1.973 5 4.425 0 2.451-2.23 4.425-5 4.425h-54.61a41.91 
+               41.91 0 00-.482 6.344v.68h55.09c2.77 0 5 1.974 5 4.426 
+               0 2.451-2.23 4.425-5 4.425h-55.09v7.025h55.09c2.77 0 
+               5 1.973 5 4.425 0 2.451-2.23 4.425-5 4.425h-55.09v29.24c0 
+               22.86 18.4 41.26 41.26 41.26s41.26-18.4 41.26-41.26v-54.65c0-22.86-18.4-41.26-41.26-41.26z"
+            stroke-linecap="round" stroke-miterlimit="4.1" fill="rgb(164, 164, 164)"; paint-order="markers fill stroke" />
+
+        </svg>
+      </button>
+
+      <!-- Define a reusable microphone icon -->
+      <div id="recording-info">
+        <span id="recording-status"></span>
+        <span id="recording-time"></span>
+      </div>
+
+    </div>
     <input id="file-input" type="file" accept="application/json" style="display:none" />
     <!-- Toast container -->
     <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
@@ -205,6 +205,9 @@
       </div>
 
     </div>
+
+  </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
  <script>
     // SSA Application JavaScript
@@ -1117,6 +1120,13 @@ wrap.addEventListener('touchend', () => {
   panes()[newIdx].addEventListener('transitionend', onDone, { once: true });
 });
   }
+      function animateOut(dir) {
+        const pane = document.querySelector('.tab-content.active');
+        if (!pane) return;
+        const cls = dir === 'left' ? 'slide-out-left' : 'slide-out-right';
+        pane.classList.add(cls);
+        setTimeout(() => pane.classList.remove(cls), 300);
+      }
 
       function animateIn(dir) {
         const pane = document.querySelector('.tab-content.active');

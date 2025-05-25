@@ -9,8 +9,8 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/svg+xml" href="./fav.svg" />
   <link rel="apple-touch-icon" href="./fav.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="manifest" href="./site.webmanifest" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+   <link rel="manifest" href="./site.webmanifest" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
@@ -54,7 +54,7 @@
               </button>
             </li>
             <li><button class="dropdown-item d-flex align-items-center" id="btn-install" hidden
-                title="Instalovat aplikaci"><span class="material-icons me-2">phone_android</span>Instalvat</button>
+                title="Instalovat aplikaci"><span class="material-icons me-2">phone_android</span>Instalovat</button>
             </li>
 
             <li>
@@ -74,11 +74,11 @@
       </div>
     </div>
     <!-- Modal for displaying the QR code -->
-    <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+    <div class="modal modal-sm fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="qrModalLabel">Sdílej aplikaci</h5>
+            <h5 class="modal-title" id="qrModalLabel">Sdílet aplikaci</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
           </div>
           <div class="modal-body">
@@ -324,6 +324,7 @@
       const COLORS = ['#FF0000', '#006400', '#00008B', '#8B008B', '#2F4F4F', '#4B0082', '#483D8B', '#556B2F', '#6B8E23', '#8B4513'];
       let audioCtx, analyser, dataArray, animId, recognition, startTime;
       let keyHandlers = [];
+let visStream = null;          // mikrofon pro vizualizaci 
 
       const tabsEl = document.querySelector('.tabs');
       const wrapEl = document.querySelector('.wrap');
@@ -410,7 +411,8 @@
             } = pos.coords;
             /* bezplatné reverse-geo API (≈1 KB odpověď) */
             const resp = await fetch(
-              `https://api.open-meteo.com/v1/geocode?latitude=${lat}&longitude=${lon}`
+              `https://geocoding-api.open-meteo.com/v1/search` +
+            `?name=${encodeURIComponent(cityOrPostcode)}&count=1`
             );
             const js = await resp.json();
             if (js && js.country_code) return js.country_code.toUpperCase();
@@ -594,7 +596,7 @@
           const btn = document.createElement('button');
           btn.className = 'text-button';
           btn.textContent = text;
-          btn.addEventListener('click', () => {
+          wrap.addEventListener('click', () => {
             if (isPlaying) return; // guard
 
             isPlaying = true;
@@ -727,7 +729,7 @@
         div.append(bd);
         wrapEl.append(div);
 
-        const defaults = predef ? ['Nende', 'Vůbec to', 'Nefunguje'] : [];
+        const defaults = predef ? ['Nende', 'Vůbec to', 'Nefunguje'] : [''];
         const arr = tabsData[id] || defaults;
         console.log(`[createTab] Will add ${arr.length} buttons for tab='${id}'`);
         arr.forEach(t => addButton(t, id));
@@ -740,7 +742,7 @@
         console.log('[activateTab]', id);
         if (!isRecording) {
           recordingStatus.textContent =
-            id === TAB_PREDEFINED ? '' : 'Stisknutí mikrofonu nebo klávesy CTRL zahájí přepis řeči';
+            id === TAB_PREDEFINED ? '' : 'Tlačítko mikrofonu nebo stisk klávesy CTRL zahájí přepis řeči';
         }
         document.querySelectorAll('.tab-button').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
         document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === id));
@@ -777,8 +779,7 @@
       function initVoice() {
         console.log('[initVoice]');
         try {
-// current line
-const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+          const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
           if (!SR) {
             console.error('[initVoice] SpeechRecognition API not available');
             return;
@@ -801,10 +802,9 @@ const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
               recordingStatus.textContent = 'Poslouchám...';
               isRecording = true;
               startTime = Date.now();
-
+ updateRecordingTime();    
               /* ADD THIS ↓↓↓ */
-              initAudioVisualization(); // start microphone visualiser
-            } catch (e) {
+             } catch (e) {
               console.error('[SR] onstart error', e);
             }
           };
@@ -819,7 +819,7 @@ const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
               addButton(text, tabId);
               tabsData[tabId] = tabsData[tabId] || [];
               tabsData[tabId].push(text);
-              persist();
+              persist();stopVisualization();
             } catch (e) {
               console.error('[SR] onresult handling error', e);
             }
@@ -836,8 +836,7 @@ const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
               recordingStatus.textContent = '';
               recordingTime.textContent = '';
 
-              stopAudioVisualization();
-              const activeTab = localStorage.getItem('activeTab');
+                const activeTab = localStorage.getItem('activeTab');
               recordingStatus.textContent =
                 activeTab !== TAB_PREDEFINED ? 'Stisknutí mikrofonu nebo klávesy CTRL zahájí přepis řeči' : '';
               recBtn.style.boxShadow = 'none'; // <-- zruší stín úplně
@@ -876,40 +875,45 @@ const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
           console.error('[initVoice] unexpected error', e);
         }
       }
+/* === NOVÁ FUNKCE místo initAudioVisualization ================= */
+async function startVisualization() {
+  if (visStream) return;                               // už běží
 
-      async function initAudioVisualization() {
-        if (audioCtx && audioCtx.state !== 'closed') return; // already running
-        console.log('[AudioVis] initAudioVisualization');
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({
-            audio: true
-          });
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-          analyser = audioCtx.createAnalyser();
-          analyser.fftSize = 256;
-          dataArray = new Uint8Array(analyser.frequencyBinCount);
-          const src = audioCtx.createMediaStreamSource(stream);
-          src.connect(analyser);
-          visualizePulse();
-          updateRecordingTime();
-        } catch (e) {
-          console.error('[AudioVis] init err', e);
-        }
-      }
+  try {
+    visStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    audioCtx  = new (window.AudioContext || window.webkitAudioContext)();
+    analyser  = audioCtx.createAnalyser();
+    analyser.fftSize = 256;
+    dataArray = new Uint8Array(analyser.frequencyBinCount);
+    audioCtx.createMediaStreamSource(visStream).connect(analyser);
+    visualizePulse();                                  // stávající funkce
+  } catch (e) {
+    console.error('[AudioVis] init error', e);
+  }
+}
 
-      function stopAudioVisualization() {
-        cancelAnimationFrame(animId);
-        if (audioCtx) audioCtx.close();
-        recBtn.style.boxShadow = 'none'; // <-- jistota, že po stop je čistě
+/* === STARÁ stopAudioVisualization() → nahradí se tímto ========= */
+function stopVisualization() {
+  cancelAnimationFrame(animId);
 
-        audioCtx = null;
-        analyser = null;
-        dataArray = null;
-        console.log('[AudioVis] stopped');
-      }
+  if (visStream) {
+    visStream.getTracks().forEach(t => t.stop());      // uvolní mikrofon
+    visStream = null;
+  }
+  if (audioCtx) {
+    audioCtx.close();
+    audioCtx = null;
+  }
+  recBtn.style.boxShadow = 'none';
+  analyser  = null;
+  dataArray = null;
+  console.log('[AudioVis] stopped');
+}
+
 
       function startRecognition() {
         console.log('[SR] startRecognition');
+        stopVisualization();          // ⚠️ uvolní mikrofon
         try {
           recognition.start();
         } catch (e) {
@@ -1036,8 +1040,8 @@ const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
           document.getElementById('qrcode').innerHTML = '';
           new QRCode(document.getElementById('qrcode'), {
             text: window.location.href,
-            width: 200,
-            height: 200,
+            width: 260,
+            height: 260,
             colorDark: '#000',
             colorLight: '#fff',
             correctLevel: QRCode.CorrectLevel.H

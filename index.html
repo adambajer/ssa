@@ -59,7 +59,7 @@
 
             <li>
               <button class="dropdown-item d-flex align-items-center" id="toggle-log-btn" title="Zobrazit log">
-                <span class="material-icons me-2">bug_report</span>Logování
+                <span class="material-icons me-2">bug_report</span>Log
               </button>
             </li>
 
@@ -214,7 +214,9 @@
     // SSA Application JavaScript
     (() => {
 
-
+ const toast = new bootstrap.Toast(document.getElementById('helpToast'), {
+            autohide: false
+          });
       /* === LOG TOAST ======================================================= */
       const logToast = document.createElement('div');
       logToast.id = 'log-toast';
@@ -1061,9 +1063,7 @@
       function initHelp() {
         console.log('[initHelp]');
         helpBtn.addEventListener('click', () => {
-          const toast = new bootstrap.Toast(document.getElementById('helpToast'), {
-            autohide: false
-          });
+         
           document.getElementById('helpToastBody').innerHTML =
             `<b>A–Z</b> přečtení textu tlačítek<br>
   <b>1–9</b> změna záložky tlačítek<br>
@@ -1116,53 +1116,59 @@
         initHelp();
         initPWA();
         enableSwipeNavigation();
+        
+
+function isDropdownOpen() {
+  return document.getElementById('menuDropdown')?.getAttribute('aria-expanded') === 'true';
+}
+
         document.addEventListener('keydown', e => {
+          
+          if (
+    e.key === ';' &&
+    !e.ctrlKey &&
+    !e.altKey &&
+    !e.metaKey &&
+    !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)
+  ) {
+    e.preventDefault();
 
-          /* první úhoz  – ;  *******************************************/
-          if (!menuAwait && e.key === ';') {
-            e.preventDefault();
-            menuAwait = true; // ← zapneme zámek
-            // Assuming 'dd' is defined elsewhere and has 'show' and 'hide' methods for your menu
-            const dd = document.getElementById('mainMenu'); // Replace 'mainMenu' with the actual ID of your menu
-            if (dd && typeof dd.show === 'function' && typeof dd.hide === 'function') {
-              dd.show();
-              setTimeout(() => menuAwait = false, 2000); // auto-reset
-              return;
-            } else {
-              console.warn("Main menu element 'dd' with show/hide methods not found.");
-              menuAwait = false; // Ensure lock is released if menu is not found
-            }
-          }
+    const dropdownBtn = document.getElementById('menuDropdown');
+    const dropdown = bootstrap.Dropdown.getOrCreateInstance(dropdownBtn);
 
-          /* druhý úhoz  – číslo 1-9 ************************************/
-          if (menuAwait && /^[1-9]$/.test(e.key)) {
-            e.preventDefault();
-            e.stopImmediatePropagation(); // ← číslo už dál nebublá
-            // Assuming 'mapKey' is defined elsewhere and maps numbers to buttons
-            if (typeof mapKey !== 'undefined') {
-              const btn = mapKey.get(e.key);
-              if (btn) btn.click();
-            } else {
-              console.warn("mapKey is not defined.");
-            }
-            const dd = document.getElementById('mainMenu'); // Replace 'mainMenu' with the actual ID of your menu
-            if (dd && typeof dd.hide === 'function') {
-              dd.hide();
-            }
-            menuAwait = false; // zámek vypneme
-          }
+    // Toggle dropdown (open/close)
+    const isOpen = dropdownBtn.getAttribute('aria-expanded') === 'true';
+    if (isOpen) {
+      dropdown.hide();
+    } else {
+      dropdown.show();
+      // Fokusuj první prvek v menu
+      setTimeout(() => {
+        document.querySelector('.dropdown-menu .dropdown-item:not([disabled])')?.focus();
+      }, 100);
+    }
+  }
+  if (!isDropdownOpen()) return;
 
+  const items = Array.from(document.querySelectorAll('.dropdown-menu .dropdown-item:not([disabled])'));
+  const index = items.indexOf(document.activeElement);
 
-          if (/^[1-9]$/.test(e.key)) {
-            if (menuAwait) return; // ← blokuje tab-shortcuts
-            // 1–9 = záložky
-            e.preventDefault();
-            const idx = parseInt(e.key, 10) - 1;
-            const tabs = Array.from(document.querySelectorAll('.tab-button'));
-            if (tabs[idx]) {
-              activateTab(tabs[idx].dataset.tab);
-            }
-          } else if (e.ctrlKey && !isRecording && localStorage.getItem('activeTab') !== TAB_PREDEFINED) {
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    const next = (index + 1) % items.length;
+    items[next].focus();
+  }
+
+  if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    const prev = (index - 1 + items.length) % items.length;
+    items[prev].focus();
+  }
+
+  if (e.key === 'Escape') {
+    bootstrap.Dropdown.getInstance(document.getElementById('menuDropdown'))?.hide();
+  }
+          if (e.ctrlKey && !isRecording && localStorage.getItem('activeTab') !== TAB_PREDEFINED) {
             // Ctrl = start/stop recording
             e.preventDefault();
             startRecognition();
@@ -1172,36 +1178,25 @@
           }
         });
 
-        // Populate mapKey after tabs are initialized
-        const mapKey = new Map();
-        const mainMenu = document.getElementById('mainMenu'); // Replace 'mainMenu' with the actual ID of your menu
-        if (mainMenu) {
-          mainMenu.querySelectorAll('button[data-key]').forEach(btn => {
-            mapKey.set(btn.dataset.key, btn);
-          });
-        } else {
-          console.warn("Main menu element with data-key buttons not found.");
+        loadSettings();
+        function loadVoicesThenInit() {
+          const tryInit = () => {
+            const voices = speechSynthesis.getVoices();
+            if (voices.length) {
+              initSettings(); // tvoje původní funkce – beze změn
+            } else {
+              speechSynthesis.onvoiceschanged = () => {
+                initSettings(); // zavolá se až po načtení hlasů
+              };
+            }
+          };
+
+          // Některé prohlížeče načtou hlasy až po menší prodlevě
+          setTimeout(tryInit, 100); // mírné zpoždění pro jistotu
         }
 
-        loadSettings();
-       function loadVoicesThenInit() {
-  const tryInit = () => {
-    const voices = speechSynthesis.getVoices();
-    if (voices.length) {
-      initSettings(); // tvoje původní funkce – beze změn
-    } else {
-      speechSynthesis.onvoiceschanged = () => {
-        initSettings(); // zavolá se až po načtení hlasů
-      };
-    }
-  };
-
-  // Některé prohlížeče načtou hlasy až po menší prodlevě
-  setTimeout(tryInit, 100); // mírné zpoždění pro jistotu
-}
-
-// Start
-loadVoicesThenInit();
+        // Start
+        loadVoicesThenInit();
 
       });
     })();

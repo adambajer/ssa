@@ -32,11 +32,9 @@ button {
 }
 
 .tabs {
-    display: flex;
+    display: inline-flex;
     gap: 10px;
-    margin-bottom: 10px;
-    border-bottom: 2px solid #ddd;
-}
+  }
 
 .tab-button {
     padding: 8px 16px;
@@ -52,6 +50,7 @@ button {
 .tab-button.active {
     color: #ff0000;
     font-weight: bold;
+    background-color: white;
 }
 
 .tab-button.active::after {
@@ -147,7 +146,9 @@ button {
  }
 
  
-
+.a1 {
+    background-color: #eeeded;
+}
   
 #start-recording {
     display: inline-block; /* Nebo inline-flex, pokud chcete zarovnat obsah */
@@ -155,9 +156,9 @@ button {
     width: 70px;
     height: 70px;
     margin: 10px;
-    border: 1px solid white;
-    background-color: white;
-    border-radius: 100%;  border: 1px solid #ccc
+    border-bottom: 1px solid #818181;
+     background-color: #fff;;
+    border-radius: 100%;¨
   }
 
 #start-recording.active,
@@ -259,12 +260,11 @@ padding-right: 5px;     font-weight: bold;color: white;}
     }
 }
 
-#recording-container {
-  display: flex;
-  flex-direction: row; /* Align items in a row */
-  align-items: center; /* Vertically center the items */
-  justify-content: flex-start; /* Keep the mic button in place */
-  gap: 10px; /* Space between the button and the text */
+#recording-container { 
+    gap: 10px;
+    position: absolute;
+    top: 0px;
+    right: 2em;
 }
 
 #recording-info {
@@ -342,4 +342,4 @@ padding-right: 5px;     font-weight: bold;color: white;}
     border-radius:4px;
     color:#333;
   }
-  
+  5302

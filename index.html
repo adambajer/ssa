@@ -719,14 +719,15 @@
         }
       }
 
-      function renderAllButtons() {
-        document.querySelectorAll('.transcription-button').forEach(btn => {
-          btn.addEventListener('click', () => {
-            speakText(btn.dataset.text);
-          });
-        });
-
-      }
+     function renderAllButtons() {
+  document.querySelectorAll('.transcription-button').forEach(btn => {
+    if (settings.launchPad) {
+      btn.classList.add('launch-pad');
+    } else {
+      btn.classList.remove('launch-pad');
+    }
+  });
+}
 
       function createTab(id, name, predef = false) {
         console.log(`[createTab] id='${id}', name='${name}', predef=${predef}`);

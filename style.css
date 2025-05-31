@@ -151,15 +151,22 @@ button {
 }
   
 #start-recording {
-    display: inline-block; /* Nebo inline-flex, pokud chcete zarovnat obsah */
-    box-shadow: none; /* Odstranění výchozího box-shadow */
-    width: 70px;
-    height: 70px;
-    margin: 10px;
-    border-bottom: 1px solid #818181;
-     background-color: #fff;;
-    border-radius: 100%;¨
-  }
+  position: absolute;
+  top: 0.5rem;
+  right: 2rem;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #aaa;
+  transition: border 0.3s, background 0.3s;
+}
+
+#start-recording.active {
+  background: red;
+  border-color: red;
+}
+
 
 #start-recording.active,
 #start-sound-capture.active {
@@ -298,7 +305,11 @@ padding-right: 5px;     font-weight: bold;color: white;}
     position: relative;
     cursor: pointer;
     overflow: hidden;
-    border: 0px solid transparent;  border-radius:0px;
+    border: 0px solid transparent;  border-radius:0px; --size: 7rem;
+  margin: 0.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  transition: transform 0.2s;
    }
    
   

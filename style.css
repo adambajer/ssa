@@ -307,9 +307,7 @@ padding-right: 5px;     font-weight: bold;color: white;}
     overflow: hidden;
     border: 0px solid transparent;  border-radius:0px; --size: 7rem;
   margin: 0.5rem;
-  
-  border-top-right-radius: 8px;
-  border-top-left-radius: 8px;
+  border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.15);
   transition: transform 0.2s;
    }

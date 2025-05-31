@@ -809,6 +809,7 @@ const defaults = predef ? [
         console.log('[initTabs] initial', init);
         activateTab(init);
         console.log('[initTabs] done');
+        renderAllButtons(); // ← DOPLŇ TENTO ŘÁDEK
       }
 
       function initVoice() {
@@ -1137,7 +1138,8 @@ const defaults = predef ? [
         setTimeout(() => ac.classList.remove(cl), 300);
       }
 
-      document.addEventListener('DOMContentLoaded', () => {
+      document.addEventListener('DOMContentLoaded', () => {             loadSettings();
+
         initTabs();
         initVoice();
         initImport();
@@ -1248,7 +1250,7 @@ const defaults = predef ? [
           return !!dropdown;
         }
 
-        loadSettings();
+   
         function loadVoicesThenInit() {
           const tryInit = () => {
             const voices = speechSynthesis.getVoices();

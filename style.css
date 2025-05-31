@@ -319,9 +319,9 @@ padding-right: 5px;     font-weight: bold;color: white;}
     inset: 0;                               /* vycentrovat */
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     border-radius:0px;
-    font-size: calc(var(--size) * .55);     /* ~ 60 % dlaždice */
+    font-size: calc(var(--size) * .35);     /* ~ 60 % dlaždice */
     font-weight: 800;
     line-height: 1;
     color: rgba(255,255,255,.9);            /* jasně bílé  */
@@ -335,7 +335,8 @@ padding-right: 5px;     font-weight: bold;color: white;}
   .launch-pad .text-button {
     position: absolute;
     width:100%;
-    bottom: 0px;
+    height: 50%;
+    top: 50%;
      padding: 0;
     border-radius:0px;
     font-size: .85rem;
@@ -343,7 +344,10 @@ padding-right: 5px;     font-weight: bold;color: white;}
   
     border: 0px solid transparent; 
     background: rgba(0,0,0,.45);            /* tmavý proužek */
-    color: #fff;  
+    color: #fff;    font-size: 0.9rem;
+  padding: 0.3rem;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
   } .kbd-badge{
     margin-left:auto;
     font-size:.65rem;
@@ -353,4 +357,4 @@ padding-right: 5px;     font-weight: bold;color: white;}
     border-radius:4px;
     color:#333;
   }
-  5302
+ 

@@ -204,7 +204,7 @@ button {
  
 }
 #start-recording.active svg path.mikrofon {
-    fill: red;
+    fill: rgb(255, 255, 255);
 }
 
 #start-sound-capture.active svg path {
@@ -271,11 +271,11 @@ padding-right: 5px;     font-weight: bold;color: white;}
     gap: 10px;
     position: absolute;
     top: 0px;
-    right: 2em;
+    right: 10em;
 }
 
 #recording-info {
-  text-align: left; /* Align text to the left */
+  text-align: right; /* Align text to the left */
   font-size: 14px;
   color: #333;
   display: flex;

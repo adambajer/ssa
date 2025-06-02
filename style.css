@@ -196,7 +196,7 @@ button {
     stroke: transparent;
 }
 #start-recording:hover svg path.mikrofon {
-    fill: red;
+    fill: black;
  
 }
 #start-recording.pulsing svg path.mikrofon {

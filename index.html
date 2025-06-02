@@ -472,6 +472,7 @@
           autohide: false
         } // trvale otevřené, dokud ho uživatel nezavře
         );
+        
         /* select hlasu */
         select.value = settings.voiceURI;
         select.addEventListener('change', () => {
@@ -750,20 +751,27 @@
         wrapEl.append(div);
 
 const defaults = predef ? [
-  'Nende',
+  'A teď mlčíš!',
+  'A proč?',
+  'Protože víš, že mám pravdu!',
   'Vůbec to',
   'Nefunguje',
-  'Tohle se posralo',
-  'Jeblo to',
-  'To snad není možný',
-  'Tohle není normální',
-  'To je bug z jiné dimenze',
-  'Zase nějaká sračka',
-  'Co to je zas?',
-  'Proč to vůbec existuje?',
-  'Zahoď to',
-  'Tohle nebudu ladit',
-  'Kdo to psal?'
+  'Nende to',
+  'Zmáčkni si éčko',
+  'Dej si éčko',
+  'Eééééčko!',
+  'Nende',
+  'Jak nejde?',
+  'Vůbec nende',
+  'Není signál',
+  'Max nervy!',
+  'Co ty?',
+  'Čus ty pičo?',
+  'Max chutě',
+  'Chceš?',
+  'Chcex dojet!',
+  'Jak víš?',
+  'Vím'
 ] : [''];
         const arr = tabsData[id] || defaults;
         console.log(`[createTab] Will add ${arr.length} buttons for tab='${id}'`);

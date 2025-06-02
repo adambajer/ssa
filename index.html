@@ -558,17 +558,25 @@
         }
       }
 
-      // Modified speak to respect settings
-      function speak(text, cb) {
-        if (settings.ignorePlaying && speechSynthesis.speaking) return;
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.lang = 'cs-CZ';
-        utter.rate = settings.rate;
-        const voice = voices.find(v => v.voiceURI === settings.voiceURI);
-        if (voice) utter.voice = voice;
-        utter.onend = cb;
-        speechSynthesis.speak(utter);
-      }
+function speak(text, cb) {
+  if (settings.ignorePlaying && speechSynthesis.speaking) return;
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'cs-CZ';
+  utter.rate = settings.rate;
+  const voice = voices.find(v => v.voiceURI === settings.voiceURI);
+  if (voice) utter.voice = voice;
+  utter.onend = cb;
+  speechSynthesis.speak(utter);
+
+  // Pokud je multiple povoleno, nenech flag "isPlaying" bránit dalším
+  if (!settings.allowMultiple) isPlaying = true;
+
+  utter.onend = () => {
+    if (!settings.allowMultiple) isPlaying = false;
+    cb?.();
+  };
+}
+
 
       function clearKeyHandlers() {
         keyHandlers.forEach(h => document.removeEventListener('keydown', h));
@@ -615,7 +623,7 @@
           btn.className = 'text-button';
           btn.textContent = text;
           wrap.addEventListener('click', () => {
-            if (isPlaying) return; // guard
+if (!settings.allowMultiple && isPlaying) return;
 
             isPlaying = true;
 

@@ -305,8 +305,7 @@ padding-right: 5px;     font-weight: bold;color: white;}
     position: relative;
     cursor: pointer;
     overflow: hidden;
-    border: 0px solid transparent;  border-radius:0px; --size: 7rem;
-  margin: 0.5rem;
+   margin: 0.5rem;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.15);
   transition: transform 0.2s;
@@ -335,18 +334,16 @@ padding-right: 5px;     font-weight: bold;color: white;}
   /* TEXT TLAČÍTKA – spodní štítek */
   .launch-pad .text-button {
     position: absolute;
-    width:100%;
+    width: 100%;
     height: 50%;
     top: 50%;
-     padding: 0;
-    border-radius:0px;
+    /* padding: 0; */
+    border-radius: 0px;
     font-size: .85rem;
-    font-weight: 600;
-  
-    border: 0px solid transparent; 
-    background: #ededed;            /* tmavý proužek */
-    color:black;    font-size: 0.9rem;
-  padding: 0.3rem;
+    /* font-weight: 600; */
+    border: 0px solid transparent;
+    background: #ededed;
+    color: black;
     } .kbd-badge{
     margin-left:auto;
     font-size:.65rem;

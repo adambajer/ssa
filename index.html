@@ -906,7 +906,7 @@
           console.log('[activateTab]', id);
           if (!isRecording) {
             recordingStatus.textContent =
-              id === TAB_PREDEFINED ? '' : 'Nahrávej';
+              id === TAB_PREDEFINED ? '' : 'Nahrávání';
           }
           document.querySelectorAll('.tab-button').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
           document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === id));
@@ -999,12 +999,12 @@
               console.log('[SR] onend');
               try {
                 recBtn.classList.remove('active');
-                recordingStatus.textContent = 'Nahrávej';
+                recordingStatus.textContent = 'Nahrávání';
                 recordingTime.textContent = '';
 
                 const activeTab = localStorage.getItem('activeTab');
                 recordingStatus.textContent =
-                  activeTab !== TAB_PREDEFINED ? 'Nahrávej' : '';
+                  activeTab !== TAB_PREDEFINED ? 'Nahrávání' : '';
                 recBtn.style.boxShadow = 'none'; // <-- zruší stín úplně
 
                 isRecording = false;

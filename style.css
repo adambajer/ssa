@@ -1,3 +1,6 @@
+body {
+  font-family: 'Inter', sans-serif;
+}
 button {
     outline: 0;
     display: inline-block;
@@ -284,62 +287,146 @@ padding-right: 5px;     font-weight: bold;color: white;}
   font-size: 12px;
   color: #666;
 }
+.tab-content-body {
+      
+  margin: 1rem;
+}
+.tab-content-body.layout-default {
+display: inline-block;
+
+  box-sizing: border-box;
+}
+
+.tab-content-body.layout-default .transcription-button {
+   display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: row;
+   width: 100%;
+  max-width: max-content;
+   border-radius: 0.6rem;
+  background: #eee;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  text-align: left; 
+} 
  
-  /* ---------- LAUNCH-PAD VZHLED ----------------------------------- */
+.tab-content-body.layout-default .transcription-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}
+
+.tab-content-body.layout-default .transcription-button .shortcut {
+font-size: 1.5rem;
+    font-weight: 800;
+    color: white;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    flex-shrink: 0;
+    line-height: 1;
+    width: 2.2rem;
+    height: 2.2rem;
+    line-height: 2.2rem;
+    text-align: center;
+}
+
+.tab-content-body.layout-default .transcription-button .text-button {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #222;
+  flex: 1;
+  line-height: 1.2;
+  padding:0.6em;
+  height: 100%;;
+}
+
+/* Grid layout pro launchpad */
+.tab-content-body.layout-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 1rem;
+  justify-items: center;
+}
 
 .launch-pad {
-    --size: 6.5rem;
-    width: var(--size);
-    height: var(--size);
-     
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    cursor: pointer;
-    overflow: hidden;
-   margin: 0.5rem; 
-  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-  transition: transform 0.2s;
-   }
-   
-  
-  /* VELKÉ PÍSMENO / KLÁVESOVÁ ZKRATKA */
-  .launch-pad .shortcut {
-    position: absolute;
-    inset: 0;       
-    padding-top: 0.2em;                        /* vycentrovat */
-    display: flex;
-    justify-content: center;
-    align-items: flex-start; 
-    font-size: calc(var(--size) * .35);     /* ~ 60 % dlaždice */
-    font-weight: 800;
-    line-height: 1;
-    color: rgba(255,255,255,.9);            /* jasně bílé  */
-    text-shadow: 0 2px 4px rgba(0,0,0,.35); /* kontrast */
-    user-select: none;
-    border: 0px solid transparent; 
-    pointer-events: none;                   /* klik projde na tlačítko */
-  }
-  
-  /* TEXT TLAČÍTKA – spodní štítek */
-  .launch-pad .text-button {
-    position: absolute;
-    width: 100%;
-    height: 50%;
-    top: 50%;
-    /* padding: 0; */ 
-    font-size: .85rem;
-    /* font-weight: 600; */
-    border: 0px solid transparent;
-    background: #ededed;
-    color: black;
-    } .kbd-badge{
-    margin-left:auto;
-    font-size:.65rem;
-    font-weight:600;
-    padding:.15rem .4rem;
-    background:#e5e5e5; 
-    color:#333;
-  }
+  aspect-ratio: 1/1;
+  width: 100%;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.launch-pad:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+}
+
+.launch-pad .shortcut {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 900;
+  color: white;
+  width: 100%;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
+  background: var(--color-top, #888);
+}
+
+.launch-pad .text-button {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  font-weight: 600;
+  backdrop-filter: blur(5px);
+  color: #222;
+  background: var(--color-bottom, #eee);
+}
+
  
+.launch-pad:hover .text-button {
+  background-color: #fff;
+}
+
+ .tab-button {
+  position: relative;
+  margin-right: 0.5rem;
+  padding-right: 1.5rem; /* prostor pro křížek */
+  background-color: #eee;
+  border: none;
+  border-radius: 4px;
+  padding: 0.4em 0.8em;
+  cursor: pointer;
+}
+
+.tab-button:hover {
+  background-color: #ddd;
+}
+
+.tab-button .tab-close {
+  position: absolute;
+  top: 0rem;
+  right: 0rem;
+  font-size: 0.9em;
+   cursor: pointer;
+opacity: 0;;}
+
+.tab-button.active .tab-close {
+opacity: 1;}
+
+.tab-add-btn {
+  font-size: 1.2em;
+  line-height: 1;
+  padding: 0.25em 0.5em;
+  border-radius: 4px;
+  margin-left: auto;
+}

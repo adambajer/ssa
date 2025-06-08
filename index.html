@@ -29,15 +29,15 @@
 
             <div class="dropdown">
               <button class="btn btn-link p-2 text-secondary" type="button" id="menuDropdown" data-bs-toggle="dropdown"
-                aria-expanded="false" title="Ovládání">
+                aria-expanded="false" title="Hlavní menu">
                 <span class="material-icons">menu</span>
               </button>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="menuDropdown">
 
 
-                <li><button class="dropdown-item d-flex align-items-center" id="import-tab" title="Import"><span
+                <li><button class="dropdown-item d-flex align-items-center" id="import-tab" title="Otevřít uloženou záložku"><span
                       class="material-icons me-2">folder_open</span>Otevřít</button></li>
-                <li><button class="dropdown-item d-flex align-items-center" id="export-tab" title="Export"><span
+                <li><button class="dropdown-item d-flex align-items-center" id="export-tab" title="Uložit záložku"><span
                       class="material-icons me-2">save</span>Uložit</button></li>
 
                 <!-- Add this new menu item in the dropdown menu -->
@@ -63,10 +63,10 @@
                   </button>
                 </li>
 
-                <li><button class="dropdown-item d-flex align-items-center" id="help-btn" title="Nápověda"><span
+                <li><button class="dropdown-item d-flex align-items-center" id="help-btn" title="Ovládání aplikace"><span
                       class="material-icons me-2">help_outline</span>Ovládání</button>
                 </li>
-                <li><button class="dropdown-item d-flex align-items-center" id="settings-btn" title="Nastavení"><span
+                <li><button class="dropdown-item d-flex align-items-center" id="settings-btn" title="Nastavení aplikace;"><span
                       class="material-icons me-2">settings</span>Nastavení</button>
                 </li>
               </ul>
@@ -1113,52 +1113,89 @@
           setTimeout(updateRecordingTime, 1000);
         }
 
-        function initImport() {
-          console.log('[initImport]');
-          impBtn.addEventListener('click', () => {
-            const tabId = localStorage.getItem('activeTab');
-            console.log('[import] tab', tabId);
-            fileInput.onchange = async e => {
-              const f = e.target.files[0];
-              if (!f) return;
-              try {
-                const txt = await f.text();
-                tabsData[tabId] = JSON.parse(txt);
-                persist();
-                const bd = document.querySelector(`#${tabId} .tab-content-body`);
-                bd.innerHTML = '';
-                tabsData[tabId].forEach(t => addButton(t, tabId));
-                console.log('[import] OK');
-              } catch (err) {
-                console.error('[import] ERR', err);
-                alert('Neplatný JSON');
-              }
-              e.target.value = '';
-            };
-            fileInput.click();
-          });
-        }
+function initImport() {
+  console.log('[initImport]');
+  impBtn.addEventListener('click', () => {
+    const tabId = localStorage.getItem('activeTab');
 
-        function initExport() {
-          console.log('[initExport]');
-          expBtn.addEventListener('click', () => {
-            const tabId = localStorage.getItem('activeTab');
-            console.log('[export] tab', tabId);
-            const arr = Array.from(document.querySelectorAll(`#${tabId} .text-button`)).map(b => b.textContent);
-            const blob = new Blob([JSON.stringify(arr, null, 2)], {
-              type: 'application/json'
-            });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `${tabId}.json`;
-            document.body.append(a);
-            a.click();
-            a.remove();
-            URL.revokeObjectURL(url);
-            console.log('[export] done');
-          });
+    const choice = prompt('Zadej 1 pro výběr souboru, nebo 2 pro vložení QR kódu jako text (base64 JSON):', '1');
+    if (choice === '2') {
+      const input = prompt('Vlož base64 QR obsah:');
+      if (input) {
+        try {
+          const json = decodeURIComponent(escape(atob(input)));
+          const data = JSON.parse(json);
+          tabsData[tabId] = data;
+          persist();
+          const bd = document.querySelector(`#${tabId} .tab-content-body`);
+          bd.innerHTML = '';
+          data.forEach(t => addButton(t, tabId));
+          console.log('[import] QR OK');
+        } catch (err) {
+          console.error('[import] QR ERR', err);
+          alert('Neplatný QR obsah');
         }
+      }
+    } else {
+      fileInput.onchange = async e => {
+        const f = e.target.files[0];
+        if (!f) return;
+        try {
+          const txt = await f.text();
+          tabsData[tabId] = JSON.parse(txt);
+          persist();
+          const bd = document.querySelector(`#${tabId} .tab-content-body`);
+          bd.innerHTML = '';
+          tabsData[tabId].forEach(t => addButton(t, tabId));
+          console.log('[import] soubor OK');
+        } catch (err) {
+          console.error('[import] soubor ERR', err);
+          alert('Neplatný JSON');
+        }
+        e.target.value = '';
+      };
+      fileInput.click();
+    }
+  });
+}
+
+
+function initExport() {
+  console.log('[initExport]');
+  expBtn.addEventListener('click', () => {
+    const tabId = localStorage.getItem('activeTab');
+    const arr = Array.from(document.querySelectorAll(`#${tabId} .text-button`)).map(b => b.textContent);
+    const json = JSON.stringify(arr, null, 2);
+    
+    // Download jako soubor
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${tabId}.json`;
+    document.body.append(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    console.log('[export] file downloaded');
+
+    // QR kód
+    const encoded = btoa(unescape(encodeURIComponent(json)));
+    document.getElementById('qrcode').innerHTML = '';
+    new QRCode(document.getElementById('qrcode'), {
+      text: encoded,
+      width: 260,
+      height: 260,
+      colorDark: '#000',
+      colorLight: '#fff',
+      correctLevel: QRCode.CorrectLevel.H
+    });
+
+    const modal = new bootstrap.Modal(document.getElementById('qrModal'));
+    modal.show();
+  });
+}
+
 
 
 

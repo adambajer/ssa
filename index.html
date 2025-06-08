@@ -37,9 +37,7 @@
                     class="material-icons me-2">folder_open</span>Otevřít</button></li>
               <li><button class="dropdown-item d-flex align-items-center" id="export-tab" title="Export"><span
                     class="material-icons me-2">save</span>Uložit</button></li>
-              <li><button class="dropdown-item d-flex align-items-center" id="delete-tab" title="Smazat tab"><span
-                    class="material-icons me-2">delete</span>Smazat</button></li>
-              <li>
+        
                 <!-- Add this new menu item in the dropdown menu -->
               <li><button class="dropdown-item d-flex align-items-center" id="erase-data-btn"
                   title="Vymazat všechna data">
@@ -759,7 +757,7 @@ function renderAllButtons() {
         const btn = document.createElement('button');
         btn.className = 'tab-button';
         btn.dataset.tab = id;
-btn.innerHTML = `${name} <span class="tab-close" title="Smazat záložku">&times;</span>`;
+btn.innerHTML = `${name} <span class="tab-close material-icons me-2">delete</span>`;
         tabsEl.append(btn); 
 tabsEl.append(btn, document.getElementById('add-tab-btn')); // ← Vložit PŘED tlačítko "+"
 

@@ -146,70 +146,14 @@ button {
 }
 
 #start-recording {
-
-    top: 0.5rem;
-    right: 2rem;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    background: white;
-    border: 2px solid #aaa;
-    transition: border 0.3s, background 0.3s;
+ 
+    width: 1.4rem;
+    height: auto; 
 }
-
-#start-recording.active {
-    background: red;
-    border-color: red;
-}
-
-
-#start-recording.active,
-#start-sound-capture.active {
-    border: 1px solid red;
-}
-
-#start-recording.pulsing {
-    animation: none;
-    /* Pulse efekt bude řízen dynamicky */
-}
-
-#start-sound-capture.active {
-    border: 1px solid blue;
-    box-shadow: 0px 0px 7px 0px rgba(0, 0, 255, 0.3);
-    animation: pulseb 1s infinite;
-}
-
-#start-recording svg,
-#start-sound-capture svg {
-
-    padding: 5px;
-    display: block;
-}
-
-#start-recording svg path,
-#start-sound-capture svg path {
-
-    stroke: transparent;
-}
-
-#start-recording:hover svg path.mikrofon {
-    fill: black;
-
-}
-
-#start-recording.pulsing svg path.mikrofon {
-    fill: red;
-
-}
-
-#start-recording.active svg path.mikrofon {
-    fill: rgb(255, 255, 255);
-}
-
-#start-sound-capture.active svg path {
-    fill: blue;
-}
-
+ 
+ #start-recording svg path{
+    fill:white;
+ }
  
 
 .tooltip {
@@ -269,33 +213,7 @@ button {
     }
 }
 
-#recording-container {
-    gap: 10px;
-    position: absolute;
-    top: 0px;
-    right: 10em;
-}
-
-#recording-info {
-    text-align: right;
-    /* Align text to the left */
-    font-size: 14px;
-    color: #333;
-    display: flex;
-    flex-direction: column;
-    /* Stack the status and time vertically */
-    gap: 2px;
-    /* Small gap between status and time */
-}
-
-#recording-status {
-    font-weight: bold;
-}
-
-#recording-time {
-    font-size: 12px;
-    color: #666;
-}
+ 
 
 .tab-content-body {
 
@@ -316,10 +234,10 @@ button {
     width: 100%;
     max-width: max-content;
     border-radius: 0.4rem;
-    border: 1px solid #ddd;
+    border: 1px solid #eaeaea;
     background: #ffffff;
     overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0px 0px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
     text-align: left;
@@ -327,8 +245,7 @@ button {
 }
 
 .tab-content-body.layout-default .transcription-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
 }
 
 .tab-content-body.layout-default .transcription-button .shortcut {
@@ -359,7 +276,7 @@ button {
 /* Grid layout pro launchpad */
 .tab-content-body.layout-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(100px, 2fr));
     gap: 1rem;
     justify-items: center;
 }
@@ -370,7 +287,8 @@ button {
     border-radius: 0.5rem;
     overflow: hidden;
     position: relative;
-    display: flex;
+    display: flex; 
+    border: 1px solid #eaeaea;;
     flex-direction: column;
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -378,7 +296,7 @@ button {
 }
 
 .launch-pad:hover {
-    transform: translateY(-4px);
+ 
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
 }
 
@@ -387,7 +305,7 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-size: clamp(1.8rem, 8vw, 2.5rem);
     font-weight: 900;
     color: white;
     width: 100%;
@@ -400,7 +318,7 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.95rem;
+    font-size: 0.70arem;
     font-weight: 600;
     backdrop-filter: blur(5px);
     color: #222;
@@ -419,10 +337,7 @@ button {
     /* margin-right: 0.5rem; */
     /* padding-right: 1.5rem; */
     background-color: #eee;
-    border: none;
-    /* border-radius: 4px; */
-    /* padding: 0.4em 0.8em; */
-    cursor: pointer;
+    border: none; 
 }
 
 .tab-button:hover {
@@ -434,9 +349,9 @@ button {
     top: 0rem;
     right: 0.2rem;
     font-size: 0.9em;
-    cursor: pointer;
-    color: black; 
+    cursor: pointer; 
     opacity: 0; 
+    color: #333;;
 }
 
 .tab-button.active .tab-close {
@@ -447,6 +362,19 @@ button {
     font-size: 1.2em;
     line-height: 1;
     padding: 0.25em 0.5em;
-    border-radius: 4px;
+    border-radius: 0px;
     margin-left: auto;
+}
+button#add-tab-btn {
+    width: 3em
+57.6px
+;
+    text-align: center;
+}button#add-tab-btn:hover {
+color: #ff0000;}
+#menuDropdown:hover .material-icons{
+    color: #ff0000;
+}
+.dropdown-item:hover span{
+    color: #ff0000  ;
 }

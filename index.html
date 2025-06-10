@@ -911,7 +911,20 @@
           document.querySelectorAll('.tab-button').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
           document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === id));
           localStorage.setItem('activeTab', id);
-          recBtn.style.display = (id === TAB_PREDEFINED ? 'none' : 'inline-block');
+
+          // Move and show/hide recording button
+          const recContainer = document.getElementById('recording-container');
+          if (id === TAB_PREDEFINED) {
+            recContainer.style.display = 'none';
+          } else {
+            const container = document.querySelector(`#${id} .tab-content-body`);
+            if (container && recContainer.parentElement !== container) {
+              recContainer.remove();
+              container.appendChild(recContainer);
+            }
+            recContainer.style.display = 'inline-block';
+          }
+
           if (isRecording) stopRecognition();
           registerKeyHandlers(id); 
 

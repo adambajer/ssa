@@ -378,3 +378,13 @@ color: #ff0000;}
 .dropdown-item:hover span{
     color: #ff0000  ;
 }
+#recording-container .transcription-button{
+    background: rgb(128, 0, 128);
+}
+#recording-container #recording-info{
+    color: white;
+    background: rgb(128, 0, 128);
+    background-color:rgb(128, 0, 128);
+    margin: 0px;
+    padding: 0px;
+}

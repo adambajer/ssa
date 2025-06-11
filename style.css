@@ -399,3 +399,19 @@ color: #ff0000;}
   animation: spin 1s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+#connection-overlay .active {
+        position: fixed;
+    inset: 0px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-family: sans-serif;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(7px);
+    text-align: center;
+    padding: 2rem;
+    transition: all 1s;
+}

@@ -399,7 +399,7 @@ color: #ff0000;}
   animation: spin 1s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
-#connection-overlay .active {
+#connection-overlay.active {
         position: fixed;
     inset: 0px;
     background: rgba(0, 0, 0, 0.8);

@@ -1303,12 +1303,14 @@ function initExport() {
           setTimeout(() => ac.classList.remove(cl), 300);
         }
    function initPWA() {  
+<script>
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/ssa/sw.js')
-    .then(() => console.log('SW registered'))
+    .then(() => console.log('[SW] Registered'))
     .catch(console.error);
 }
- 
+</script>
+
 }
         document.addEventListener('DOMContentLoaded', () => {
           loadSettings();

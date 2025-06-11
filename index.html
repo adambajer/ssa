@@ -1268,13 +1268,12 @@ function initExport() {
         }
 
        function initPWA() {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js')
-      .then(reg => console.log('[PWA] Service Worker registrován:', reg.scope))
-      .catch(err => console.error('[PWA] Chyba registrace:', err));
-  } else {
-    console.warn('[PWA] Service Worker není podporován tímto prohlížečem.');
-  }
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('se.js')
+    .then(() => console.log('Service worker zaregistrován.'))
+    .catch(err => console.error('SW registrace selhala:', err));
+}
+
 }
 
         function changeTab(index) {

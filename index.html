@@ -1457,6 +1457,11 @@ function initExport() {
 
   // Když se odpojíš později
   window.addEventListener('offline', handleOffline);
+  window.addEventListener('online', () => {
+  console.log('[APP] Znovu online');
+  // Tady můžeš např. zobrazit banner, obnovit data atd.
+});
+
 </script>
 
 </body>

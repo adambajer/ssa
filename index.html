@@ -1477,17 +1477,21 @@ function showOverlay() {
     text-align:center;padding:2rem
   `;
   overlay.innerHTML = `
-    <h1>📡 Ztráta připojení</h1>
-    <p>Od: <span id="since"></span></p>
-    <p>Trvá: <span id="duration">0 s</span></p>
-    <div class="loader"></div>
+   <h1>📡 Ztráta připojení</h1>
+  <p>Od: <span id="out-start">--:--:--</span></p>
+  <p>Trvá: <span id="out-duration">0 s</span></p>
+  <div class="signal-bars">
+    <div class="bar"></div><div class="bar"></div>
+    <div class="bar"></div><div class="bar"></div>
+  </div>
+  <div class="loader" style="display:none"></div>
   `;
   document.body.appendChild(overlay);
   speakSafe('Výpadek signálu.');
-  document.getElementById('since').textContent = outageStart.toLocaleTimeString('cs-CZ');
+  document.getElementById('out-start').textContent = outageStart.toLocaleTimeString('cs-CZ');
   outageTimer = setInterval(() => {
     const sec = Math.floor((new Date() - outageStart) / 1000);
-    document.getElementById('duration').textContent = `${sec} s`;
+    document.getElementById('out-duration').textContent = `${sec} s`;
   }, 1000);
 }
 

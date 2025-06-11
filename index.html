@@ -1454,62 +1454,53 @@
 
                 });
             })();
+            // bezpečná TTS funkce
             function speakSafe(text) {
                 if (!window.speechSynthesis) return;
                 window.speechSynthesis.cancel();
-                const u = new SpeechSynthesisUtterance(text);
-                u.lang = 'cs-CZ';
-                u.rate = 1;
-                window.speechSynthesis.speak(u);
+                const utter = new SpeechSynthesisUtterance(text);
+                utter.lang = 'cs-CZ';
+                utter.rate = 1;
+                window.speechSynthesis.speak(utter);
             }
 
-            // Připrav overlay element
+            let overlay = null;
             let outageStart, outageTimer;
-            const overlay = document.createElement('div');
-            overlay.id = 'connection-overlay';
-            overlay.innerHTML = `
-  <h1>📡 Ztráta připojení</h1>
-  <p>Od: <span id="out-start">--:--:--</span></p>
-  <p>Trvá: <span id="out-duration">0 s</span></p>
-  <div class="signal-bars">
-    <div class="bar"></div><div class="bar"></div>
-    <div class="bar"></div><div class="bar"></div>
-  </div>
-  <div class="loader" style="display:none"></div>
-`;
-            document.body.appendChild(overlay);
 
-            navigator.serviceWorker.addEventListener('message', e => {
-                if (e.data?.type !== 'connection-status') return;
-                if (e.data.status === 'disconnected') startOutage();
-                else endOutage();
+            navigator.serviceWorker.addEventListener('message', event => {
+                if (event.data?.type !== 'connection-status') return;
+                if (event.data.status === 'disconnected') showOverlay();
+                else hideOverlay();
             });
 
-            function startOutage() {
-                if (overlay.classList.contains('visible')) return;
+            function showOverlay() {
+                if (overlay) return;
                 outageStart = new Date();
-                overlay.querySelector('#out-start').textContent = outageStart.toLocaleTimeString('cs-CZ');
-                overlay.querySelector('.loader').style.display = 'none';
-                overlay.classList.add('visible');
-                speakSafe('Ztráta připojení.');
+                overlay = document.createElement('div');
+                overlay.id = 'connection-overlay';
+                overlay.classList.toggle('active'); 
+                overlay.innerHTML = `
+    <h1>📡 Výpadek signálu</h1>
+    <p>Od: <span id="since"></span></p>
+    <p>Trvá: <span id="duration">0 s</span></p>
+    <div class="loader"></div>
+  `;
+                document.body.appendChild(overlay);
+                speakSafe('Výpadek signálu.');
+                document.getElementById('since').textContent = outageStart.toLocaleTimeString('cs-CZ');
                 outageTimer = setInterval(() => {
                     const sec = Math.floor((new Date() - outageStart) / 1000);
-                    overlay.querySelector('#out-duration').textContent = sec + ' s';
-                }, 500);
+                    document.getElementById('duration').textContent = `${sec} s`;
+                }, 1000);
             }
 
-            function endOutage() {
-                if (!overlay.classList.contains('visible')) return;
+            function hideOverlay() {
+                if (!overlay) return;
                 clearInterval(outageTimer);
                 const sec = Math.floor((new Date() - outageStart) / 1000);
-                overlay.querySelector('.loader').style.display = 'block';
-                speakSafe(`Připojení obnoveno. Výpadek trval ${sec} sekund.`);
-                setTimeout(() => overlay.classList.remove('visible'), 1500);
-            }
-
-            // Registrace SW
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('/ssa/sw.js').catch(console.error);
+                speakSafe(`Signál obnoven. Výpadek ${sec} sekund.`);
+                overlay.remove();
+                overlay = null;
             }
         </script>
 

@@ -20,24 +20,27 @@
     }
 
     .signal-bars {
-      display: inline-block;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      height: 50px;
       margin: 20px auto;
     }
 
     .bar {
       width: 10px;
-      height: 10px;
       margin: 0 3px;
-      display: inline-block;
       background-color: #444;
-      animation: signalBlink 1s infinite;
+      animation: signalAnim 1s infinite;
+      border-radius: 3px;
     }
 
-    .bar:nth-child(2) { animation-delay: 0.2s; }
-    .bar:nth-child(3) { animation-delay: 0.4s; }
-    .bar:nth-child(4) { animation-delay: 0.6s; }
+    .bar:nth-child(1) { height: 10px; animation-delay: 0s; }
+    .bar:nth-child(2) { height: 20px; animation-delay: 0.1s; }
+    .bar:nth-child(3) { height: 30px; animation-delay: 0.2s; }
+    .bar:nth-child(4) { height: 40px; animation-delay: 0.3s; }
 
-    @keyframes signalBlink {
+    @keyframes signalAnim {
       0%, 100% { opacity: 0.3; transform: scaleY(0.5); }
       50% { opacity: 1; transform: scaleY(1.2); }
     }
@@ -75,71 +78,70 @@
     <div>Od: <span id="startTime">–</span></div><br>
     <div>Trvá: <span id="duration">0 s</span></div>
   </div>
-<script>
-  const CHECK_INTERVAL = 1000;
-  let reloaded = false;
-  const startTimestamp = new Date();
-  const startTimeEl = document.getElementById('startTime');
-  const durationEl = document.getElementById('duration');
-  const statusEl = document.getElementById('status');
 
-  function formatTime(date) {
-    return date.toLocaleTimeString('cs-CZ');
-  }
-function safeSpeak(text) {
-  if (!window.speechSynthesis) return;
+  <script>
+    const CHECK_INTERVAL = 1000;
+    let reloaded = false;
+    const startTimestamp = new Date();
+    const startTimeEl = document.getElementById('startTime');
+    const durationEl = document.getElementById('duration');
+    const statusEl = document.getElementById('status');
 
-  window.speechSynthesis.cancel(); // zruší předchozí mluvení
-
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = 'cs-CZ';
-  utter.rate = 1;
-
-  window.speechSynthesis.speak(utter);
-}
-  
-  
-
-  // Výpis typu zařízení
-  const deviceInfo = `${navigator.platform}, ${navigator.userAgent}`;
-
-  // inicializace
-  startTimeEl.textContent = formatTime(startTimestamp);
-  safeSpeak('Varování. Není signálu.');
-  safespeak('Nouzový režim spuštěn. Čekám na obnovu.');
-
-  // aktualizace trvání výpadku
-  setInterval(() => {
-    const now = new Date();
-    const seconds = Math.floor((now - startTimestamp) / 1000);
-    durationEl.textContent = `${seconds} s`;
-  }, 1000);
-
-  // kontrola připojení
-  setInterval(async () => {
-    if (reloaded) return;
-    try {
-      const res = await fetch('/ssa/ping.txt', { cache: 'no-cache' });
-      if (res.ok) {
-        const now = new Date();
-        const duration = Math.floor((now - startTimestamp) / 1000);
-        const summary = `Signál obnoven v ${formatTime(now)}. Výpadek trval ${duration} sekund.`;
-
-        safeSpeak(summary);
-
-        document.body.classList.add('online');
-        statusEl.textContent = 'Signál obnoven! Načítám…';
-
-        reloaded = true;
-        setTimeout(() => {
-          location.href = '/ssa/';
-        }, 3500); // necháme čas na čtení
-      }
-    } catch {
-      // stále offline
+    function formatTime(date) {
+      return date.toLocaleTimeString('cs-CZ');
     }
-  }, CHECK_INTERVAL);
-</script>
 
+    function safeSpeak(text) {
+      if (!window.speechSynthesis) return;
+      window.speechSynthesis.cancel(); // přeruší předchozí výstup
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = 'cs-CZ';
+      utter.rate = 1;
+      window.speechSynthesis.speak(utter);
+    }
+
+    function log(msg) {
+      console.log(`[${new Date().toLocaleTimeString()}] ${msg}`);
+    }
+
+    // Zahájení výpadku
+    startTimeEl.textContent = formatTime(startTimestamp);
+    safeSpeak('Varování systému, zaznamenán výpadek signálu.');
+    safeSpeak('Nouzový režim spuštěn. Čekám na obnovu spojení.');
+    log('Výpadek signálu zahájen.');
+
+    // Aktualizace trvání
+    setInterval(() => {
+      const now = new Date();
+      const seconds = Math.floor((now - startTimestamp) / 1000);
+      durationEl.textContent = `${seconds} s`;
+    }, 1000);
+
+    // Kontrola připojení
+    setInterval(async () => {
+      if (reloaded) return;
+      try {
+        const res = await fetch('/ssa/ping.txt', { cache: 'no-cache' });
+        if (res.ok) {
+          const now = new Date();
+          const duration = Math.floor((now - startTimestamp) / 1000);
+          const summary = `Signál obnoven v ${formatTime(now)}. Výpadek trval ${duration} sekund.`;
+
+          log(summary);
+          safeSpeak(summary);
+
+          document.body.classList.add('online');
+          statusEl.textContent = 'Signál obnoven! Načítám…';
+
+          reloaded = true;
+          setTimeout(() => {
+            location.href = '/ssa/';
+          }, 4000); // čas na dočtení
+        }
+      } catch {
+        // stále offline
+      }
+    }, CHECK_INTERVAL);
+  </script>
 </body>
 </html>

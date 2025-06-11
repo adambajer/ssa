@@ -2,1504 +2,1507 @@
 <html lang="cs">
 
 <head>
-  <meta charset="UTF-8">
-  <title>SSA</title>
-  <meta name="theme-color" content="#1976D2">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
-  <link rel="icon" type="image/svg+xml" href="./fav.svg" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="apple-touch-icon" href="./fav.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <link rel="manifest" href="./site.webmanifest" />
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
-    crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <title>SSA</title>
+    <meta name="theme-color" content="#1976D2">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/svg+xml" href="./fav.svg" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="apple-touch-icon" href="./fav.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="manifest" href="./site.webmanifest" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+        crossorigin="anonymous"></script>
 </head>
 
 <body>
-  <div class="wrap container-fluid ">
-    <div class="a1 border-bottom mb-2 ">
-      <div class="tabs">
-        <div class="tabs d-flex flex-wrap align-items-center">
-          <!-- Tab buttons budou dynamicky doplněny -->
-          <button class="tab-add-btn btn btn-sm " id="add-tab-btn" title="Přidat záložku">+</button>
-          <div class="d-flex justify-content-between align-items-center">
+    <div class="wrap container-fluid ">
+        <div class="a1 border-bottom mb-2 ">
+            <div class="tabs">
+                <div class="tabs d-flex flex-wrap align-items-center">
+                    <!-- Tab buttons budou dynamicky doplněny -->
+                    <button class="tab-add-btn btn btn-sm " id="add-tab-btn" title="Přidat záložku">+</button>
+                    <div class="d-flex justify-content-between align-items-center">
 
-            <div class="dropdown">
-              <button class="btn btn-link p-2 text-secondary" type="button" id="menuDropdown" data-bs-toggle="dropdown"
-                aria-expanded="false" title="Hlavní menu">
-                <span class="material-icons">menu</span>
-              </button>
-              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="menuDropdown">
+                        <div class="dropdown">
+                            <button class="btn btn-link p-2 text-secondary" type="button" id="menuDropdown"
+                                data-bs-toggle="dropdown" aria-expanded="false" title="Hlavní menu">
+                                <span class="material-icons">menu</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="menuDropdown">
 
 
-                <li><button class="dropdown-item d-flex align-items-center" id="import-tab" title="Otevřít uloženou záložku"><span
-                      class="material-icons me-2">folder_open</span>Otevřít</button></li>
-                <li><button class="dropdown-item d-flex align-items-center" id="export-tab" title="Uložit záložku"><span
-                      class="material-icons me-2">save</span>Uložit</button></li>
+                                <li><button class="dropdown-item d-flex align-items-center" id="import-tab"
+                                        title="Otevřít uloženou záložku"><span
+                                            class="material-icons me-2">folder_open</span>Otevřít</button></li>
+                                <li><button class="dropdown-item d-flex align-items-center" id="export-tab"
+                                        title="Uložit záložku"><span
+                                            class="material-icons me-2">save</span>Uložit</button></li>
 
-                <!-- Add this new menu item in the dropdown menu -->
-                <li><button class="dropdown-item d-flex align-items-center" id="erase-data-btn"
-                    title="Vymazat všechna data">
-                    <span class="material-icons me-2">delete_forever</span>Reset
-                  </button></li>
-                <hr class="dropdown-divider">
-                </li>
-                <li>
-                  <button class="dropdown-item d-flex align-items-center" id="share-btn" title="Sdílet">
-                    <span class="material-icons me-2">share</span>Sdílet
-                  </button>
-                </li>
-                <li><button class="dropdown-item d-flex align-items-center" id="btn-install" hidden
-                    title="Instalovat aplikaci"><span
-                      class="material-icons me-2">phone_android</span>Instalovat</button>
-                </li>
+                                <!-- Add this new menu item in the dropdown menu -->
+                                <li><button class="dropdown-item d-flex align-items-center" id="erase-data-btn"
+                                        title="Vymazat všechna data">
+                                        <span class="material-icons me-2">delete_forever</span>Reset
+                                    </button></li>
+                                <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <button class="dropdown-item d-flex align-items-center" id="share-btn"
+                                        title="Sdílet">
+                                        <span class="material-icons me-2">share</span>Sdílet
+                                    </button>
+                                </li>
+                                <li><button class="dropdown-item d-flex align-items-center" id="btn-install" hidden
+                                        title="Instalovat aplikaci"><span
+                                            class="material-icons me-2">phone_android</span>Instalovat</button>
+                                </li>
 
-                <li>
-                  <button class="dropdown-item d-flex align-items-center" id="toggle-log-btn" title="Zobrazit log">
-                    <span class="material-icons me-2">bug_report</span>Log
-                  </button>
-                </li>
+                                <li>
+                                    <button class="dropdown-item d-flex align-items-center" id="toggle-log-btn"
+                                        title="Zobrazit log">
+                                        <span class="material-icons me-2">bug_report</span>Log
+                                    </button>
+                                </li>
 
-                <li><button class="dropdown-item d-flex align-items-center" id="help-btn" title="Ovládání aplikace"><span
-                      class="material-icons me-2">help_outline</span>Ovládání</button>
-                </li>
-                <li><button class="dropdown-item d-flex align-items-center" id="settings-btn" title="Nastavení aplikace;"><span
-                      class="material-icons me-2">settings</span>Nastavení</button>
-                </li>
-              </ul>
-            </div>
-          </div>
+                                <li><button class="dropdown-item d-flex align-items-center" id="help-btn"
+                                        title="Ovládání aplikace"><span
+                                            class="material-icons me-2">help_outline</span>Ovládání</button>
+                                </li>
+                                <li><button class="dropdown-item d-flex align-items-center" id="settings-btn"
+                                        title="Nastavení aplikace;"><span
+                                            class="material-icons me-2">settings</span>Nastavení</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
 
-        </div>
+                </div>
 
-        <div id="recording-container">
-          <div class="transcription-button" style="border-color: rgb(128, 0, 128);">
-            <span id="start-recording" class="shortcut"
-              style="background-color: rgb(128, 0, 128); color: rgb(255, 255, 255);">
-              <!-- HTML for the two buttons -->
-              <svg version="1.1" viewBox="0 0 210 210" xmlns="http://www.w3.org/2000/svg">
-                <g transform="translate(0 4.174)">
-                  <path d="m46.2 87.43c-6.23 0-11.28 4.842-11.28 10.82 0 31.98 
+                <div id="recording-container">
+                    <div class="transcription-button" style="border-color: rgb(128, 0, 128);">
+                        <span id="start-recording" class="shortcut"
+                            style="background-color: rgb(128, 0, 128); color: rgb(255, 255, 255);">
+                            <!-- HTML for the two buttons -->
+                            <svg version="1.1" viewBox="0 0 210 210" xmlns="http://www.w3.org/2000/svg">
+                                <g transform="translate(0 4.174)">
+                                    <path d="m46.2 87.43c-6.23 0-11.28 4.842-11.28 10.82 0 31.98 
                  24.8 58.5 57.06 64.21v26.81h.047a13.02 12.75 0 00-.046.622 
                  13.02 12.75 0 0013.02 12.75 13.02 12.75 0 0013.02-12.75 
                  13.02 12.75 0 00-.016-.622h.016v-26.81c32.27-5.716 
                  57.07-32.23 57.06-64.21 0-5.973-5.05-10.82-11.28-10.82s-11.28 
                  4.842-11.28 10.82c0 24.09-20.95 43.74-47.52 43.74s-47.52-19.65-47.52-43.74
                  c0-5.973-5.05-10.82-11.28-10.82z" fill="#000" />
-                  <ellipse cx="92.74" cy="205.8" rx=".757" ry=".076" />
-                </g>
-                <path class="mikrofon" d="m105 0c-17.49 0-32.36 10.78-38.38 26.07h52.21c2.77 0 
+                                    <ellipse cx="92.74" cy="205.8" rx=".757" ry=".076" />
+                                </g>
+                                <path class="mikrofon" d="m105 0c-17.49 0-32.36 10.78-38.38 26.07h52.21c2.77 0 
                5 1.973 5 4.425 0 2.451-2.23 4.425-5 4.425h-54.61a41.91 
                41.91 0 00-.482 6.344v.68h55.09c2.77 0 5 1.974 5 4.426 
                0 2.451-2.23 4.425-5 4.425h-55.09v7.025h55.09c2.77 0 
                5 1.973 5 4.425 0 2.451-2.23 4.425-5 4.425h-55.09v29.24c0 
                22.86 18.4 41.26 41.26 41.26s41.26-18.4 41.26-41.26v-54.65c0-22.86-18.4-41.26-41.26-41.26z"
-                  stroke-linecap="round" stroke-miterlimit="4.1" fill="#000" ; paint-order="markers fill stroke" />
-              </svg>
-            </span>
-            <button class="text-button">
-              <div id="recording-info">
-                <span id="recording-status"></span>
-                <span id="recording-time"></span>
-              </div>
-            </button>
-          </div>
+                                    stroke-linecap="round" stroke-miterlimit="4.1" fill="#000" ;
+                                    paint-order="markers fill stroke" />
+                            </svg>
+                        </span>
+                        <button class="text-button">
+                            <div id="recording-info">
+                                <span id="recording-status"></span>
+                                <span id="recording-time"></span>
+                            </div>
+                        </button>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+        <!-- Modal for displaying the QR code -->
+        <div class="modal modal-sm fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="qrModalLabel">Skenuj QR</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="qrcode"></div> <!-- QR code will be generated here -->
+                    </div>
+                    <div class="modal-footer">
+                        <p>https://adambajer.github.io/ssa/</p>
+
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zavřít</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Toast container (pravý spodní roh) -->
+        <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 1080;">
+            <!-- Nastavení (toast) -->
+            <div id="settingsToast" class="toast text-bg-light border-0" role="alert" aria-live="assertive"
+                aria-atomic="true" data-bs-autohide="false"> <!-- autohide = false  -->
+
+                <div class="toast-header bg-danger text-white">
+                    <strong class="me-auto">Nastavení</strong>
+                    <button type="button" class="btn-close text-white" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+
+                </div>
+
+                <div class="toast-body">
+                    <div class="mb-3">
+                        <label for="voiceSelect" class="form-label">Zvolte hlas TTS</label>
+                        <select id="voiceSelect" class="form-select"></select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="rateRange" class="form-label">
+                            Rychlost čtení: <span id="rateValue">1</span>
+                        </label>
+                        <input type="range" id="rateRange" min="0.5" max="10" step="0.1" value="1" class="form-range">
+                    </div>
+
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="checkbox" id="ignorePlaying">
+                        <label class="form-check-label" for="ignorePlaying">
+                            Ignorovat, pokud již probíhá čtení
+                        </label>
+                    </div>
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="allowMultiple">
+                        <label class="form-check-label" for="allowMultiple">
+                            Povolit více čtení současně
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="launchPadMode">
+                        <label class="form-check-label" for="launchPadMode">
+                            Launch-pad vzhled tlačítek
+                        </label>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
+            <div id="helpToast" class="toast align-items-start text-bg-light border-0" role="alert"
+                aria-live="assertive" aria-atomic="true">
+                <div class="toast-header bg-danger text-white">
+                    <strong class="me-auto">Ovládání</strong>
+                    <button type="button" class="btn-close text-white" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+                </div>
+                <div class="toast-body" id="helpToastBody"></div>
+            </div>
 
         </div>
-
-
-      </div>
-    </div>
-    <!-- Modal for displaying the QR code -->
-    <div class="modal modal-sm fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="qrModalLabel">Skenuj QR</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zavřít"></button>
-          </div>
-          <div class="modal-body">
-            <div id="qrcode"></div> <!-- QR code will be generated here -->
-          </div>
-          <div class="modal-footer">
-            <p>https://adambajer.github.io/ssa/</p>
-
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zavřít</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Toast container (pravý spodní roh) -->
-    <div class="position-fixed bottom-0 start-0 p-3" style="z-index: 1080;">
-      <!-- Nastavení (toast) -->
-      <div id="settingsToast" class="toast text-bg-light border-0" role="alert" aria-live="assertive" aria-atomic="true"
-        data-bs-autohide="false"> <!-- autohide = false  -->
-
-        <div class="toast-header bg-danger text-white">
-          <strong class="me-auto">Nastavení</strong>
-          <button type="button" class="btn-close text-white" data-bs-dismiss="toast" aria-label="Close"></button>
+        <input id="file-input" type="file" accept="application/json" style="display:none" />
+        <!-- Toast container -->
+        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
+            <div id="helpToast" class="toast align-items-start text-bg-light border-0" role="alert"
+                aria-live="assertive" aria-atomic="true">
+                <div class="toast-header bg-danger text-white">
+                    <strong class="me-auto">Klávesové zkratky</strong>
+                    <button type="button" class="btn-close text-white" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+                </div>
+                <div class="toast-body" id="helpToastBody"></div>
+            </div>
 
         </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
+        <script>
+            const TAB_PREDEFINED = 'predefined';
+            let tabsData;
+            let customTabs;
+            let recordingStatus = document.getElementById('recording-status');
 
-        <div class="toast-body">
-          <div class="mb-3">
-            <label for="voiceSelect" class="form-label">Zvolte hlas TTS</label>
-            <select id="voiceSelect" class="form-select"></select>
-          </div>
+            function persist() {
+                console.log('[persist] Saving state');
+                try {
+                    localStorage.setItem('customTabs', JSON.stringify(customTabs));
+                    localStorage.setItem('tabsData', JSON.stringify(tabsData));
+                    console.log('[persist] OK');
+                } catch (e) {
+                    console.error('[persist] ERR', e);
+                }
+            }
+            function deleteTab(tabId) {
+                if (tabId === TAB_PREDEFINED) {
+                    alert('Tuto záložku nelze smazat');
+                    return;
+                }
 
-          <div class="mb-3">
-            <label for="rateRange" class="form-label">
-              Rychlost čtení: <span id="rateValue">1</span>
-            </label>
-            <input type="range" id="rateRange" min="0.5" max="10" step="0.1" value="1" class="form-range">
-          </div>
+                if (!confirm('Opravdu smazat záložku?')) return;
 
-          <div class="form-check mb-2">
-            <input class="form-check-input" type="checkbox" id="ignorePlaying">
-            <label class="form-check-label" for="ignorePlaying">
-              Ignorovat, pokud již probíhá čtení
-            </label>
-          </div>
+                delete tabsData[tabId];
+                const idx = customTabs.findIndex(t => t.id === tabId);
+                if (idx > -1) customTabs.splice(idx, 1);
+                persist();
+                document.querySelector(`.tab-button[data-tab="${tabId}"]`)?.remove();
+                document.getElementById(tabId)?.remove();
+                activateTab(TAB_PREDEFINED);
+            }
 
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="allowMultiple">
-            <label class="form-check-label" for="allowMultiple">
-              Povolit více čtení současně
-            </label>
-          </div>
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="launchPadMode">
-            <label class="form-check-label" for="launchPadMode">
-              Launch-pad vzhled tlačítek
-            </label>
-          </div>
-        </div>
+            // SSA Application JavaScript
+            (() => {
 
+                const toast = new bootstrap.Toast(document.getElementById('helpToast'), {
+                    autohide: false
+                });
+                /* === LOG TOAST ======================================================= */
+                const logToast = document.createElement('div');
+                logToast.id = 'log-toast';
+                logToast.className = 'toast shadow';
+                Object.assign(logToast.style, {
+                    position: 'fixed',
+                    bottom: '1rem',
+                    right: '0%',
+                    width: 'auto',
+                    maxHeight: '60vh', // víc prostoru, ale ne přes celou výšku
+                    overflow: 'hidden', // scrolluje jen body
+                    display: 'none',
+                    zIndex: '1100',
+                    fontFamily: 'monospace',
+                    resize: 'both', // ← Umožní rohové tažení pro změnu velikosti
+                });
 
-      </div>
-    </div>
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
-      <div id="helpToast" class="toast align-items-start text-bg-light border-0" role="alert" aria-live="assertive"
-        aria-atomic="true">
-        <div class="toast-header bg-danger text-white">
-          <strong class="me-auto">Ovládání</strong>
-          <button type="button" class="btn-close text-white" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body" id="helpToastBody"></div>
-      </div>
-
-    </div>
-    <input id="file-input" type="file" accept="application/json" style="display:none" />
-    <!-- Toast container -->
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080;">
-      <div id="helpToast" class="toast align-items-start text-bg-light border-0" role="alert" aria-live="assertive"
-        aria-atomic="true">
-        <div class="toast-header bg-danger text-white">
-          <strong class="me-auto">Klávesové zkratky</strong>
-          <button type="button" class="btn-close text-white" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body" id="helpToastBody"></div>
-      </div>
-
-    </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
-    <script>
-      const TAB_PREDEFINED = 'predefined';
-      let tabsData;
-      let customTabs;
-      let recordingStatus = document.getElementById('recording-status');
-
-      function persist() {
-        console.log('[persist] Saving state');
-        try {
-          localStorage.setItem('customTabs', JSON.stringify(customTabs));
-          localStorage.setItem('tabsData', JSON.stringify(tabsData));
-          console.log('[persist] OK');
-        } catch (e) {
-          console.error('[persist] ERR', e);
-        }
-      }
-      function deleteTab(tabId) {
-        if (tabId === TAB_PREDEFINED) {
-          alert('Tuto záložku nelze smazat');
-          return;
-        }
-
-        if (!confirm('Opravdu smazat záložku?')) return;
-
-        delete tabsData[tabId];
-        const idx = customTabs.findIndex(t => t.id === tabId);
-        if (idx > -1) customTabs.splice(idx, 1);
-        persist();
-        document.querySelector(`.tab-button[data-tab="${tabId}"]`)?.remove();
-        document.getElementById(tabId)?.remove();
-        activateTab(TAB_PREDEFINED);
-      }
-
-      // SSA Application JavaScript
-      (() => {
-
-        const toast = new bootstrap.Toast(document.getElementById('helpToast'), {
-          autohide: false
-        });
-        /* === LOG TOAST ======================================================= */
-        const logToast = document.createElement('div');
-        logToast.id = 'log-toast';
-        logToast.className = 'toast shadow';
-        Object.assign(logToast.style, {
-          position: 'fixed',
-          bottom: '1rem',
-          right: '0%',
-          width: 'auto',
-          maxHeight: '60vh', // víc prostoru, ale ne přes celou výšku
-          overflow: 'hidden', // scrolluje jen body
-          display: 'none',
-          zIndex: '1100',
-          fontFamily: 'monospace',
-          resize: 'both', // ← Umožní rohové tažení pro změnu velikosti
-        });
-
-        /* ----- Sticky header (drag-handle) ---------------------------------- */
-        const header = document.createElement('div');
-        header.className = 'toast-header bg-danger text-white';
-        header.innerHTML =
-          `<strong class="me-auto">Log aplikace</strong>
+                /* ----- Sticky header (drag-handle) ---------------------------------- */
+                const header = document.createElement('div');
+                header.className = 'toast-header bg-danger text-white';
+                header.innerHTML =
+                    `<strong class="me-auto">Log aplikace</strong>
         <button type="button" class="btn-close text-white" data-bs-dismiss="toast" aria-label="Close"></button>
 `;
 
-        Object.assign(header.style, {
-          position: 'sticky',
-          top: '0',
-          cursor: 'move',
-        });
-        logToast.append(header);
-
-        /* ----- Scrollovatelné tělo ----------------------------------------- */
-        const body = document.createElement('div');
-        body.className = 'toast-body pt-0';
-        Object.assign(body.style, {
-          height: 'calc(60vh - 40px)', // 40 px ≈ výška headeru
-          overflowY: 'auto',
-          paddingRight: '0.75rem',
-        });
-        logToast.append(body);
-
-        document.body.append(logToast);
-
-        /* === Viditelnost (položka „Log panel“) ============================== */
-        document.getElementById('toggle-log-btn')
-          .addEventListener('click', () => {
-            logToast.style.display =
-              logToast.style.display === 'none' ? 'block' : 'none';
-          });
-
-        /* Zavřít křížkem */
-        header.querySelector('.btn-close')
-          .addEventListener('click', () => logToast.style.display = 'none');
-
-        /* === Drag & drop za header ========================================== */
-        let dragging = false,
-          offX = 0,
-          offY = 0;
-
-        header.addEventListener('mousedown', e => {
-          dragging = true;
-          offX = e.clientX - logToast.offsetLeft;
-          offY = e.clientY - logToast.offsetTop;
-          e.preventDefault();
-        });
-        document.addEventListener('mousemove', e => {
-          if (!dragging) return;
-          logToast.style.left = `${e.clientX - offX}px`;
-          logToast.style.top = `${e.clientY - offY}px`;
-        });
-        document.addEventListener('mouseup', () => dragging = false);
-        let menuAwait = false; // ⇐ globální, viditelná pro oba listenery
-
-        /* === Přesměrování console.log / console.error ======================= */
-        let logCounter = 0; // pořadové číslo řádku
-        const origLog = console.log.bind(console);
-        const origErr = console.error.bind(console);
-
-        console.log = (...args) => {
-          origLog(...args);
-          appendLine('LOG', ...args);
-        };
-        console.error = (...args) => {
-          origErr(...args);
-          appendLine('ERROR', ...args);
-        };
-
-        function appendLine(type, ...args) {
-          const time = new Date().toLocaleTimeString(); // HH:MM:SS
-          const msg = args.map(a =>
-            typeof a === 'object' ? JSON.stringify(a) : String(a)
-          ).join(' ');
-
-          const line = document.createElement('div');
-          line.textContent = `[${++logCounter}] ${time} ${type}: ${msg}`;
-          if (type === 'ERROR') line.style.color = '#dc3545';
-
-          body.append(line);
-          body.scrollTop = body.scrollHeight; // auto-scroll dolů
-        }
-
-        /* -------------------------------------------------------------------- */
-        console.log('[App] Initialization start');
-        console.log('[App] Version 1.0.0');
-        const TAB_PREDEFINED = 'predefined';
-        const COLORS = [
-          '#B00020', '#007000', '#0033A0', '#800080', '#004D4D',
-          '#5D00A0', '#3A3AA0', '#4C7500', '#5C8A00', '#A0522D',
-          '#FF4500', '#228B22', '#00688B', '#9932CC', '#CD853F',
-          '#8B0000', '#2E8B57', '#4169E1', '#8B4513', '#008B8B',
-          '#DC143C', '#556B2F', '#8A2BE2', '#6B8E23', '#D2691E',
-          '#B03060', '#483D8B', '#20B2AA', '#A52A2A', '#5F9EA0',
-          '#800000', '#7B68EE'
-        ];
-
-
-
-        let audioCtx, analyser, dataArray, animId, recognition, startTime;
-        let keyHandlers = [];
-        let visStream = null;          // mikrofon pro vizualizaci 
-
-        const tabsEl = document.querySelector('.tabs');
-        const wrapEl = document.querySelector('.wrap');
-        const recBtn = document.getElementById('start-recording');
-        const recordingTime = document.getElementById('recording-time');
-        let isPlaying = false;
-
-        const shareBtn = document.getElementById('share-btn');
-        const helpBtn = document.getElementById('help-btn');
-        const addBtn = document.getElementById('add-tab-btn');
-        const impBtn = document.getElementById('import-tab');
-        const expBtn = document.getElementById('export-tab');
-        const delBtn = document.getElementById('delete-tab');
-        const eraseBtn = document.getElementById('erase-data-btn');
-        const fileInput = document.getElementById('file-input');
-        const installBtn = document.getElementById('btn-install');
-
-        customTabs = JSON.parse(localStorage.getItem('customTabs') || '[]');
-        tabsData = JSON.parse(localStorage.getItem('tabsData') || '{}');
-        let isRecording = false;
-        let voices = [];
-        const settings = {
-          voiceURI: '',
-          rate: 1,
-          ignorePlaying: false,
-          allowMultiple: false,
-          launchPad: false // <-- nová volba
-
-        };
-
-        /* ---------- SETTINGS PERSISTENCE ---------------------------------- */
-        function saveSettings() {
-          localStorage.setItem('voiceURI', settings.voiceURI);
-          localStorage.setItem('rate', settings.rate);
-          localStorage.setItem('ignorePlaying', settings.ignorePlaying);
-          localStorage.setItem('allowMultiple', settings.allowMultiple);
-          localStorage.setItem('launchPad', settings.launchPad);
-        }
-
-        function loadSettings() {
-          settings.voiceURI = localStorage.getItem('voiceURI') || settings.voiceURI;
-          settings.rate = parseFloat(localStorage.getItem('rate') || settings.rate);
-          settings.ignorePlaying = JSON.parse(localStorage.getItem('ignorePlaying') || settings.ignorePlaying);
-          settings.allowMultiple = JSON.parse(localStorage.getItem('allowMultiple') || settings.allowMultiple);
-          settings.launchPad = JSON.parse(localStorage.getItem('launchPad') || settings.launchPad);
-        }
-
-        function initSettings() {
-          const select = document.getElementById('voiceSelect');
-          const rateRange = document.getElementById('rateRange');
-          const rateValue = document.getElementById('rateValue');
-          const ignoreChk = document.getElementById('ignorePlaying');
-          const multiChk = document.getElementById('allowMultiple');
-          const padChk = document.getElementById('launchPadMode');
-          padChk.checked = settings.launchPad;
-
-
-          /* ---------- Pomocné funkce ----------------------------------------- */
-
-          /* IANA->ISO map jen pro nejběžnější zóny (doplň podle potřeby) */
-          const tzMap = {
-            'Europe/Prague': 'CZ',
-            'Europe/Bratislava': 'SK',
-            'Europe/Berlin': 'DE',
-            'Europe/London': 'GB',
-            'America/Chicago': 'US',
-            'America/New_York': 'US',
-            'Asia/Tokyo': 'JP'
-          };
-
-          /* Vrátí Promise<string> 2-písmenný kód země */
-          async function detectCountry() {
-            /* 1) Geo-lokace */
-            try {
-              const pos = await new Promise((res, rej) => {
-                navigator.geolocation.getCurrentPosition(res, rej, {
-                  timeout: 3000
+                Object.assign(header.style, {
+                    position: 'sticky',
+                    top: '0',
+                    cursor: 'move',
                 });
-              });
-              const {
-                latitude: lat,
-                longitude: lon
-              } = pos.coords;
-              /* bezplatné reverse-geo API (≈1 KB odpověď) */
-              const resp = await fetch(
-                `https://geocoding-api.open-meteo.com/v1/search` +
-                `?name=${encodeURIComponent(cityOrPostcode)}&count=1`
-              );
-              const js = await resp.json();
-              if (js && js.country_code) return js.country_code.toUpperCase();
-            } catch (_) { /* ignorujeme chyby – jen zkusíme další metodu */ }
+                logToast.append(header);
 
-            /* 2) časové pásmo */
-            try {
-              const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-              if (tz && tzMap[tz]) return tzMap[tz];
-            } catch (_) { /* fall-through */ }
-
-            /* 3) poslední záchrana – jazykové nastavení prohlížeče */
-            return (navigator.language || 'en-US').split('-')[1]?.toUpperCase() || 'US';
-          }
-
-          /* ---------- Přidat do initSettings() místo původního Populate voices */
-
-          (async () => {
-            /* zjištění země jen jednou */
-            const browserCountry = await detectCountry();
-            console.log('[voices] using country', browserCountry);
-
-            voices = speechSynthesis.getVoices();
-            /* filtrujeme podle stejné země */
-            const countryVoices = voices.filter(v => {
-              const vCountry = v.lang.split('-')[1]?.toUpperCase();
-              return vCountry === browserCountry;
-            });
-
-            /* fallback: když nic, necháme všechny */
-            const list = countryVoices.length ? countryVoices : voices;
-
-            select.innerHTML = ''; // vyčisti <select>
-            list.forEach(v => {
-              const opt = document.createElement('option');
-              opt.value = v.voiceURI;
-              opt.textContent = `${v.name} (${v.lang})` + (v.default ? ' ★' : '');
-              select.append(opt);
-            });
-
-            // implicitní výběr
-            select.value = settings.voiceURI || (list[0] && list[0].voiceURI);
-
-            // Přidej listener až po naplnění selectu
-            select.addEventListener('change', () => {
-              settings.voiceURI = select.value;
-              saveSettings();
-            });
-          })();
-          const settingsToast = new bootstrap.Toast(
-            document.getElementById('settingsToast'), {
-            autohide: false
-          } // trvale otevřené, dokud ho uživatel nezavře
-          );
-
-          /* select hlasu */
-          select.value = settings.voiceURI;
-          select.addEventListener('change', () => {
-            settings.voiceURI = select.value;
-            saveSettings();
-          });
-
-          /* rychlost */
-          rateRange.value = settings.rate;
-          rateValue.textContent = settings.rate;
-          rateRange.addEventListener('input', () => {
-            settings.rate = parseFloat(rateRange.value);
-            rateValue.textContent = settings.rate;
-            saveSettings();
-          });
-
-          /* ignore / multiple */
-          ignoreChk.checked = settings.ignorePlaying;
-          multiChk.checked = settings.allowMultiple;
-
-          ignoreChk.addEventListener('change', () => {
-            settings.ignorePlaying = ignoreChk.checked;
-            saveSettings();
-          });
-          multiChk.addEventListener('change', () => {
-            settings.allowMultiple = multiChk.checked;
-            saveSettings();
-          });
-
-          /* launch-pad vzhled */
-          padChk.checked = settings.launchPad;
-          padChk.addEventListener('change', () => {
-            settings.launchPad = padChk.checked;
-            renderAllButtons();
-            saveSettings();
-          });
-
-          document.getElementById('settings-btn')
-            .addEventListener('click', () => settingsToast.show());
-        }
-        // Override localStorage
-        (function () {
-          const oSet = Storage.prototype.setItem,
-            oRm = Storage.prototype.removeItem,
-            oClr = Storage.prototype.clear;
-          Storage.prototype.setItem = function (k, v) {
-            console.log('[LS] setItem', k, v);
-            try {
-              oSet.apply(this, [k, v]);
-              console.log('[LS] setItem OK', k);
-            } catch (e) {
-              console.error('[LS] setItem ERR', k, e);
-            }
-          };
-          Storage.prototype.removeItem = function (k) {
-            console.log('[LS] removeItem', k);
-            try {
-              oRm.apply(this, [k]);
-              console.log('[LS] removeItem OK', k);
-            } catch (e) {
-              console.error('[LS] removeItem ERR', k, e);
-            }
-          };
-          Storage.prototype.clear = function () {
-            console.log('[LS] clear');
-            try {
-              oClr.apply(this);
-              console.log('[LS] clear OK');
-            } catch (e) {
-              console.error('[LS] clear ERR', e);
-            }
-          };
-        })();
-
-
-
-        function speak(text, cb) {
-          if (settings.ignorePlaying && speechSynthesis.speaking) return;
-          const utter = new SpeechSynthesisUtterance(text);
-          utter.lang = 'cs-CZ';
-          utter.rate = settings.rate;
-          const voice = voices.find(v => v.voiceURI === settings.voiceURI);
-          if (voice) utter.voice = voice;
-          utter.onend = cb;
-          speechSynthesis.speak(utter);
-
-          // Pokud je multiple povoleno, nenech flag "isPlaying" bránit dalším
-          if (!settings.allowMultiple) isPlaying = true;
-
-          utter.onend = () => {
-            if (!settings.allowMultiple) isPlaying = false;
-            cb?.();
-          };
-        }
-
-
-        function clearKeyHandlers() {
-          keyHandlers.forEach(h => document.removeEventListener('keydown', h));
-          keyHandlers = [];
-        }
-        function registerKeyHandlers(tabId) {
-          clearKeyHandlers();
-
-          const container = document.querySelector(`#${tabId} .tab-content-body`);
-          if (!container) return;
-
-          // Najdi všechna transcription-button tlačítka kromě nahrávacího
-          const wraps = Array.from(container.querySelectorAll('.transcription-button'))
-            .filter(wrap => !wrap.closest('#recording-container'));
-
-          // Odstraň staré shortcuty
-          wraps.forEach(wrap => {
-            const old = wrap.querySelector('.shortcut');
-            if (old) old.remove();
-          });
-
-          // Nové shortcuty A, B, C, ...
-          wraps.forEach((wrap, i) => {
-            const btn = wrap.querySelector('button');
-            if (!btn) return;
-
-            const key = String.fromCharCode(65 + i); // A, B, C...
-
-            // Přidej nový vizuální label
-            const lbl = document.createElement('span');
-            lbl.className = 'shortcut';
-            lbl.textContent = key;
-            Object.assign(lbl.style, {
-              backgroundColor: wrap.style.borderColor,
-              color: '#fff',
-            });
-            wrap.prepend(lbl);
-
-            // Handler pro daný klíč
-            const handler = e => {
-              if (
-                !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName) &&
-                e.key.toUpperCase() === key
-              ) {
-                btn.click();
-              }
-            };
-            document.addEventListener('keydown', handler);
-            keyHandlers.push(handler);
-          });
-
-          // 🎙 Mikrofonní tlačítko – reaguje na klávesu Z
-          const recButton = document.getElementById('start-recording');
-          if (recButton) {
-            const handler = e => {
-              if (
-                !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName) &&
-                e.key.toUpperCase() === 'Z'
-              ) {
-                recButton.click();
-              }
-            };
-            document.addEventListener('keydown', handler);
-            keyHandlers.push(handler);
-          }
-        }
-
-
-
-        function addButton(text, tabId) {
-          console.log(`[addButton] Attempting to add button to tab='${tabId}' with text='${text}'`);
-          try {
-            const container = document.querySelector(`#${tabId} .tab-content-body`);
-            if (!container) throw new Error(`Container for tab '${tabId}' not found`);
-
-            const idx = container.querySelectorAll('.transcription-button').length;
-            let color = COLORS[idx % COLORS.length];
-
-            // wrapper div
-            const wrap = document.createElement('div');
-            wrap.className = 'transcription-button';
-            if (settings.launchPad) wrap.classList.add('launch-pad'); // <—
-
-            wrap.style.borderColor = color;
-
-            // button element
-            const btn = document.createElement('button');
-            btn.className = 'text-button';
-            btn.textContent = text;
-            wrap.addEventListener('click', () => {
-              if (!settings.allowMultiple && isPlaying) return;
-
-              isPlaying = true;
-
-              // turn the glow on
-              wrap.style.transition = 'box-shadow .5s ease-in-out, border .5s ease-in-out';
-              wrap.style.boxShadow = `0 0 20px 0 ${color}`; // full glow
-              wrap.style.transform = 'all .5s linear'; // keep your pulse
-              wrap.classList.add('activated');
-
-              speak(btn.textContent, () => {
-
-                /* ---- WHEN PLAYBACK ENDS ---- */
-
-                wrap.classList.remove('activated');
-
-                // 1. fade the glow to zero – the transition makes it smooth
-                wrap.style.boxShadow = `0 0 0 0 ${color}`;
-
-                // 2. optional: wipe the inline style after the fade completes
-                wrap.addEventListener('transitionend', () => {
-                  wrap.style.boxShadow = ''; // back to clean state
-                }, {
-                  once: true
+                /* ----- Scrollovatelné tělo ----------------------------------------- */
+                const body = document.createElement('div');
+                body.className = 'toast-body pt-0';
+                Object.assign(body.style, {
+                    height: 'calc(60vh - 40px)', // 40 px ≈ výška headeru
+                    overflowY: 'auto',
+                    paddingRight: '0.75rem',
                 });
+                logToast.append(body);
 
-                isPlaying = false;
-              });
-            });
+                document.body.append(logToast);
 
+                /* === Viditelnost (položka „Log panel“) ============================== */
+                document.getElementById('toggle-log-btn')
+                    .addEventListener('click', () => {
+                        logToast.style.display =
+                            logToast.style.display === 'none' ? 'block' : 'none';
+                    });
 
-            // shortcut label
-            const lbl = document.createElement('span');
-            lbl.className = 'shortcut';
-            lbl.textContent = String.fromCharCode(65 + idx);
-            Object.assign(lbl.style, {
-              backgroundColor: color,
-              color: '#fff',
-            });
-            wrap.append(lbl, btn);
+                /* Zavřít křížkem */
+                header.querySelector('.btn-close')
+                    .addEventListener('click', () => logToast.style.display = 'none');
 
-            //// context menu for edit/delete
-            wrap.addEventListener('contextmenu', e => {
-              e.preventDefault();
-              document.querySelectorAll('.context-menu').forEach(m => m.remove());
-              const menu = document.createElement('div');
-              menu.className = 'context-menu shadow-sm';
-              Object.assign(menu.style, {
-                position: 'absolute',
-                top: `${e.clientY}px`,
-                left: `${e.clientX}px`,
-                zIndex: '10000'
-              });
+                /* === Drag & drop za header ========================================== */
+                let dragging = false,
+                    offX = 0,
+                    offY = 0;
 
-              // edit button
-              const edit = document.createElement('button');
-              edit.textContent = '✏️ Upravit';
-              edit.className = 'border-bottom';
+                header.addEventListener('mousedown', e => {
+                    dragging = true;
+                    offX = e.clientX - logToast.offsetLeft;
+                    offY = e.clientY - logToast.offsetTop;
+                    e.preventDefault();
+                });
+                document.addEventListener('mousemove', e => {
+                    if (!dragging) return;
+                    logToast.style.left = `${e.clientX - offX}px`;
+                    logToast.style.top = `${e.clientY - offY}px`;
+                });
+                document.addEventListener('mouseup', () => dragging = false);
+                let menuAwait = false; // ⇐ globální, viditelná pro oba listenery
 
-              edit.addEventListener('click', () => {
-                const nt = prompt('Upravit text:', btn.textContent);
-                if (nt) {
-                  const btns = Array.from(container.querySelectorAll('.text-button'));
-                  const index = btns.indexOf(btn);
-                  if (index > -1) {
-                    tabsData[tabId][index] = nt;
-                    persist();
-                    btn.textContent = nt;
-                  }
+                /* === Přesměrování console.log / console.error ======================= */
+                let logCounter = 0; // pořadové číslo řádku
+                const origLog = console.log.bind(console);
+                const origErr = console.error.bind(console);
+
+                console.log = (...args) => {
+                    origLog(...args);
+                    appendLine('LOG', ...args);
+                };
+                console.error = (...args) => {
+                    origErr(...args);
+                    appendLine('ERROR', ...args);
+                };
+
+                function appendLine(type, ...args) {
+                    const time = new Date().toLocaleTimeString(); // HH:MM:SS
+                    const msg = args.map(a =>
+                        typeof a === 'object' ? JSON.stringify(a) : String(a)
+                    ).join(' ');
+
+                    const line = document.createElement('div');
+                    line.textContent = `[${++logCounter}] ${time} ${type}: ${msg}`;
+                    if (type === 'ERROR') line.style.color = '#dc3545';
+
+                    body.append(line);
+                    body.scrollTop = body.scrollHeight; // auto-scroll dolů
                 }
-                menu.remove();
-                registerKeyHandlers(tabId);
-              });
 
-              // delete button
-              const del = document.createElement('button');
-              del.textContent = '🗑️ Smazat';
-              del.addEventListener('click', () => {
-                const btns = Array.from(container.querySelectorAll('.text-button'));
-                const index = btns.indexOf(btn);
-                if (index > -1) {
-                  tabsData[tabId].splice(index, 1);
-                  persist();
-                  wrap.remove();
+                /* -------------------------------------------------------------------- */
+                console.log('[App] Initialization start');
+                console.log('[App] Version 1.0.0');
+                const TAB_PREDEFINED = 'predefined';
+                const COLORS = [
+                    '#B00020', '#007000', '#0033A0', '#800080', '#004D4D',
+                    '#5D00A0', '#3A3AA0', '#4C7500', '#5C8A00', '#A0522D',
+                    '#FF4500', '#228B22', '#00688B', '#9932CC', '#CD853F',
+                    '#8B0000', '#2E8B57', '#4169E1', '#8B4513', '#008B8B',
+                    '#DC143C', '#556B2F', '#8A2BE2', '#6B8E23', '#D2691E',
+                    '#B03060', '#483D8B', '#20B2AA', '#A52A2A', '#5F9EA0',
+                    '#800000', '#7B68EE'
+                ];
+
+
+
+                let audioCtx, analyser, dataArray, animId, recognition, startTime;
+                let keyHandlers = [];
+                let visStream = null;          // mikrofon pro vizualizaci 
+
+                const tabsEl = document.querySelector('.tabs');
+                const wrapEl = document.querySelector('.wrap');
+                const recBtn = document.getElementById('start-recording');
+                const recordingTime = document.getElementById('recording-time');
+                let isPlaying = false;
+
+                const shareBtn = document.getElementById('share-btn');
+                const helpBtn = document.getElementById('help-btn');
+                const addBtn = document.getElementById('add-tab-btn');
+                const impBtn = document.getElementById('import-tab');
+                const expBtn = document.getElementById('export-tab');
+                const delBtn = document.getElementById('delete-tab');
+                const eraseBtn = document.getElementById('erase-data-btn');
+                const fileInput = document.getElementById('file-input');
+                const installBtn = document.getElementById('btn-install');
+
+                customTabs = JSON.parse(localStorage.getItem('customTabs') || '[]');
+                tabsData = JSON.parse(localStorage.getItem('tabsData') || '{}');
+                let isRecording = false;
+                let voices = [];
+                const settings = {
+                    voiceURI: '',
+                    rate: 1,
+                    ignorePlaying: false,
+                    allowMultiple: false,
+                    launchPad: false // <-- nová volba
+
+                };
+
+                /* ---------- SETTINGS PERSISTENCE ---------------------------------- */
+                function saveSettings() {
+                    localStorage.setItem('voiceURI', settings.voiceURI);
+                    localStorage.setItem('rate', settings.rate);
+                    localStorage.setItem('ignorePlaying', settings.ignorePlaying);
+                    localStorage.setItem('allowMultiple', settings.allowMultiple);
+                    localStorage.setItem('launchPad', settings.launchPad);
                 }
-                menu.remove();
-                registerKeyHandlers(tabId);
-              });
 
-              menu.append(edit, del);
-              document.body.append(menu);
-              document.addEventListener('click', () => menu.remove(), {
-                once: true
-              });
-            });
+                function loadSettings() {
+                    settings.voiceURI = localStorage.getItem('voiceURI') || settings.voiceURI;
+                    settings.rate = parseFloat(localStorage.getItem('rate') || settings.rate);
+                    settings.ignorePlaying = JSON.parse(localStorage.getItem('ignorePlaying') || settings.ignorePlaying);
+                    settings.allowMultiple = JSON.parse(localStorage.getItem('allowMultiple') || settings.allowMultiple);
+                    settings.launchPad = JSON.parse(localStorage.getItem('launchPad') || settings.launchPad);
+                }
 
-            container.append(wrap);
-            registerKeyHandlers(tabId);
-            appendRecordingButton(tabId); // <-- DŮLEŽITÉ
-
-            console.log(`[addButton] Successfully added button to tab='${tabId}' with text='${text}'`);
-          } catch (e) {
-            console.error(`[addButton] Failed to add button to tab='${tabId}' with text='${text}'`, e);
-          }
-        }
-        function appendRecordingButton(tabId) {
-          const container = document.querySelector(`#${tabId} .tab-content-body`);
-          const recorder = document.getElementById('recording-container');
-
-          if (!container || !recorder) return;
-
-          // Odeber z původního rodiče
-          if (recorder.parentElement !== container) {
-            recorder.remove();
-          }
-
-          // Zajisti, že bude viditelný
-          recorder.style.display = 'inline-block';
-
-          // Připoj ho jako POSLEDNÍ prvek
-          container.appendChild(recorder);
-        }
+                function initSettings() {
+                    const select = document.getElementById('voiceSelect');
+                    const rateRange = document.getElementById('rateRange');
+                    const rateValue = document.getElementById('rateValue');
+                    const ignoreChk = document.getElementById('ignorePlaying');
+                    const multiChk = document.getElementById('allowMultiple');
+                    const padChk = document.getElementById('launchPadMode');
+                    padChk.checked = settings.launchPad;
 
 
+                    /* ---------- Pomocné funkce ----------------------------------------- */
 
-        function renderAllButtons() {
-          document.querySelectorAll('.transcription-button').forEach(btn => {
-            if (settings.launchPad) {
-              btn.classList.add('launch-pad');
-            } else {
-              btn.classList.remove('launch-pad');
-            }
+                    /* IANA->ISO map jen pro nejběžnější zóny (doplň podle potřeby) */
+                    const tzMap = {
+                        'Europe/Prague': 'CZ',
+                        'Europe/Bratislava': 'SK',
+                        'Europe/Berlin': 'DE',
+                        'Europe/London': 'GB',
+                        'America/Chicago': 'US',
+                        'America/New_York': 'US',
+                        'Asia/Tokyo': 'JP'
+                    };
 
-            // Přepnutí layoutu na .tab-content-body (předek tlačítka)
-            const tabContentBody = btn.closest('.tab-content-body');
-            if (tabContentBody) {
-              if (settings.launchPad) {
-                tabContentBody.classList.add('layout-grid');
-                tabContentBody.classList.remove('layout-default');
-              } else {
-                tabContentBody.classList.add('layout-default');
-                tabContentBody.classList.remove('layout-grid');
-              }
-            }
-          });
+                    /* Vrátí Promise<string> 2-písmenný kód země */
+                    async function detectCountry() {
+                        /* 1) Geo-lokace */
+                        try {
+                            const pos = await new Promise((res, rej) => {
+                                navigator.geolocation.getCurrentPosition(res, rej, {
+                                    timeout: 3000
+                                });
+                            });
+                            const {
+                                latitude: lat,
+                                longitude: lon
+                            } = pos.coords;
+                            /* bezplatné reverse-geo API (≈1 KB odpověď) */
+                            const resp = await fetch(
+                                `https://geocoding-api.open-meteo.com/v1/search` +
+                                `?name=${encodeURIComponent(cityOrPostcode)}&count=1`
+                            );
+                            const js = await resp.json();
+                            if (js && js.country_code) return js.country_code.toUpperCase();
+                        } catch (_) { /* ignorujeme chyby – jen zkusíme další metodu */ }
+
+                        /* 2) časové pásmo */
+                        try {
+                            const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                            if (tz && tzMap[tz]) return tzMap[tz];
+                        } catch (_) { /* fall-through */ }
+
+                        /* 3) poslední záchrana – jazykové nastavení prohlížeče */
+                        return (navigator.language || 'en-US').split('-')[1]?.toUpperCase() || 'US';
+                    }
+
+                    /* ---------- Přidat do initSettings() místo původního Populate voices */
+
+                    (async () => {
+                        /* zjištění země jen jednou */
+                        const browserCountry = await detectCountry();
+                        console.log('[voices] using country', browserCountry);
+
+                        voices = speechSynthesis.getVoices();
+                        /* filtrujeme podle stejné země */
+                        const countryVoices = voices.filter(v => {
+                            const vCountry = v.lang.split('-')[1]?.toUpperCase();
+                            return vCountry === browserCountry;
+                        });
+
+                        /* fallback: když nic, necháme všechny */
+                        const list = countryVoices.length ? countryVoices : voices;
+
+                        select.innerHTML = ''; // vyčisti <select>
+                        list.forEach(v => {
+                            const opt = document.createElement('option');
+                            opt.value = v.voiceURI;
+                            opt.textContent = `${v.name} (${v.lang})` + (v.default ? ' ★' : '');
+                            select.append(opt);
+                        });
+
+                        // implicitní výběr
+                        select.value = settings.voiceURI || (list[0] && list[0].voiceURI);
+
+                        // Přidej listener až po naplnění selectu
+                        select.addEventListener('change', () => {
+                            settings.voiceURI = select.value;
+                            saveSettings();
+                        });
+                    })();
+                    const settingsToast = new bootstrap.Toast(
+                        document.getElementById('settingsToast'), {
+                        autohide: false
+                    } // trvale otevřené, dokud ho uživatel nezavře
+                    );
+
+                    /* select hlasu */
+                    select.value = settings.voiceURI;
+                    select.addEventListener('change', () => {
+                        settings.voiceURI = select.value;
+                        saveSettings();
+                    });
+
+                    /* rychlost */
+                    rateRange.value = settings.rate;
+                    rateValue.textContent = settings.rate;
+                    rateRange.addEventListener('input', () => {
+                        settings.rate = parseFloat(rateRange.value);
+                        rateValue.textContent = settings.rate;
+                        saveSettings();
+                    });
+
+                    /* ignore / multiple */
+                    ignoreChk.checked = settings.ignorePlaying;
+                    multiChk.checked = settings.allowMultiple;
+
+                    ignoreChk.addEventListener('change', () => {
+                        settings.ignorePlaying = ignoreChk.checked;
+                        saveSettings();
+                    });
+                    multiChk.addEventListener('change', () => {
+                        settings.allowMultiple = multiChk.checked;
+                        saveSettings();
+                    });
+
+                    /* launch-pad vzhled */
+                    padChk.checked = settings.launchPad;
+                    padChk.addEventListener('change', () => {
+                        settings.launchPad = padChk.checked;
+                        renderAllButtons();
+                        saveSettings();
+                    });
+
+                    document.getElementById('settings-btn')
+                        .addEventListener('click', () => settingsToast.show());
+                }
+                // Override localStorage
+                (function () {
+                    const oSet = Storage.prototype.setItem,
+                        oRm = Storage.prototype.removeItem,
+                        oClr = Storage.prototype.clear;
+                    Storage.prototype.setItem = function (k, v) {
+                        console.log('[LS] setItem', k, v);
+                        try {
+                            oSet.apply(this, [k, v]);
+                            console.log('[LS] setItem OK', k);
+                        } catch (e) {
+                            console.error('[LS] setItem ERR', k, e);
+                        }
+                    };
+                    Storage.prototype.removeItem = function (k) {
+                        console.log('[LS] removeItem', k);
+                        try {
+                            oRm.apply(this, [k]);
+                            console.log('[LS] removeItem OK', k);
+                        } catch (e) {
+                            console.error('[LS] removeItem ERR', k, e);
+                        }
+                    };
+                    Storage.prototype.clear = function () {
+                        console.log('[LS] clear');
+                        try {
+                            oClr.apply(this);
+                            console.log('[LS] clear OK');
+                        } catch (e) {
+                            console.error('[LS] clear ERR', e);
+                        }
+                    };
+                })();
 
 
-        }
+
+                function speak(text, cb) {
+                    if (settings.ignorePlaying && speechSynthesis.speaking) return;
+                    const utter = new SpeechSynthesisUtterance(text);
+                    utter.lang = 'cs-CZ';
+                    utter.rate = settings.rate;
+                    const voice = voices.find(v => v.voiceURI === settings.voiceURI);
+                    if (voice) utter.voice = voice;
+                    utter.onend = cb;
+                    speechSynthesis.speak(utter);
+
+                    // Pokud je multiple povoleno, nenech flag "isPlaying" bránit dalším
+                    if (!settings.allowMultiple) isPlaying = true;
+
+                    utter.onend = () => {
+                        if (!settings.allowMultiple) isPlaying = false;
+                        cb?.();
+                    };
+                }
+
+
+                function clearKeyHandlers() {
+                    keyHandlers.forEach(h => document.removeEventListener('keydown', h));
+                    keyHandlers = [];
+                }
+                function registerKeyHandlers(tabId) {
+                    clearKeyHandlers();
+
+                    const container = document.querySelector(`#${tabId} .tab-content-body`);
+                    if (!container) return;
+
+                    // Najdi všechna transcription-button tlačítka kromě nahrávacího
+                    const wraps = Array.from(container.querySelectorAll('.transcription-button'))
+                        .filter(wrap => !wrap.closest('#recording-container'));
+
+                    // Odstraň staré shortcuty
+                    wraps.forEach(wrap => {
+                        const old = wrap.querySelector('.shortcut');
+                        if (old) old.remove();
+                    });
+
+                    // Nové shortcuty A, B, C, ...
+                    wraps.forEach((wrap, i) => {
+                        const btn = wrap.querySelector('button');
+                        if (!btn) return;
+
+                        const key = String.fromCharCode(65 + i); // A, B, C...
+
+                        // Přidej nový vizuální label
+                        const lbl = document.createElement('span');
+                        lbl.className = 'shortcut';
+                        lbl.textContent = key;
+                        Object.assign(lbl.style, {
+                            backgroundColor: wrap.style.borderColor,
+                            color: '#fff',
+                        });
+                        wrap.prepend(lbl);
+
+                        // Handler pro daný klíč
+                        const handler = e => {
+                            if (
+                                !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName) &&
+                                e.key.toUpperCase() === key
+                            ) {
+                                btn.click();
+                            }
+                        };
+                        document.addEventListener('keydown', handler);
+                        keyHandlers.push(handler);
+                    });
+
+                    // 🎙 Mikrofonní tlačítko – reaguje na klávesu Z
+                    const recButton = document.getElementById('start-recording');
+                    if (recButton) {
+                        const handler = e => {
+                            if (
+                                !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName) &&
+                                e.key.toUpperCase() === 'Z'
+                            ) {
+                                recButton.click();
+                            }
+                        };
+                        document.addEventListener('keydown', handler);
+                        keyHandlers.push(handler);
+                    }
+                }
 
 
 
-        function createTab(id, name, predef = false) {
-          console.log(`[createTab] id='${id}', name='${name}', predef=${predef}`);
-          if (document.getElementById(id)) {
-            console.log(`[createTab] Tab '${id}' already exists, skipping creation.`);
-            return;
-          }
-          const btn = document.createElement('button');
-          btn.className = 'tab-button';
-          btn.dataset.tab = id;
-          btn.innerHTML = `
+                function addButton(text, tabId) {
+                    console.log(`[addButton] Attempting to add button to tab='${tabId}' with text='${text}'`);
+                    try {
+                        const container = document.querySelector(`#${tabId} .tab-content-body`);
+                        if (!container) throw new Error(`Container for tab '${tabId}' not found`);
+
+                        const idx = container.querySelectorAll('.transcription-button').length;
+                        let color = COLORS[idx % COLORS.length];
+
+                        // wrapper div
+                        const wrap = document.createElement('div');
+                        wrap.className = 'transcription-button';
+                        if (settings.launchPad) wrap.classList.add('launch-pad'); // <—
+
+                        wrap.style.borderColor = color;
+
+                        // button element
+                        const btn = document.createElement('button');
+                        btn.className = 'text-button';
+                        btn.textContent = text;
+                        wrap.addEventListener('click', () => {
+                            if (!settings.allowMultiple && isPlaying) return;
+
+                            isPlaying = true;
+
+                            // turn the glow on
+                            wrap.style.transition = 'box-shadow .5s ease-in-out, border .5s ease-in-out';
+                            wrap.style.boxShadow = `0 0 20px 0 ${color}`; // full glow
+                            wrap.style.transform = 'all .5s linear'; // keep your pulse
+                            wrap.classList.add('activated');
+
+                            speak(btn.textContent, () => {
+
+                                /* ---- WHEN PLAYBACK ENDS ---- */
+
+                                wrap.classList.remove('activated');
+
+                                // 1. fade the glow to zero – the transition makes it smooth
+                                wrap.style.boxShadow = `0 0 0 0 ${color}`;
+
+                                // 2. optional: wipe the inline style after the fade completes
+                                wrap.addEventListener('transitionend', () => {
+                                    wrap.style.boxShadow = ''; // back to clean state
+                                }, {
+                                    once: true
+                                });
+
+                                isPlaying = false;
+                            });
+                        });
+
+
+                        // shortcut label
+                        const lbl = document.createElement('span');
+                        lbl.className = 'shortcut';
+                        lbl.textContent = String.fromCharCode(65 + idx);
+                        Object.assign(lbl.style, {
+                            backgroundColor: color,
+                            color: '#fff',
+                        });
+                        wrap.append(lbl, btn);
+
+                        //// context menu for edit/delete
+                        wrap.addEventListener('contextmenu', e => {
+                            e.preventDefault();
+                            document.querySelectorAll('.context-menu').forEach(m => m.remove());
+                            const menu = document.createElement('div');
+                            menu.className = 'context-menu shadow-sm';
+                            Object.assign(menu.style, {
+                                position: 'absolute',
+                                top: `${e.clientY}px`,
+                                left: `${e.clientX}px`,
+                                zIndex: '10000'
+                            });
+
+                            // edit button
+                            const edit = document.createElement('button');
+                            edit.textContent = '✏️ Upravit';
+                            edit.className = 'border-bottom';
+
+                            edit.addEventListener('click', () => {
+                                const nt = prompt('Upravit text:', btn.textContent);
+                                if (nt) {
+                                    const btns = Array.from(container.querySelectorAll('.text-button'));
+                                    const index = btns.indexOf(btn);
+                                    if (index > -1) {
+                                        tabsData[tabId][index] = nt;
+                                        persist();
+                                        btn.textContent = nt;
+                                    }
+                                }
+                                menu.remove();
+                                registerKeyHandlers(tabId);
+                            });
+
+                            // delete button
+                            const del = document.createElement('button');
+                            del.textContent = '🗑️ Smazat';
+                            del.addEventListener('click', () => {
+                                const btns = Array.from(container.querySelectorAll('.text-button'));
+                                const index = btns.indexOf(btn);
+                                if (index > -1) {
+                                    tabsData[tabId].splice(index, 1);
+                                    persist();
+                                    wrap.remove();
+                                }
+                                menu.remove();
+                                registerKeyHandlers(tabId);
+                            });
+
+                            menu.append(edit, del);
+                            document.body.append(menu);
+                            document.addEventListener('click', () => menu.remove(), {
+                                once: true
+                            });
+                        });
+
+                        container.append(wrap);
+                        registerKeyHandlers(tabId);
+                        appendRecordingButton(tabId); // <-- DŮLEŽITÉ
+
+                        console.log(`[addButton] Successfully added button to tab='${tabId}' with text='${text}'`);
+                    } catch (e) {
+                        console.error(`[addButton] Failed to add button to tab='${tabId}' with text='${text}'`, e);
+                    }
+                }
+                function appendRecordingButton(tabId) {
+                    const container = document.querySelector(`#${tabId} .tab-content-body`);
+                    const recorder = document.getElementById('recording-container');
+
+                    if (!container || !recorder) return;
+
+                    // Odeber z původního rodiče
+                    if (recorder.parentElement !== container) {
+                        recorder.remove();
+                    }
+
+                    // Zajisti, že bude viditelný
+                    recorder.style.display = 'inline-block';
+
+                    // Připoj ho jako POSLEDNÍ prvek
+                    container.appendChild(recorder);
+                }
+
+
+
+                function renderAllButtons() {
+                    document.querySelectorAll('.transcription-button').forEach(btn => {
+                        if (settings.launchPad) {
+                            btn.classList.add('launch-pad');
+                        } else {
+                            btn.classList.remove('launch-pad');
+                        }
+
+                        // Přepnutí layoutu na .tab-content-body (předek tlačítka)
+                        const tabContentBody = btn.closest('.tab-content-body');
+                        if (tabContentBody) {
+                            if (settings.launchPad) {
+                                tabContentBody.classList.add('layout-grid');
+                                tabContentBody.classList.remove('layout-default');
+                            } else {
+                                tabContentBody.classList.add('layout-default');
+                                tabContentBody.classList.remove('layout-grid');
+                            }
+                        }
+                    });
+
+
+                }
+
+
+
+                function createTab(id, name, predef = false) {
+                    console.log(`[createTab] id='${id}', name='${name}', predef=${predef}`);
+                    if (document.getElementById(id)) {
+                        console.log(`[createTab] Tab '${id}' already exists, skipping creation.`);
+                        return;
+                    }
+                    const btn = document.createElement('button');
+                    btn.className = 'tab-button';
+                    btn.dataset.tab = id;
+                    btn.innerHTML = `
   ${name} 
   <span class="tab-close" title="Smazat záložku" onclick="deleteTab('${id}')">&times;</span>
 `;
 
-          tabsEl.append(btn);
-          tabsEl.append(btn, document.getElementById('add-tab-btn')); // ← Vložit PŘED tlačítko "+"
+                    tabsEl.append(btn);
+                    tabsEl.append(btn, document.getElementById('add-tab-btn')); // ← Vložit PŘED tlačítko "+"
 
-          const div = document.createElement('div');
-          div.className = 'tab-content';
-          div.id = id;
-          const bd = document.createElement('div');
-          bd.className = 'tab-content-body layout-default'; // ← výchozí layout
-          div.append(bd);
-          wrapEl.append(div);
+                    const div = document.createElement('div');
+                    div.className = 'tab-content';
+                    div.id = id;
+                    const bd = document.createElement('div');
+                    bd.className = 'tab-content-body layout-default'; // ← výchozí layout
+                    div.append(bd);
+                    wrapEl.append(div);
 
-          const defaults = predef ? [
-            'A teď mlčíš!',
-            'A proč?',
-            'Protože víš, že mám pravdu!',
-            'Vůbec to',
-            'Nefunguje',
-            'Nende to',
-            'Zmáčkni si éčko',
-            'Dej si éčko',
-            'Eééééčko!',
-            'Nende',
-            'Jak nejde?',
-            'Vůbec nende',
-            'Není signál',
-            'Max nervy!',
-            'Co ty?',
-            'Čus ty pičo?',
-            'Max chutě',
-            'Chceš?',
-            'Chcex!',
-            'Nechcex!',
-            'Jak víš?',
-            'Vím',
-            'Jak semenuješ',
-            'Na našulinku',
-            'Ná náá šulííínku',
-            'Dezasbyls?',
-            'Dýžeju'
-          ] : [''];
-          const arr = tabsData[id] || defaults;
-          console.log(`[createTab] Will add ${arr.length} buttons for tab='${id}'`);
-          arr.forEach(t => addButton(t, id));
-          appendRecordingButton(id); // ⬅️ Přidej sem!
+                    const defaults = predef ? [
+                        'A teď mlčíš!',
+                        'A proč?',
+                        'Protože víš, že mám pravdu!',
+                        'Vůbec to',
+                        'Nefunguje',
+                        'Nende to',
+                        'Zmáčkni si éčko',
+                        'Dej si éčko',
+                        'Eééééčko!',
+                        'Nende',
+                        'Jak nejde?',
+                        'Vůbec nende',
+                        'Není signál',
+                        'Max nervy!',
+                        'Co ty?',
+                        'Čus ty pičo?',
+                        'Max chutě',
+                        'Chceš?',
+                        'Chcex!',
+                        'Nechcex!',
+                        'Jak víš?',
+                        'Vím',
+                        'Jak semenuješ',
+                        'Na našulinku',
+                        'Ná náá šulííínku',
+                        'Dezasbyls?',
+                        'Dýžeju'
+                    ] : [''];
+                    const arr = tabsData[id] || defaults;
+                    console.log(`[createTab] Will add ${arr.length} buttons for tab='${id}'`);
+                    arr.forEach(t => addButton(t, id));
+                    appendRecordingButton(id); // ⬅️ Přidej sem!
 
-          btn.addEventListener('click', () => activateTab(id));
-          console.log(`[createTab] Completed creation for '${id}'`);
-        }
-
-        function activateTab(id) {
-          console.log('[activateTab]', id);
-          if (!isRecording) {
-            recordingStatus.textContent =
-              id === TAB_PREDEFINED ? '' : 'Nahrávání';
-          }
-          document.querySelectorAll('.tab-button').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
-          document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === id));
-          localStorage.setItem('activeTab', id);
-
-          // Move and show/hide recording button
-          const recContainer = document.getElementById('recording-container');
-          if (id === TAB_PREDEFINED) {
-            recContainer.style.display = 'none';
-          } else {
-            const container = document.querySelector(`#${id} .tab-content-body`);
-            if (container && recContainer.parentElement !== container) {
-              recContainer.remove();
-              container.appendChild(recContainer);
-            }
-            recContainer.style.display = 'inline-block';
-          }
-
-          if (isRecording) stopRecognition();
-          registerKeyHandlers(id); 
-
-          console.log('[activateTab] done');
-        }
-
-        function initTabs() {
-          console.log('[initTabs] start');
-          createTab(TAB_PREDEFINED, '1', true);
-          customTabs.forEach(t => createTab(t.id, t.name));
-          addBtn.addEventListener('click', () => {
-            console.log('[initTabs] add click');
-            const id = `tab-${customTabs.length + 2}`,
-              name = String(customTabs.length + 2);
-            customTabs.push({
-              id,
-              name
-            });
-            tabsData[id] = [];
-            persist();
-            createTab(id, name);
-            activateTab(id);
-          });
-          const init = localStorage.getItem('activeTab') || TAB_PREDEFINED;
-          console.log('[initTabs] initial', init);
-          activateTab(init);
-          console.log('[initTabs] done');
-          renderAllButtons(); // ← DOPLŇ TENTO ŘÁDEK
-        }
-
-        function initVoice() {
-          console.log('[initVoice]');
-          try {
-            const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SR) {
-              console.error('[initVoice] SpeechRecognition API not available');
-              return;
-            }
-            try {
-              recognition = new SR();
-              console.log('[initVoice] SpeechRecognition instance created');
-            } catch (e) {
-              console.error('[initVoice] Failed to instantiate SpeechRecognition', e);
-              return;
-            }
-            recognition.lang = 'cs-CZ';
-            recognition.interimResults = false;
-            recognition.continuous = false;
-
-            recognition.onstart = () => {
-              console.log('[SR] onstart');
-              try {
-                recBtn.classList.add('active');
-                recordingStatus.textContent = 'Mluv...';
-                isRecording = true;
-                startTime = Date.now();
-                updateRecordingTime();
-                /* ADD THIS ↓↓↓ */
-              } catch (e) {
-                console.error('[SR] onstart error', e);
-              }
-            };
-
-
-            recognition.onresult = e => {
-              console.log('[SR] onresult event', e);
-              try {
-                const text = e.results[0][0].transcript.trim();
-                console.log('[SR] result transcript', text);
-                const tabId = localStorage.getItem('activeTab');
-                addButton(text, tabId);
-                tabsData[tabId] = tabsData[tabId] || [];
-                tabsData[tabId].push(text);
-                persist(); stopVisualization();
-              } catch (e) {
-                console.error('[SR] onresult handling error', e);
-              }
-            };
-
-            recognition.onerror = e => {
-              console.error('[SR] error event', e.error);
-            };
-
-            recognition.onend = () => {
-              console.log('[SR] onend');
-              try {
-                recBtn.classList.remove('active');
-                recordingStatus.textContent = 'Nahrávání';
-                recordingTime.textContent = '';
-
-                const activeTab = localStorage.getItem('activeTab');
-                recordingStatus.textContent =
-                  activeTab !== TAB_PREDEFINED ? 'Nahrávání' : '';
-                recBtn.style.boxShadow = 'none'; // <-- zruší stín úplně
-
-                isRecording = false;
-              } catch (e) {
-                console.error('[SR] onend error', e);
-              }
-            };
-          const recorder = document.getElementById('recording-container');
-
-            recorder.addEventListener('click', () => {
-              const tabId = localStorage.getItem('activeTab');
-              if (tabId === TAB_PREDEFINED) {
-                alert('Nahrávání není povoleno');
-                return;
-              }
-              if (isRecording) {
-                console.log('[SR] click - stopping recognition');
-                try {
-                  stopRecognition();
-                } catch (e) {
-                  console.error('[SR] stopRecognition error', e);
+                    btn.addEventListener('click', () => activateTab(id));
+                    console.log(`[createTab] Completed creation for '${id}'`);
                 }
-              } else {
-                console.log('[SR] click - starting recognition');
-                try {
-                  startRecognition();
-                } catch (e) {
-                  console.error('[SR] startRecognition error', e);
+
+                function activateTab(id) {
+                    console.log('[activateTab]', id);
+                    if (!isRecording) {
+                        recordingStatus.textContent =
+                            id === TAB_PREDEFINED ? '' : 'Nahrávání';
+                    }
+                    document.querySelectorAll('.tab-button').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.toggle('active', c.id === id));
+                    localStorage.setItem('activeTab', id);
+
+                    // Move and show/hide recording button
+                    const recContainer = document.getElementById('recording-container');
+                    if (id === TAB_PREDEFINED) {
+                        recContainer.style.display = 'none';
+                    } else {
+                        const container = document.querySelector(`#${id} .tab-content-body`);
+                        if (container && recContainer.parentElement !== container) {
+                            recContainer.remove();
+                            container.appendChild(recContainer);
+                        }
+                        recContainer.style.display = 'inline-block';
+                    }
+
+                    if (isRecording) stopRecognition();
+                    registerKeyHandlers(id);
+
+                    console.log('[activateTab] done');
                 }
-              }
-            });
 
-            console.log('[initVoice] done');
-          } catch (e) {
-            console.error('[initVoice] unexpected error', e);
-          }
-        }
-        /* === NOVÁ FUNKCE místo initAudioVisualization ================= */
-        async function startVisualization() {
-          if (visStream) return;                               // už běží
+                function initTabs() {
+                    console.log('[initTabs] start');
+                    createTab(TAB_PREDEFINED, '1', true);
+                    customTabs.forEach(t => createTab(t.id, t.name));
+                    addBtn.addEventListener('click', () => {
+                        console.log('[initTabs] add click');
+                        const id = `tab-${customTabs.length + 2}`,
+                            name = String(customTabs.length + 2);
+                        customTabs.push({
+                            id,
+                            name
+                        });
+                        tabsData[id] = [];
+                        persist();
+                        createTab(id, name);
+                        activateTab(id);
+                    });
+                    const init = localStorage.getItem('activeTab') || TAB_PREDEFINED;
+                    console.log('[initTabs] initial', init);
+                    activateTab(init);
+                    console.log('[initTabs] done');
+                    renderAllButtons(); // ← DOPLŇ TENTO ŘÁDEK
+                }
 
-          try {
-            visStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            analyser = audioCtx.createAnalyser();
-            analyser.fftSize = 256;
-            dataArray = new Uint8Array(analyser.frequencyBinCount);
-            audioCtx.createMediaStreamSource(visStream).connect(analyser);
-            visualizePulse();                                  // stávající funkce
-          } catch (e) {
-            console.error('[AudioVis] init error', e);
-          }
-        }
+                function initVoice() {
+                    console.log('[initVoice]');
+                    try {
+                        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+                        if (!SR) {
+                            console.error('[initVoice] SpeechRecognition API not available');
+                            return;
+                        }
+                        try {
+                            recognition = new SR();
+                            console.log('[initVoice] SpeechRecognition instance created');
+                        } catch (e) {
+                            console.error('[initVoice] Failed to instantiate SpeechRecognition', e);
+                            return;
+                        }
+                        recognition.lang = 'cs-CZ';
+                        recognition.interimResults = false;
+                        recognition.continuous = false;
 
-        /* === STARÁ stopAudioVisualization() → nahradí se tímto ========= */
-        function stopVisualization() {
-          cancelAnimationFrame(animId);
-
-          if (visStream) {
-            visStream.getTracks().forEach(t => t.stop());      // uvolní mikrofon
-            visStream = null;
-          }
-          if (audioCtx) {
-            audioCtx.close();
-            audioCtx = null;
-          }
-          recBtn.style.boxShadow = 'none';
-          analyser = null;
-          dataArray = null;
-          console.log('[AudioVis] stopped');
-        }
-
-
-        function startRecognition() {
-          console.log('[SR] startRecognition');
-          stopVisualization();          // ⚠️ uvolní mikrofon
-          try {
-            recognition.start();
-          } catch (e) {
-            console.error('[SR] startErr', e);
-          }
-        }
-
-        function stopRecognition() {
-          console.log('[SR] stopRecognition');
-          recognition.stop();
-          recBtn.style.boxShadow = `0px 0px 0px rgba(0,0,0,0)`;
-
-        }
-
-        function visualizePulse() {
-          if (!isRecording) return;
-          analyser.getByteFrequencyData(dataArray);
-          const vol = dataArray.reduce((s, v) => s + v, 0) / dataArray.length;
-          const glow = Math.min(vol / 256, 1);
-          recBtn.style.boxShadow = `0 0 ${100 * glow}px rgba(255,0,0,${0.3 + 0.7 * glow})`;
-          animId = requestAnimationFrame(visualizePulse);
-        }
-
-        function updateRecordingTime() {
-          if (!isRecording) return;
-          const elapsed = Math.floor((Date.now() - startTime) / 1000);
-          const m = String(Math.floor(elapsed / 60)).padStart(2, '0');
-          const s = String(elapsed % 60).padStart(2, '0');
-          recordingTime.textContent = `${m}:${s}`;
-          setTimeout(updateRecordingTime, 1000);
-        }
-
-function initImport() {
-  console.log('[initImport]');
-  impBtn.addEventListener('click', () => {
-    const tabId = localStorage.getItem('activeTab');
-
-    const choice = prompt('Zadej 1 pro výběr souboru, nebo 2 pro vložení QR kódu jako text (base64 JSON):', '1');
-    if (choice === '2') {
-      const input = prompt('Vlož base64 QR obsah:');
-      if (input) {
-        try {
-          const json = decodeURIComponent(escape(atob(input)));
-          const data = JSON.parse(json);
-          tabsData[tabId] = data;
-          persist();
-          const bd = document.querySelector(`#${tabId} .tab-content-body`);
-          bd.innerHTML = '';
-          data.forEach(t => addButton(t, tabId));
-          console.log('[import] QR OK');
-        } catch (err) {
-          console.error('[import] QR ERR', err);
-          alert('Neplatný QR obsah');
-        }
-      }
-    } else {
-      fileInput.onchange = async e => {
-        const f = e.target.files[0];
-        if (!f) return;
-        try {
-          const txt = await f.text();
-          tabsData[tabId] = JSON.parse(txt);
-          persist();
-          const bd = document.querySelector(`#${tabId} .tab-content-body`);
-          bd.innerHTML = '';
-          tabsData[tabId].forEach(t => addButton(t, tabId));
-          console.log('[import] soubor OK');
-        } catch (err) {
-          console.error('[import] soubor ERR', err);
-          alert('Neplatný JSON');
-        }
-        e.target.value = '';
-      };
-      fileInput.click();
-    }
-  });
-}
+                        recognition.onstart = () => {
+                            console.log('[SR] onstart');
+                            try {
+                                recBtn.classList.add('active');
+                                recordingStatus.textContent = 'Mluv...';
+                                isRecording = true;
+                                startTime = Date.now();
+                                updateRecordingTime();
+                                /* ADD THIS ↓↓↓ */
+                            } catch (e) {
+                                console.error('[SR] onstart error', e);
+                            }
+                        };
 
 
-function initExport() {
-  console.log('[initExport]');
-  expBtn.addEventListener('click', () => {
-    const tabId = localStorage.getItem('activeTab');
-    const arr = Array.from(document.querySelectorAll(`#${tabId} .text-button`)).map(b => b.textContent);
-    const json = JSON.stringify(arr, null, 2);
-    
-    // Download jako soubor
-    const blob = new Blob([json], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${tabId}.json`;
-    document.body.append(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-    console.log('[export] file downloaded');
+                        recognition.onresult = e => {
+                            console.log('[SR] onresult event', e);
+                            try {
+                                const text = e.results[0][0].transcript.trim();
+                                console.log('[SR] result transcript', text);
+                                const tabId = localStorage.getItem('activeTab');
+                                addButton(text, tabId);
+                                tabsData[tabId] = tabsData[tabId] || [];
+                                tabsData[tabId].push(text);
+                                persist(); stopVisualization();
+                            } catch (e) {
+                                console.error('[SR] onresult handling error', e);
+                            }
+                        };
 
-    // QR kód
-    const encoded = btoa(unescape(encodeURIComponent(json)));
-    document.getElementById('qrcode').innerHTML = '';
-    new QRCode(document.getElementById('qrcode'), {
-      text: encoded,
-      width: 260,
-      height: 260,
-      colorDark: '#000',
-      colorLight: '#fff',
-      correctLevel: QRCode.CorrectLevel.H
-    });
+                        recognition.onerror = e => {
+                            console.error('[SR] error event', e.error);
+                        };
 
-    const modal = new bootstrap.Modal(document.getElementById('qrModal'));
-    modal.show();
-  });
-}
+                        recognition.onend = () => {
+                            console.log('[SR] onend');
+                            try {
+                                recBtn.classList.remove('active');
+                                recordingStatus.textContent = 'Nahrávání';
+                                recordingTime.textContent = '';
+
+                                const activeTab = localStorage.getItem('activeTab');
+                                recordingStatus.textContent =
+                                    activeTab !== TAB_PREDEFINED ? 'Nahrávání' : '';
+                                recBtn.style.boxShadow = 'none'; // <-- zruší stín úplně
+
+                                isRecording = false;
+                            } catch (e) {
+                                console.error('[SR] onend error', e);
+                            }
+                        };
+                        const recorder = document.getElementById('recording-container');
+
+                        recorder.addEventListener('click', () => {
+                            const tabId = localStorage.getItem('activeTab');
+                            if (tabId === TAB_PREDEFINED) {
+                                alert('Nahrávání není povoleno');
+                                return;
+                            }
+                            if (isRecording) {
+                                console.log('[SR] click - stopping recognition');
+                                try {
+                                    stopRecognition();
+                                } catch (e) {
+                                    console.error('[SR] stopRecognition error', e);
+                                }
+                            } else {
+                                console.log('[SR] click - starting recognition');
+                                try {
+                                    startRecognition();
+                                } catch (e) {
+                                    console.error('[SR] startRecognition error', e);
+                                }
+                            }
+                        });
+
+                        console.log('[initVoice] done');
+                    } catch (e) {
+                        console.error('[initVoice] unexpected error', e);
+                    }
+                }
+                /* === NOVÁ FUNKCE místo initAudioVisualization ================= */
+                async function startVisualization() {
+                    if (visStream) return;                               // už běží
+
+                    try {
+                        visStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                        analyser = audioCtx.createAnalyser();
+                        analyser.fftSize = 256;
+                        dataArray = new Uint8Array(analyser.frequencyBinCount);
+                        audioCtx.createMediaStreamSource(visStream).connect(analyser);
+                        visualizePulse();                                  // stávající funkce
+                    } catch (e) {
+                        console.error('[AudioVis] init error', e);
+                    }
+                }
+
+                /* === STARÁ stopAudioVisualization() → nahradí se tímto ========= */
+                function stopVisualization() {
+                    cancelAnimationFrame(animId);
+
+                    if (visStream) {
+                        visStream.getTracks().forEach(t => t.stop());      // uvolní mikrofon
+                        visStream = null;
+                    }
+                    if (audioCtx) {
+                        audioCtx.close();
+                        audioCtx = null;
+                    }
+                    recBtn.style.boxShadow = 'none';
+                    analyser = null;
+                    dataArray = null;
+                    console.log('[AudioVis] stopped');
+                }
+
+
+                function startRecognition() {
+                    console.log('[SR] startRecognition');
+                    stopVisualization();          // ⚠️ uvolní mikrofon
+                    try {
+                        recognition.start();
+                    } catch (e) {
+                        console.error('[SR] startErr', e);
+                    }
+                }
+
+                function stopRecognition() {
+                    console.log('[SR] stopRecognition');
+                    recognition.stop();
+                    recBtn.style.boxShadow = `0px 0px 0px rgba(0,0,0,0)`;
+
+                }
+
+                function visualizePulse() {
+                    if (!isRecording) return;
+                    analyser.getByteFrequencyData(dataArray);
+                    const vol = dataArray.reduce((s, v) => s + v, 0) / dataArray.length;
+                    const glow = Math.min(vol / 256, 1);
+                    recBtn.style.boxShadow = `0 0 ${100 * glow}px rgba(255,0,0,${0.3 + 0.7 * glow})`;
+                    animId = requestAnimationFrame(visualizePulse);
+                }
+
+                function updateRecordingTime() {
+                    if (!isRecording) return;
+                    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                    const m = String(Math.floor(elapsed / 60)).padStart(2, '0');
+                    const s = String(elapsed % 60).padStart(2, '0');
+                    recordingTime.textContent = `${m}:${s}`;
+                    setTimeout(updateRecordingTime, 1000);
+                }
+
+                function initImport() {
+                    console.log('[initImport]');
+                    impBtn.addEventListener('click', () => {
+                        const tabId = localStorage.getItem('activeTab');
+
+                        const choice = prompt('Zadej 1 pro výběr souboru, nebo 2 pro vložení QR kódu jako text (base64 JSON):', '1');
+                        if (choice === '2') {
+                            const input = prompt('Vlož base64 QR obsah:');
+                            if (input) {
+                                try {
+                                    const json = decodeURIComponent(escape(atob(input)));
+                                    const data = JSON.parse(json);
+                                    tabsData[tabId] = data;
+                                    persist();
+                                    const bd = document.querySelector(`#${tabId} .tab-content-body`);
+                                    bd.innerHTML = '';
+                                    data.forEach(t => addButton(t, tabId));
+                                    console.log('[import] QR OK');
+                                } catch (err) {
+                                    console.error('[import] QR ERR', err);
+                                    alert('Neplatný QR obsah');
+                                }
+                            }
+                        } else {
+                            fileInput.onchange = async e => {
+                                const f = e.target.files[0];
+                                if (!f) return;
+                                try {
+                                    const txt = await f.text();
+                                    tabsData[tabId] = JSON.parse(txt);
+                                    persist();
+                                    const bd = document.querySelector(`#${tabId} .tab-content-body`);
+                                    bd.innerHTML = '';
+                                    tabsData[tabId].forEach(t => addButton(t, tabId));
+                                    console.log('[import] soubor OK');
+                                } catch (err) {
+                                    console.error('[import] soubor ERR', err);
+                                    alert('Neplatný JSON');
+                                }
+                                e.target.value = '';
+                            };
+                            fileInput.click();
+                        }
+                    });
+                }
+
+
+                function initExport() {
+                    console.log('[initExport]');
+                    expBtn.addEventListener('click', () => {
+                        const tabId = localStorage.getItem('activeTab');
+                        const arr = Array.from(document.querySelectorAll(`#${tabId} .text-button`)).map(b => b.textContent);
+                        const json = JSON.stringify(arr, null, 2);
+
+                        // Download jako soubor
+                        const blob = new Blob([json], { type: 'application/json' });
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = `${tabId}.json`;
+                        document.body.append(a);
+                        a.click();
+                        a.remove();
+                        URL.revokeObjectURL(url);
+                        console.log('[export] file downloaded');
+
+                        // QR kód
+                        const encoded = btoa(unescape(encodeURIComponent(json)));
+                        document.getElementById('qrcode').innerHTML = '';
+                        new QRCode(document.getElementById('qrcode'), {
+                            text: encoded,
+                            width: 260,
+                            height: 260,
+                            colorDark: '#000',
+                            colorLight: '#fff',
+                            correctLevel: QRCode.CorrectLevel.H
+                        });
+
+                        const modal = new bootstrap.Modal(document.getElementById('qrModal'));
+                        modal.show();
+                    });
+                }
 
 
 
 
-        function initEraseData() {
-          console.log('[initEraseData]');
-          eraseBtn.addEventListener('click', () => {
-            if (!confirm('Vymazat všechna data?')) return;
-            localStorage.clear();
-            customTabs.length = 0;
-            for (const k in tabsData) delete tabsData[k];
-            persist();
-            document.querySelectorAll('.tab-button').forEach(b => b.dataset.tab !== TAB_PREDEFINED && b.remove());
-            document.querySelectorAll('.tab-content').forEach(c => c.id !== TAB_PREDEFINED && c.remove());
-            activateTab(TAB_PREDEFINED);
-            location.reload();
-          });
-        }
+                function initEraseData() {
+                    console.log('[initEraseData]');
+                    eraseBtn.addEventListener('click', () => {
+                        if (!confirm('Vymazat všechna data?')) return;
+                        localStorage.clear();
+                        customTabs.length = 0;
+                        for (const k in tabsData) delete tabsData[k];
+                        persist();
+                        document.querySelectorAll('.tab-button').forEach(b => b.dataset.tab !== TAB_PREDEFINED && b.remove());
+                        document.querySelectorAll('.tab-content').forEach(c => c.id !== TAB_PREDEFINED && c.remove());
+                        activateTab(TAB_PREDEFINED);
+                        location.reload();
+                    });
+                }
 
-        function initShare() {
-          console.log('[initShare]');
-          const qrScript = document.createElement('script');
-          qrScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
-          document.head.append(qrScript);
-          shareBtn.addEventListener('click', () => {
-            console.log('[share]');
-            const modal = new bootstrap.Modal(document.getElementById('qrModal'));
-            document.getElementById('qrcode').innerHTML = '';
-            new QRCode(document.getElementById('qrcode'), {
-              text: window.location.href,
-              width: 260,
-              height: 260,
-              colorDark: '#000',
-              colorLight: '#fff',
-              correctLevel: QRCode.CorrectLevel.H
-            });
-            modal.show();
-          });
-        }
+                function initShare() {
+                    console.log('[initShare]');
+                    const qrScript = document.createElement('script');
+                    qrScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+                    document.head.append(qrScript);
+                    shareBtn.addEventListener('click', () => {
+                        console.log('[share]');
+                        const modal = new bootstrap.Modal(document.getElementById('qrModal'));
+                        document.getElementById('qrcode').innerHTML = '';
+                        new QRCode(document.getElementById('qrcode'), {
+                            text: window.location.href,
+                            width: 260,
+                            height: 260,
+                            colorDark: '#000',
+                            colorLight: '#fff',
+                            correctLevel: QRCode.CorrectLevel.H
+                        });
+                        modal.show();
+                    });
+                }
 
-        function initHelp() {
-          console.log('[initHelp]');
-          helpBtn.addEventListener('click', () => {
+                function initHelp() {
+                    console.log('[initHelp]');
+                    helpBtn.addEventListener('click', () => {
 
-            document.getElementById('helpToastBody').innerHTML =
-              `<b>A–Z</b> přečtení textu tlačítek<br>
+                        document.getElementById('helpToastBody').innerHTML =
+                            `<b>A–Z</b> přečtení textu tlačítek<br>
             <b>1–9</b> změna záložky tlačítek<br>
             <b>;</b> hlavní menu<br>
             <b>Ctrl</b> ovládání přepisu řeči`;
 
-            toast.show();
-          });
-        }
-
-    
-
-        function changeTab(index) {
-          // Najdi všechny taby
-          const tabs = Array.from(document.querySelectorAll('.tab-button'));
-          if (index >= 0 && index < tabs.length) {
-            tabs[index].click();
-          }
-        }
-
-        function enableSwipeNavigation() {
-          let startX = 0,
-            endX = 0;
-          const tabs = Array.from(document.querySelectorAll('.tab-button'));
-          document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
-          document.addEventListener('touchend', e => {
-            endX = e.changedTouches[0].clientX;
-            const activeIdx = tabs.findIndex(t => t.classList.contains('active'));
-            if (startX - endX > 50 && activeIdx < tabs.length - 1) {
-              animateTabTransition('left');
-              activateTab(tabs[activeIdx + 1].dataset.tab);
-            } else if (endX - startX > 50 && activeIdx > 0) {
-              animateTabTransition('right');
-              activateTab(tabs[activeIdx - 1].dataset.tab);
-            }
-          });
-        }
-
-        function animateTabTransition(dir) {
-          const ac = document.querySelector('.tab-content.active');
-          if (!ac) return;
-          const cl = dir === 'left' ? 'slide-out-left' : 'slide-out-right';
-          ac.classList.add(cl);
-          setTimeout(() => ac.classList.remove(cl), 300);
-        }
-   function initPWA() {  
- if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/ssa/sw.js')
-    .then(() => console.log('[SW] Registered'))
-    .catch(console.error);
-}
-
-}
-        document.addEventListener('DOMContentLoaded', () => {
-          loadSettings();
-
-          initTabs();
-          initVoice();
-          initImport();
-          initExport();
-          initEraseData();
-          initShare();
-          initHelp();
-          initPWA();
-          enableSwipeNavigation();
-          const items = document.querySelectorAll('.dropdown-menu .dropdown-item');
-          items.forEach((item, i) => {
-            item.dataset.index = i + 1;
-            const label = document.createElement('span');
-            label.className = 'hotkey-label ms-auto text-muted small';
-            label.textContent = `${i + 1}`;
-            label.style.marginLeft = 'auto';
-            label.style.fontSize = '0.8em';
-            label.style.opacity = '0.6';
-            label.style.pointerEvents = 'none';
-            item.appendChild(label);
-          });
-
-
-          document.addEventListener('keydown', e => {
-            // Když NENÍ otevřené menu, a nejsme v inputu nebo textarea
-            if (
-              !isDropdownOpen() &&
-              !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)
-            ) {
-              if (
-                e.ctrlKey &&
-                !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)
-              ) {
-                if (!isRecording && localStorage.getItem('activeTab') !== TAB_PREDEFINED) {
-                  e.preventDefault();
-                  startRecognition();
-                } else if (isRecording) {
-                  e.preventDefault();
-                  stopRecognition();
+                        toast.show();
+                    });
                 }
-              }
-              if (/^Digit[1-9]$/.test(e.code)) {
-                const idx = parseInt(e.code.replace('Digit', ''), 10) - 1;
-                changeTab(idx);
-                e.preventDefault();
-              }
+
+
+
+                function changeTab(index) {
+                    // Najdi všechny taby
+                    const tabs = Array.from(document.querySelectorAll('.tab-button'));
+                    if (index >= 0 && index < tabs.length) {
+                        tabs[index].click();
+                    }
+                }
+
+                function enableSwipeNavigation() {
+                    let startX = 0,
+                        endX = 0;
+                    const tabs = Array.from(document.querySelectorAll('.tab-button'));
+                    document.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+                    document.addEventListener('touchend', e => {
+                        endX = e.changedTouches[0].clientX;
+                        const activeIdx = tabs.findIndex(t => t.classList.contains('active'));
+                        if (startX - endX > 50 && activeIdx < tabs.length - 1) {
+                            animateTabTransition('left');
+                            activateTab(tabs[activeIdx + 1].dataset.tab);
+                        } else if (endX - startX > 50 && activeIdx > 0) {
+                            animateTabTransition('right');
+                            activateTab(tabs[activeIdx - 1].dataset.tab);
+                        }
+                    });
+                }
+
+                function animateTabTransition(dir) {
+                    const ac = document.querySelector('.tab-content.active');
+                    if (!ac) return;
+                    const cl = dir === 'left' ? 'slide-out-left' : 'slide-out-right';
+                    ac.classList.add(cl);
+                    setTimeout(() => ac.classList.remove(cl), 300);
+                }
+                function initPWA() {
+                    if ('serviceWorker' in navigator) {
+                        navigator.serviceWorker.register('/ssa/sw.js')
+                            .then(() => console.log('[SW] Registered'))
+                            .catch(console.error);
+                    }
+
+                }
+                document.addEventListener('DOMContentLoaded', () => {
+                    loadSettings();
+
+                    initTabs();
+                    initVoice();
+                    initImport();
+                    initExport();
+                    initEraseData();
+                    initShare();
+                    initHelp();
+                    initPWA();
+                    enableSwipeNavigation();
+                    const items = document.querySelectorAll('.dropdown-menu .dropdown-item');
+                    items.forEach((item, i) => {
+                        item.dataset.index = i + 1;
+                        const label = document.createElement('span');
+                        label.className = 'hotkey-label ms-auto text-muted small';
+                        label.textContent = `${i + 1}`;
+                        label.style.marginLeft = 'auto';
+                        label.style.fontSize = '0.8em';
+                        label.style.opacity = '0.6';
+                        label.style.pointerEvents = 'none';
+                        item.appendChild(label);
+                    });
+
+
+                    document.addEventListener('keydown', e => {
+                        // Když NENÍ otevřené menu, a nejsme v inputu nebo textarea
+                        if (
+                            !isDropdownOpen() &&
+                            !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)
+                        ) {
+                            if (
+                                e.ctrlKey &&
+                                !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)
+                            ) {
+                                if (!isRecording && localStorage.getItem('activeTab') !== TAB_PREDEFINED) {
+                                    e.preventDefault();
+                                    startRecognition();
+                                } else if (isRecording) {
+                                    e.preventDefault();
+                                    stopRecognition();
+                                }
+                            }
+                            if (/^Digit[1-9]$/.test(e.code)) {
+                                const idx = parseInt(e.code.replace('Digit', ''), 10) - 1;
+                                changeTab(idx);
+                                e.preventDefault();
+                            }
+                        }
+                        if (
+                            e.key === ';' &&
+                            !e.ctrlKey &&
+                            !e.altKey &&
+                            !e.metaKey &&
+                            !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)
+                        ) {
+                            e.preventDefault();
+
+                            const dropdownBtn = document.getElementById('menuDropdown');
+                            const dropdown = bootstrap.Dropdown.getOrCreateInstance(dropdownBtn);
+
+                            // Toggle dropdown (open/close)
+                            const isOpen = dropdownBtn.getAttribute('aria-expanded') === 'true';
+                            if (isOpen) {
+                                dropdown.hide();
+                            } else {
+                                dropdown.show();
+                                // Fokusuj první prvek v menu
+                                setTimeout(() => {
+                                    document.querySelector('.dropdown-menu .dropdown-item:not([disabled])')?.focus();
+                                }, 100);
+                            }
+                        }
+                        if (!isDropdownOpen()) return;
+
+                        // Aktivace položky číslem 1–9
+
+                        if (/^Digit[1-9]$/.test(e.code)) {
+                            const idx = parseInt(e.code.replace('Digit', ''), 10) - 1;
+
+                            const items = Array.from(document.querySelectorAll('.dropdown-menu .dropdown-item:not([disabled])'));
+                            if (items[idx]) {
+                                items[idx].click();
+                                e.preventDefault();
+                                return;
+                            }
+                        }
+
+                        const items = Array.from(document.querySelectorAll('.dropdown-menu .dropdown-item:not([disabled])'));
+                        const index = items.indexOf(document.activeElement);
+
+
+
+                        if (e.key === 'Escape') {
+                            bootstrap.Dropdown.getInstance(document.getElementById('menuDropdown'))?.hide();
+                        }
+                        if (e.ctrlKey && !isRecording && localStorage.getItem('activeTab') !== TAB_PREDEFINED) {
+                            // Ctrl = start/stop recording
+                            e.preventDefault();
+                            startRecognition();
+                        } else if (e.ctrlKey && isRecording) {
+                            e.preventDefault();
+                            stopRecognition();
+                        }
+                    });
+
+                    function isDropdownOpen() {
+                        const dropdown = document.querySelector('.dropdown-menu.show');
+                        return !!dropdown;
+                    }
+
+
+                    function loadVoicesThenInit() {
+                        const tryInit = () => {
+                            const voices = speechSynthesis.getVoices();
+                            if (voices.length) {
+                                initSettings(); // tvoje původní funkce – beze změn
+                            } else {
+                                speechSynthesis.onvoiceschanged = () => {
+                                    initSettings(); // zavolá se až po načtení hlasů
+                                };
+                            }
+                        };
+
+                        // Některé prohlížeče načtou hlasy až po menší prodlevě
+                        setTimeout(tryInit, 100); // mírné zpoždění pro jistotu
+                    }
+
+                    // Start
+                    loadVoicesThenInit();
+
+                });
+            })();
+            // bezpečná TTS funkce
+            function speakSafe(text) {
+                if (!window.speechSynthesis) return;
+                window.speechSynthesis.cancel();
+                const utter = new SpeechSynthesisUtterance(text);
+                utter.lang = 'cs-CZ';
+                utter.rate = 1;
+                window.speechSynthesis.speak(utter);
             }
-            if (
-              e.key === ';' &&
-              !e.ctrlKey &&
-              !e.altKey &&
-              !e.metaKey &&
-              !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)
-            ) {
-              e.preventDefault();
 
-              const dropdownBtn = document.getElementById('menuDropdown');
-              const dropdown = bootstrap.Dropdown.getOrCreateInstance(dropdownBtn);
+            let overlay = null;
+            let outageStart, outageTimer;
 
-              // Toggle dropdown (open/close)
-              const isOpen = dropdownBtn.getAttribute('aria-expanded') === 'true';
-              if (isOpen) {
-                dropdown.hide();
-              } else {
-                dropdown.show();
-                // Fokusuj první prvek v menu
-                setTimeout(() => {
-                  document.querySelector('.dropdown-menu .dropdown-item:not([disabled])')?.focus();
-                }, 100);
-              }
-            }
-            if (!isDropdownOpen()) return;
+            navigator.serviceWorker.addEventListener('message', event => {
+                if (event.data?.type !== 'connection-status') return;
+                if (event.data.status === 'disconnected') showOverlay();
+                else hideOverlay();
+            });
 
-            // Aktivace položky číslem 1–9
-
-            if (/^Digit[1-9]$/.test(e.code)) {
-              const idx = parseInt(e.code.replace('Digit', ''), 10) - 1;
-
-              const items = Array.from(document.querySelectorAll('.dropdown-menu .dropdown-item:not([disabled])'));
-              if (items[idx]) {
-                items[idx].click();
-                e.preventDefault();
-                return;
-              }
-            }
-
-            const items = Array.from(document.querySelectorAll('.dropdown-menu .dropdown-item:not([disabled])'));
-            const index = items.indexOf(document.activeElement);
-
-
-
-            if (e.key === 'Escape') {
-              bootstrap.Dropdown.getInstance(document.getElementById('menuDropdown'))?.hide();
-            }
-            if (e.ctrlKey && !isRecording && localStorage.getItem('activeTab') !== TAB_PREDEFINED) {
-              // Ctrl = start/stop recording
-              e.preventDefault();
-              startRecognition();
-            } else if (e.ctrlKey && isRecording) {
-              e.preventDefault();
-              stopRecognition();
-            }
-          });
-
-          function isDropdownOpen() {
-            const dropdown = document.querySelector('.dropdown-menu.show');
-            return !!dropdown;
-          }
-
-
-          function loadVoicesThenInit() {
-            const tryInit = () => {
-              const voices = speechSynthesis.getVoices();
-              if (voices.length) {
-                initSettings(); // tvoje původní funkce – beze změn
-              } else {
-                speechSynthesis.onvoiceschanged = () => {
-                  initSettings(); // zavolá se až po načtení hlasů
-                };
-              }
-            };
-
-            // Některé prohlížeče načtou hlasy až po menší prodlevě
-            setTimeout(tryInit, 100); // mírné zpoždění pro jistotu
-          }
-
-          // Start
-          loadVoicesThenInit();
-
-        });
-      })(); 
- // bezpečná TTS funkce
-function speakSafe(text) {
-  if (!window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.lang = 'cs-CZ';
-  utter.rate = 1;
-  window.speechSynthesis.speak(utter);
-}
-
-let overlay = null;
-let outageStart, outageTimer;
-
-navigator.serviceWorker.addEventListener('message', event => {
-  if (event.data?.type !== 'connection-status') return;
-  if (event.data.status === 'disconnected') showOverlay();
-  else hideOverlay();
-});
-
-function showOverlay() {
-  if (overlay) return;
-  outageStart = new Date();
-  overlay = document.createElement('div');
-  overlay.id = 'connection-overlay';
-  overlay.style.cssText = `
-    position:fixed;top:0;left:0;right:0;bottom:0;
-    background:rgba(0,0,0,0.8);color:white;
-    font-family:sans-serif;z-index:9999;
-    display:flex;flex-direction:column;
-    align-items:center;justify-content:center;
-    text-align:center;padding:2rem
-  `;
-  overlay.innerHTML = `
-    <h1>📡 Ztráta připojení</h1>
+            function showOverlay() {
+                if (overlay) return;
+                outageStart = new Date();
+                overlay = document.createElement('div');
+                overlay.id = 'connection-overlay';
+                overlay.classList.toggle('active'); 
+                overlay.innerHTML = `
+    <h1>📡 Výpadek signálu</h1>
     <p>Od: <span id="since"></span></p>
     <p>Trvá: <span id="duration">0 s</span></p>
     <div class="loader"></div>
   `;
-  document.body.appendChild(overlay);
-  speakSafe('Výpadek signálu.');
-  document.getElementById('since').textContent = outageStart.toLocaleTimeString('cs-CZ');
-  outageTimer = setInterval(() => {
-    const sec = Math.floor((new Date() - outageStart) / 1000);
-    document.getElementById('duration').textContent = `${sec} s`;
-  }, 1000);
-}
+                document.body.appendChild(overlay);
+                speakSafe('Výpadek signálu.');
+                document.getElementById('since').textContent = outageStart.toLocaleTimeString('cs-CZ');
+                outageTimer = setInterval(() => {
+                    const sec = Math.floor((new Date() - outageStart) / 1000);
+                    document.getElementById('duration').textContent = `${sec} s`;
+                }, 1000);
+            }
 
-function hideOverlay() {
-  if (!overlay) return;
-  clearInterval(outageTimer);
-  const sec = Math.floor((new Date() - outageStart) / 1000);
-  speakSafe(`Signál obnoven. Výpadek ${sec} sekund.`);
-  overlay.remove();
-  overlay = null;
-}
-</script>
+            function hideOverlay() {
+                if (!overlay) return;
+                clearInterval(outageTimer);
+                const sec = Math.floor((new Date() - outageStart) / 1000);
+                speakSafe(`Signál obnoven. Výpadek ${sec} sekund.`);
+                overlay.remove();
+                overlay = null;
+            }
+        </script>
 
 
 </body>

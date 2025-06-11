@@ -1444,6 +1444,20 @@ function initExport() {
       })();
     </script>
  
+<script>
+  function handleOffline() {
+    console.warn('[APP] Ztráta připojení – přesměrovávám na offline shell');
+    location.href = '/ssa/appShell.html';
+  }
+
+  // Při načtení
+  if (!navigator.onLine) {
+    handleOffline();
+  }
+
+  // Když se odpojíš později
+  window.addEventListener('offline', handleOffline);
+</script>
 
 </body>
 

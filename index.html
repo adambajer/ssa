@@ -211,7 +211,14 @@
       let tabsData;
       let customTabs;
       let recordingStatus = document.getElementById('recording-status');
+    const settings = {
+          voiceURI: '',
+          rate: 1,
+          ignorePlaying: false,
+          allowMultiple: false,
+          launchPad: false // <-- nová volba
 
+        };
       function persist() {
         console.log('[persist] Saving state');
         try {
@@ -387,14 +394,7 @@
         tabsData = JSON.parse(localStorage.getItem('tabsData') || '{}');
         let isRecording = false;
         let voices = [];
-        const settings = {
-          voiceURI: '',
-          rate: 1,
-          ignorePlaying: false,
-          allowMultiple: false,
-          launchPad: false // <-- nová volba
-
-        };
+    
 
         /* ---------- SETTINGS PERSISTENCE ---------------------------------- */
         function saveSettings() {

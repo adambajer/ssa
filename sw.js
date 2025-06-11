@@ -1,43 +1,11 @@
-const CACHE_NAME = 'ssa-cache-v1';
-const FILES_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/style.css',
-  '/manifest.json',
-  '/fav.png'
-];
-
-self.addEventListener('install', evt => {
-  evt.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(FILES_TO_CACHE))
-  );
-  self.skipWaiting();
-});
-
-self.addEventListener('activate', evt => {
-  // Odstranění starých cache
-  evt.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.map(key => {
-        if (key !== CACHE_NAME) return caches.delete(key);
-      }))
-    )
-  );
-});
-
-self.addEventListener('fetch', evt => {
-  evt.respondWith(
-    caches.match(evt.request)
-      .then(cachedResp => cachedResp || fetch(evt.request))
-  );
-});
 const CHECK_URL = 'https://adambajer.github.io/ssa/ping.txt';
 let isOnline = true;
 
+// Při instalaci a aktivaci jen základ
 self.addEventListener('install', e => self.skipWaiting());
 self.addEventListener('activate', e => self.clients.claim());
 
+// Fetch přesměrování, pokud není online
 self.addEventListener('fetch', event => {
   if (!isOnline) {
     console.warn('[SW] Offline – vracím fallback stránku');
@@ -49,6 +17,7 @@ self.addEventListener('fetch', event => {
   }
 });
 
+// Start kontrolní smyčky
 startReconnectLoop();
 
 function startReconnectLoop() {

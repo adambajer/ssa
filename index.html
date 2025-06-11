@@ -1267,14 +1267,7 @@ function initExport() {
           });
         }
 
-       function initPWA() {
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('se.js')
-    .then(() => console.log('Service worker zaregistrován.'))
-    .catch(err => console.error('SW registrace selhala:', err));
-}
-
-}
+    
 
         function changeTab(index) {
           // Najdi všechny taby
@@ -1309,7 +1302,14 @@ if ('serviceWorker' in navigator) {
           ac.classList.add(cl);
           setTimeout(() => ac.classList.remove(cl), 300);
         }
-
+   function initPWA() {  
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/ssa/sw.js')
+    .then(() => console.log('SW registered'))
+    .catch(console.error);
+}
+ 
+}
         document.addEventListener('DOMContentLoaded', () => {
           loadSettings();
 
@@ -1443,26 +1443,39 @@ if ('serviceWorker' in navigator) {
           loadVoicesThenInit();
 
         });
-      })();
-    </script>
- 
-<script>
-  function handleOffline() {
-    console.warn('[APP] Ztráta připojení – přesměrovávám na offline shell');
-    location.href = '/ssa/appShell.html';
-  }
+      })(); 
+      
+let overlay, outageStart, outageTimer;
 
-  // Při načtení
-  if (!navigator.onLine) {
-    handleOffline();
-  }
-
-  // Když se odpojíš později
-  window.addEventListener('offline', handleOffline);
-  window.addEventListener('online', () => {
-  console.log('[APP] Znovu online');
-  // Tady můžeš např. zobrazit banner, obnovit data atd.
+navigator.serviceWorker.addEventListener('message', e => {
+  if (e.data?.type !== 'connection-status') return;
+  if (e.data.status === 'disconnected') showOverlay();
+  else showOverlay(); // connected
 });
+
+function showOverlay() {
+  if (!overlay) {
+    outageStart = new Date();
+    overlay = document.createElement('div');
+    overlay.id = 'connection-overlay';
+    overlay.innerHTML = `
+      <div style="...">🔌 Není signál
+      Od: ${outageStart.toLocaleTimeString('cs-CZ')}<br>
+      <span id="d">0 s</span>
+      <div class="loader"></div></div>`;
+    document.body.append(overlay);
+    speak('Ztráta připojení');
+    outageTimer = setInterval(() => {
+      const diff = Math.floor((new Date()-outageStart)/1000);
+      overlay.querySelector('#d').textContent = `${diff} s`;
+    }, 1000);
+  } else {
+    clearInterval(outageTimer);
+    const diff = Math.floor((new Date()-outageStart)/1000);
+    speak(`Spojení obnoveno. Výpadek ${diff} sek.`);
+    overlay.remove(); overlay = null;
+  }
+}
 
 </script>
 

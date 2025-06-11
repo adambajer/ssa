@@ -2,16 +2,13 @@
 const CHECK_URL = 'https://adambajer.github.io/ssa/ping.txt';
 let isOnline = true;
 
-self.addEventListener('install', e => self.skipWaiting());
-self.addEventListener('activate', e => self.clients.claim());
-self.addEventListener('fetch', e => {
-  // nech přirozený fetch, fallback nepotřebujeme
-});
+self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('activate', () => self.clients.claim());
 
 function notifyClients(status) {
-  self.clients.matchAll().then(clients =>
-    clients.forEach(c => c.postMessage({ type: 'connection-status', status }))
-  );
+  self.clients.matchAll().then(clients => {
+    clients.forEach(c => c.postMessage({ type: 'connection-status', status }));
+  });
 }
 
 setInterval(async () => {

@@ -211,14 +211,7 @@
       let tabsData;
       let customTabs;
       let recordingStatus = document.getElementById('recording-status');
-    const settings = {
-          voiceURI: '',
-          rate: 1,
-          ignorePlaying: false,
-          allowMultiple: false,
-          launchPad: false // <-- nová volba
 
-        };
       function persist() {
         console.log('[persist] Saving state');
         try {
@@ -394,7 +387,14 @@
         tabsData = JSON.parse(localStorage.getItem('tabsData') || '{}');
         let isRecording = false;
         let voices = [];
-    
+        const settings = {
+          voiceURI: '',
+          rate: 1,
+          ignorePlaying: false,
+          allowMultiple: false,
+          launchPad: false // <-- nová volba
+
+        };
 
         /* ---------- SETTINGS PERSISTENCE ---------------------------------- */
         function saveSettings() {
@@ -584,7 +584,25 @@
 
 
 
-    
+        function speak(text, cb) {
+          if (settings.ignorePlaying && speechSynthesis.speaking) return;
+          const utter = new SpeechSynthesisUtterance(text);
+          utter.lang = 'cs-CZ';
+          utter.rate = settings.rate;
+          const voice = voices.find(v => v.voiceURI === settings.voiceURI);
+          if (voice) utter.voice = voice;
+          utter.onend = cb;
+          speechSynthesis.speak(utter);
+
+          // Pokud je multiple povoleno, nenech flag "isPlaying" bránit dalším
+          if (!settings.allowMultiple) isPlaying = true;
+
+          utter.onend = () => {
+            if (!settings.allowMultiple) isPlaying = false;
+            cb?.();
+          };
+        }
+
 
         function clearKeyHandlers() {
           keyHandlers.forEach(h => document.removeEventListener('keydown', h));
@@ -1426,25 +1444,7 @@ if ('serviceWorker' in navigator) {
 
         });
       })(); 
-          function speak(text, cb) {
-          if (settings.ignorePlaying && speechSynthesis.speaking) return;
-          const utter = new SpeechSynthesisUtterance(text);
-          utter.lang = 'cs-CZ';
-          utter.rate = settings.rate;
-          const voice = voices.find(v => v.voiceURI === settings.voiceURI);
-          if (voice) utter.voice = voice;
-          utter.onend = cb;
-          speechSynthesis.speak(utter);
-
-          // Pokud je multiple povoleno, nenech flag "isPlaying" bránit dalším
-          if (!settings.allowMultiple) isPlaying = true;
-
-          utter.onend = () => {
-            if (!settings.allowMultiple) isPlaying = false;
-            cb?.();
-          };
-        }
-
+      
 let overlay, outageStart, outageTimer;
 
 navigator.serviceWorker.addEventListener('message', e => {

@@ -584,7 +584,7 @@
 
 
 
-        function speak(text, cb) {
+       public function speak(text, cb) {
           if (settings.ignorePlaying && speechSynthesis.speaking) return;
           const utter = new SpeechSynthesisUtterance(text);
           utter.lang = 'cs-CZ';
@@ -1267,15 +1267,6 @@ function initExport() {
           });
         }
 
-       function initPWA() {
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('se.js')
-    .then(() => console.log('Service worker zaregistrován.'))
-    .catch(err => console.error('SW registrace selhala:', err));
-}
-
-}
-
         function changeTab(index) {
           // Najdi všechny taby
           const tabs = Array.from(document.querySelectorAll('.tab-button'));
@@ -1500,6 +1491,16 @@ function hideOverlay() {
   overlay.remove();
   overlay = null;
 }
+   
+       function initPWA() {
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('se.js')
+    .then(() => console.log('Service worker zaregistrován.'))
+    .catch(err => console.error('SW registrace selhala:', err));
+}
+
+}
+
   
 </script>
 

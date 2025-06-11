@@ -1444,40 +1444,64 @@ if ('serviceWorker' in navigator) {
 
         });
       })(); 
-      
-let overlay, outageStart, outageTimer;
+     <script>
+// bezpečná TTS funkce
+function speakSafe(text) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'cs-CZ';
+  utter.rate = 1;
+  window.speechSynthesis.speak(utter);
+}
 
-navigator.serviceWorker.addEventListener('message', e => {
-  if (e.data?.type !== 'connection-status') return;
-  if (e.data.status === 'disconnected') showOverlay();
-  else showOverlay(); // connected
+let overlay = null;
+let outageStart, outageTimer;
+
+navigator.serviceWorker.addEventListener('message', event => {
+  if (event.data?.type !== 'connection-status') return;
+  if (event.data.status === 'disconnected') showOverlay();
+  else hideOverlay();
 });
 
 function showOverlay() {
-  if (!overlay) {
-    outageStart = new Date();
-    overlay = document.createElement('div');
-    overlay.id = 'connection-overlay';
-    overlay.innerHTML = `
-      <div style="...">🔌 Není signál
-      Od: ${outageStart.toLocaleTimeString('cs-CZ')}<br>
-      <span id="d">0 s</span>
-      <div class="loader"></div></div>`;
-    document.body.append(overlay);
-    speak('Ztráta připojení');
-    outageTimer = setInterval(() => {
-      const diff = Math.floor((new Date()-outageStart)/1000);
-      overlay.querySelector('#d').textContent = `${diff} s`;
-    }, 1000);
-  } else {
-    clearInterval(outageTimer);
-    const diff = Math.floor((new Date()-outageStart)/1000);
-    speak(`Spojení obnoveno. Výpadek ${diff} sek.`);
-    overlay.remove(); overlay = null;
-  }
+  if (overlay) return;
+  outageStart = new Date();
+  overlay = document.createElement('div');
+  overlay.id = 'connection-overlay';
+  overlay.style.cssText = `
+    position:fixed;top:0;left:0;right:0;bottom:0;
+    background:rgba(0,0,0,0.8);color:white;
+    font-family:sans-serif;z-index:9999;
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    text-align:center;padding:2rem
+  `;
+  overlay.innerHTML = `
+    <h1>📡 Ztráta připojení</h1>
+    <p>Od: <span id="since"></span></p>
+    <p>Trvá: <span id="duration">0 s</span></p>
+    <div class="loader"></div>
+  `;
+  document.body.appendChild(overlay);
+  speakSafe('Ztráta připojení.');
+  document.getElementById('since').textContent = outageStart.toLocaleTimeString('cs-CZ');
+  outageTimer = setInterval(() => {
+    const sec = Math.floor((new Date() - outageStart) / 1000);
+    document.getElementById('duration').textContent = `${sec} s`;
+  }, 1000);
 }
 
+function hideOverlay() {
+  if (!overlay) return;
+  clearInterval(outageTimer);
+  const sec = Math.floor((new Date() - outageStart) / 1000);
+  speakSafe(`Připojení obnoveno. Výpadek trval ${sec} sekund.`);
+  overlay.remove();
+  overlay = null;
+}
 </script>
+
 
 </body>
 

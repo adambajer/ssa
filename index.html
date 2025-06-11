@@ -1262,9 +1262,15 @@ function initExport() {
           });
         }
 
-        function initPWA() {
-          console.log('[PWA] Disabled: service worker registration skipped');
-        }
+       function initPWA() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => console.log('[PWA] Service Worker registrován:', reg.scope))
+      .catch(err => console.error('[PWA] Chyba registrace:', err));
+  } else {
+    console.warn('[PWA] Service Worker není podporován tímto prohlížečem.');
+  }
+}
 
         function changeTab(index) {
           // Najdi všechny taby
@@ -1435,19 +1441,7 @@ function initExport() {
         });
       })();
     </script>
-    <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('sw.js')
-        .then(reg => {
-          console.log('[SW] Registrován:', reg.scope);
-        })
-        .catch(err => {
-          console.error('[SW] Chyba registrace:', err);
-        });
-    });
-  }
-</script>
+ 
 
 </body>
 

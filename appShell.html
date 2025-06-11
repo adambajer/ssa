@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Offline režim</title>
+  <title>Výpadek signálu!</title>
   <style>
     body {
-      background: #1a1a1a;
+      background: #8c0014;
       color: white;
       text-align: center;
       font-family: sans-serif;
@@ -64,7 +64,7 @@
   </style>
 </head>
 <body>
-  <h1 id="status">Offline režim</h1>
+  <h1 id="status">Není signál!</h1>
   <div class="signal-bars">
     <div class="bar"></div>
     <div class="bar"></div>
@@ -72,68 +72,75 @@
     <div class="bar"></div>
   </div>
   <div class="info">
-    <div>Výpadek začal: <span id="startTime">–</span></div>
-    <div>Trvání výpadku: <span id="duration">0 s</span></div>
+    <div>Od: <span id="startTime">–</span></div><br>
+    <div>Trvá: <span id="duration">0 s</span></div>
   </div>
+<script>
+  const CHECK_INTERVAL = 1000;
+  let reloaded = false;
+  const startTimestamp = new Date();
+  const startTimeEl = document.getElementById('startTime');
+  const durationEl = document.getElementById('duration');
+  const statusEl = document.getElementById('status');
 
-  <script>
-    const CHECK_INTERVAL = 1000;
-    let reloaded = false;
-    const startTimestamp = new Date();
-    const startTimeEl = document.getElementById('startTime');
-    const durationEl = document.getElementById('duration');
-    const statusEl = document.getElementById('status');
+  function formatTime(date) {
+    return date.toLocaleTimeString('cs-CZ');
+  }
 
-    function formatTime(date) {
-      return date.toLocaleTimeString('cs-CZ');
-    }
+  function speak(text) {
+    if (!window.speechSynthesis) return;
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'cs-CZ';
+    utter.rate = 1;
+    window.speechSynthesis.speak(utter);
+  }
 
-    function speak(text) {
-      if (!window.speechSynthesis) return;
-      const utter = new SpeechSynthesisUtterance(text);
-      utter.lang = 'cs-CZ';
-      utter.rate = 1;
-      window.speechSynthesis.speak(utter);
-    }
+  function log(msg) {
+    console.log(`[${new Date().toLocaleTimeString()}] ${msg}`);
+  }
 
-    function log(msg) {
-      console.log(`[${new Date().toLocaleTimeString()}] ${msg}`);
-    }
+  // Výpis typu zařízení
+  const deviceInfo = `${navigator.platform}, ${navigator.userAgent}`;
 
-    // inicializace
-    startTimeEl.textContent = formatTime(startTimestamp);
-    speak('Aplikace je v offline režimu.');
-    log('Zahájen offline režim.');
+  // inicializace
+  startTimeEl.textContent = formatTime(startTimestamp);
+  speak('Varování systému, zaznamenán výpadek signálu.');
+  speak('Nouzový režim spuštěn. Čekám na obnovu.');
+  log('Výpadek signálu spuštěn.');
 
-    // aktualizace trvání výpadku
-    setInterval(() => {
-      const now = new Date();
-      const seconds = Math.floor((now - startTimestamp) / 1000);
-      durationEl.textContent = `${seconds} s`;
-    }, 1000);
+  // aktualizace trvání výpadku
+  setInterval(() => {
+    const now = new Date();
+    const seconds = Math.floor((now - startTimestamp) / 1000);
+    durationEl.textContent = `${seconds} s`;
+  }, 1000);
 
-    // kontrola připojení
-    setInterval(async () => {
-      if (reloaded) return;
-      try {
-        const res = await fetch('/ssa/ping.txt', { cache: 'no-cache' });
-        if (res.ok) {
-          log('Spojení obnoveno.');
-          speak('Připojeno k internetu. Obnovuji aplikaci.');
+  // kontrola připojení
+  setInterval(async () => {
+    if (reloaded) return;
+    try {
+      const res = await fetch('/ssa/ping.txt', { cache: 'no-cache' });
+      if (res.ok) {
+        const now = new Date();
+        const duration = Math.floor((now - startTimestamp) / 1000);
+        const summary = `Signál obnoven v ${formatTime(now)}. Výpadek trval ${duration} sekund. Zařízení: ${deviceInfo}`;
 
-          // změna stylů a textu
-          document.body.classList.add('online');
-          statusEl.textContent = 'Připojeno! Obnovuji…';
+        log(summary);
+        speak(summary);
 
-          reloaded = true;
-          setTimeout(() => {
-            location.href = '/ssa/';
-          }, 1500);
-        }
-      } catch {
-        // pořád offline
+        document.body.classList.add('online');
+        statusEl.textContent = 'Signál obnoven! Načítám…';
+
+        reloaded = true;
+        setTimeout(() => {
+          location.href = '/ssa/';
+        }, 3500); // necháme čas na čtení
       }
-    }, CHECK_INTERVAL);
-  </script>
+    } catch {
+      // stále offline
+    }
+  }, CHECK_INTERVAL);
+</script>
+
 </body>
 </html>

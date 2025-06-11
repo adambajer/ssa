@@ -584,7 +584,7 @@
 
 
 
-       public function speak(text, cb) {
+       function speak(text, cb) {
           if (settings.ignorePlaying && speechSynthesis.speaking) return;
           const utter = new SpeechSynthesisUtterance(text);
           utter.lang = 'cs-CZ';
@@ -1437,6 +1437,25 @@ function initExport() {
       })();
     </script>
  <script>
+    function speakSafe(text, cb) {
+          if (settings.ignorePlaying && speechSynthesis.speaking) return;
+          const utter = new SpeechSynthesisUtterance(text);
+          utter.lang = 'cs-CZ';
+          utter.rate = settings.rate;
+          const voice = voices.find(v => v.voiceURI === settings.voiceURI);
+          if (voice) utter.voice = voice;
+          utter.onend = cb;
+          speechSynthesis.speak(utter);
+
+          // Pokud je multiple povoleno, nenech flag "isPlaying" bránit dalším
+          if (!settings.allowMultiple) isPlaying = true;
+
+          utter.onend = () => {
+            if (!settings.allowMultiple) isPlaying = false;
+            cb?.();
+          };
+        }
+
 let outageStart = null;
 let overlay = null;
 let outageTimer = null;
@@ -1474,7 +1493,7 @@ function showOverlay() {
   `;
 
   document.body.appendChild(overlay);
-  speak('Ztráta připojení. Zahajuji nouzový režim.');
+  speakSafe('Není signál!');
 
   document.getElementById('start-time').textContent = `Od: ${outageStart.toLocaleTimeString('cs-CZ')}`;
 
@@ -1486,7 +1505,7 @@ function showOverlay() {
 
 function hideOverlay() {
   const duration = Math.floor((new Date() - outageStart) / 1000);
-  speak(`Spojení obnoveno. Výpadek trval ${duration} sekund. Zahájeno v ${outageStart.toLocaleTimeString('cs-CZ')}.`);
+  speakSafe(`Signál obnoven. Výpadek ${duration} s od ${outageStart.toLocaleTimeString('cs-CZ')}.`);
   clearInterval(outageTimer);
   overlay.remove();
   overlay = null;

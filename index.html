@@ -1483,7 +1483,7 @@ function showOverlay() {
     <div class="loader"></div>
   `;
   document.body.appendChild(overlay);
-  speakSafe('Ztráta připojení.');
+  speakSafe('Výpadek signálu.');
   document.getElementById('since').textContent = outageStart.toLocaleTimeString('cs-CZ');
   outageTimer = setInterval(() => {
     const sec = Math.floor((new Date() - outageStart) / 1000);
@@ -1495,7 +1495,7 @@ function hideOverlay() {
   if (!overlay) return;
   clearInterval(outageTimer);
   const sec = Math.floor((new Date() - outageStart) / 1000);
-  speakSafe(`Připojení obnoveno. Výpadek trval ${sec} sekund.`);
+  speakSafe(`Signál obnoven. Výpadek ${sec} sekund.`);
   overlay.remove();
   overlay = null;
 }

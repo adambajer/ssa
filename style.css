@@ -393,6 +393,7 @@ color: #ff0000;}
   width: 40px;
   height: 40px;
   border: 5px solid #aaa;
+    backdrop-filter:blur(10px);
   border-top: 5px solid limegreen;
   border-radius: 50%;
   animation: spin 1s linear infinite;

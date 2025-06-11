@@ -32,15 +32,17 @@
   <div class="loader"></div>
 
   <script>
-    const check = async () => {
+    setInterval(async () => {
       try {
         const res = await fetch('/ssa/ping.txt', { cache: 'no-cache' });
-        if (res.ok) location.reload();
+        if (res.ok) {
+          console.log('[appShell] Online, obnovuji aplikaci');
+          location.href = '/ssa/';
+        }
       } catch (err) {
-        setTimeout(check, 1000);
+        // zůstaň v offline režimu
       }
-    };
-    check();
+    }, 1000);
   </script>
 </body>
 </html>

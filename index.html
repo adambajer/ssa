@@ -1469,12 +1469,20 @@ function showOverlay() {
   overlay = document.createElement('div');
   overlay.id = 'connection-overlay';
   overlay.style.cssText = `
-    position:fixed;top:0;left:0;right:0;bottom:0;
-    background:rgba(0,0,0,0.8);color:white;
-    font-family:sans-serif;z-index:9999;
-    display:flex;flex-direction:column;
-    align-items:center;justify-content:center;
-    text-align:center;padding:2rem
+       position: fixed;
+    inset: 0px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-family: sans-serif;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(7px);
+    text-align: center;
+    padding: 2rem;
+    transition: all 1s;
   `;
   overlay.innerHTML = `
     <h1>📡 Ztráta připojení</h1>
@@ -1483,7 +1491,7 @@ function showOverlay() {
     <div class="loader"></div>
   `;
   document.body.appendChild(overlay);
-  speakSafe('Výpadek signálu.');
+  speakSafe('Ztráta připojení.');
   document.getElementById('since').textContent = outageStart.toLocaleTimeString('cs-CZ');
   outageTimer = setInterval(() => {
     const sec = Math.floor((new Date() - outageStart) / 1000);
@@ -1495,7 +1503,7 @@ function hideOverlay() {
   if (!overlay) return;
   clearInterval(outageTimer);
   const sec = Math.floor((new Date() - outageStart) / 1000);
-  speakSafe(`Signál obnoven. Výpadek ${sec} sekund.`);
+  speakSafe(`Připojení obnoveno. Výpadek trval ${sec} sekund.`);
   overlay.remove();
   overlay = null;
 }

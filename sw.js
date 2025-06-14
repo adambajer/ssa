@@ -1,34 +1,27 @@
-const CACHE_NAME = 'ssa-cache-v1';
-const FILES_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/style.css',
-  '/manifest.json',
-  '/fav.png'
-];
+// sw.js
+const CHECK_URL = 'https://adambajer.github.io/ssa/ping.txt';
+let isOnline = true;
 
-self.addEventListener('install', evt => {
-  evt.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(FILES_TO_CACHE))
-  );
-  self.skipWaiting();
-});
+self.addEventListener('install', () => self.skipWaiting());
+self.addEventListener('activate', () => self.clients.claim());
 
-self.addEventListener('activate', evt => {
-  // Odstranění starých cache
-  evt.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.map(key => {
-        if (key !== CACHE_NAME) return caches.delete(key);
-      }))
-    )
-  );
-});
+function notifyClients(status) {
+  self.clients.matchAll().then(clients => {
+    clients.forEach(c => c.postMessage({ type: 'connection-status', status }));
+  });
+}
 
-self.addEventListener('fetch', evt => {
-  evt.respondWith(
-    caches.match(evt.request)
-      .then(cachedResp => cachedResp || fetch(evt.request))
-  );
-});
+setInterval(async () => {
+  try {
+    const res = await fetch(CHECK_URL, { cache: 'no-cache' });
+    if (res.ok && !isOnline) {
+      isOnline = true;
+      notifyClients('connected');
+    }
+  } catch {
+    if (isOnline) {
+      isOnline = false;
+      notifyClients('disconnected');
+    }
+  }
+}, 1000);

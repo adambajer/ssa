@@ -763,7 +763,12 @@
             'Chcex!',
             'Nechcex!',
             'Jak víš?',
-            'Vím'
+            'Vím',
+            'Jak semenuješ',
+            'Na našulinku',
+            'Ná náá šulííínku',
+            'Dezasbyls?',
+            'Dýžeju'
           ] : [''];
           const arr = tabsData[id] || defaults;
           console.log(`[createTab] Will add ${arr.length} buttons for tab='${id}'`);
@@ -1050,9 +1055,11 @@
             toast.show();
           });
         }
+
         function initPWA() {
           console.log('[PWA] Disabled: service worker registration skipped');
         }
+
         function changeTab(index) {
           // Najdi všechny taby
           const tabs = Array.from(document.querySelectorAll('.tab-button'));
@@ -1084,6 +1091,7 @@
           ac.classList.add(cl);
           setTimeout(() => ac.classList.remove(cl), 300);
         }
+
         document.addEventListener('DOMContentLoaded', () => {
           loadSettings();
           initTabs();
@@ -1199,7 +1207,68 @@
           // Start
           loadVoicesThenInit();
         });
-      })();
-    </script>
+      })(); 
+ // bezpečná TTS funkce
+function speakSafe(text) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'cs-CZ';
+  utter.rate = 1;
+  window.speechSynthesis.speak(utter);
+}
+
+let overlay = null;
+let outageStart, outageTimer;
+
+navigator.serviceWorker.addEventListener('message', event => {
+  if (event.data?.type !== 'connection-status') return;
+  if (event.data.status === 'disconnected') showOverlay();
+  else hideOverlay();
+});
+
+function showOverlay() {
+  if (overlay) return;
+  outageStart = new Date();
+  overlay = document.createElement('div');
+  overlay.id = 'connection-overlay';
+  overlay.style.cssText = `
+    position:fixed;top:0;left:0;right:0;bottom:0;
+    background:rgba(0,0,0,0.8);color:white;
+    font-family:sans-serif;z-index:9999;
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    text-align:center;padding:2rem
+  `;
+  overlay.innerHTML = `
+   <h1>📡 Ztráta připojení</h1>
+  <p>Od: <span id="out-start">--:--:--</span></p>
+  <p>Trvá: <span id="out-duration">0 s</span></p>
+  <div class="signal-bars">
+    <div class="bar"></div><div class="bar"></div>
+    <div class="bar"></div><div class="bar"></div>
+  </div>
+  <div class="loader" style="display:none"></div>
+  `;
+  document.body.appendChild(overlay);
+  speakSafe('Výpadek signálu.');
+  document.getElementById('out-start').textContent = outageStart.toLocaleTimeString('cs-CZ');
+  outageTimer = setInterval(() => {
+    const sec = Math.floor((new Date() - outageStart) / 1000);
+    document.getElementById('out-duration').textContent = `${sec} s`;
+  }, 1000);
+}
+
+function hideOverlay() {
+  if (!overlay) return;
+  clearInterval(outageTimer);
+  const sec = Math.floor((new Date() - outageStart) / 1000);
+  speakSafe(`Signál obnoven. Výpadek ${sec} sekund.`);
+  overlay.remove();
+  overlay = null;
+}
+</script>
+
+
 </body>
 </html>

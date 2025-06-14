@@ -245,19 +245,17 @@ span#recording-status {
 }
 
 .tab-content-body.layout-default .transcription-button .shortcut {
+background: rgb(128, 0, 128);
     font-size: 1.2rem;
     font-weight: 800;
-     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
     flex-shrink: 0;
     line-height: 1;
     width: 2.2rem;
-    height: 2.2rem;     color: rgb(128, 0, 128);  
-
-
+    height: 2.2rem;
     line-height: 2.2rem;
     text-align: center;
     display: inline-block;
-    ;
 }
 .layout-default svg {
     margin:0.4rem;
@@ -403,7 +401,7 @@ button#add-tab-btn:hover {
 #recording-container .text-button {
  }
 #recording-time {
-     font-weight: bold;
+   
  }
 .loader {
   margin-top: 20px;

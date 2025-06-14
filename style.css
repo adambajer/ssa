@@ -208,15 +208,18 @@ button {
 
 .tab-content-body {
 
-    margin: 0.5rem;
+    margin:1rem;
 }
 
 .tab-content-body.layout-default {
-    gap: 8px;
+    gap: 1rem;
     display: inline-flex
 ;
     box-sizing: border-box;
     align-items: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+ 
 }
 .tab-content-body.layout-default .transcription-button {
     display: inline-block;
@@ -235,8 +238,7 @@ button {
 span#recording-status {
     color: white;
 }
-#recording-container .transcription-button {
-    background: rgb(128, 0, 128);  
+#recording-container .transcription-button {   background-color: #eaeaea;
 }
 .tab-content-body.layout-default .transcription-button:hover {
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
@@ -245,16 +247,20 @@ span#recording-status {
 .tab-content-body.layout-default .transcription-button .shortcut {
     font-size: 1.2rem;
     font-weight: 800;
-    color: white;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
     flex-shrink: 0;
     line-height: 1;
-    width: 1.2rem;
-    height: 2.2rem;
+    width: 2.2rem;
+    height: 2.2rem;     color: rgb(128, 0, 128);  
+
+
     line-height: 2.2rem;
     text-align: center;
     display: inline-block;
     ;
+}
+.layout-default svg {
+    margin:0.4rem;
 }
 
 .tab-content-body.layout-default .transcription-button .text-button {
@@ -283,9 +289,7 @@ span#recording-status {
     border-radius: 0.5rem;
     overflow: hidden;
     position: relative;
-    display: flex;
-    border: 1px solid #eaeaea;
-    ;
+    display: flex; 
     flex-direction: column;
      transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
@@ -392,19 +396,15 @@ button#add-tab-btn:hover {
 
 #recording-container #recording-info {
     
-    background: rgb(128, 0, 128);
-
+ 
 }
 
 
 #recording-container .text-button {
-    background: rgb(128, 0, 128);
-}
+ }
 #recording-time {
-    color: white;
-    font-weight: bold;
-    font-size: 1.2rem;
-}
+     font-weight: bold;
+ }
 .loader {
   margin-top: 20px;
   width: 40px;

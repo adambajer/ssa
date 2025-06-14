@@ -68,13 +68,7 @@
         </div>
         <div id="recording-container">
           <div class="transcription-button">
-        
-            <button class="text-button">
-              <div id="recording-info">
-                 <div id="recording-time"></div>
-              </div>
-            </button>
-                <span id="start-recording" class="shortcut">
+         <span id="start-recording" class="shortcut">
               <!-- HTML for the two buttons -->
               <svg version="1.1" viewBox="0 0 210 210" xmlns="http://www.w3.org/2000/svg">
                 <g>
@@ -96,6 +90,12 @@
                   stroke-linecap="round" stroke-miterlimit="4.1" fill="#000" ; paint-order="markers fill stroke" />
               </svg>
             </span>
+            <button class="text-button">
+              <div id="recording-info">
+                 <div id="recording-time"></div>
+              </div>
+            </button>
+               
           </div>
         </div>
       </div>
@@ -797,7 +797,7 @@
               recContainer.remove();
               container.appendChild(recContainer);
             }
-            recContainer.style.display = 'default';
+recContainer.style.display = 'flex'; // nebo 'block', podle designu
           }
           if (isRecording) stopRecognition();
           registerKeyHandlers(id);

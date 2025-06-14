@@ -37,7 +37,7 @@ button {
 
 .tabs {
     display: inline-flex;
- }
+}
 
 .tab-button {
     padding: 8px 16px;
@@ -84,15 +84,16 @@ button {
 
 
 
- 
+
 
 .transcription-button {
     position: relative;
-     flex-direction: row;
+    flex-direction: row;
     flex-wrap: nowrap;
     align-content: space-around;
     justify-content: center;
     align-items: stretch;
+    background-color: transparent;
 
 }
 
@@ -119,9 +120,7 @@ button {
 
 .text-button {
 
-    flex-grow: 1;
-    background-color: white;
-    background: white;
+    flex-grow: 1; 
 }
 
 .context-menu button {
@@ -145,16 +144,8 @@ button {
     background-color: #eeeded;
 }
 
-#start-recording {
  
-    width: 1.4rem;
-    height: auto; 
-}
- 
- #start-recording svg path{
-    fill:white;
- }
- 
+
 
 .tooltip {
     position: absolute;
@@ -162,7 +153,7 @@ button {
     color: #fff;
     text-align: center;
     padding: 5px;
-     visibility: hidden;
+    visibility: hidden;
     z-index: 1;
     top: -25px;
 }
@@ -213,7 +204,7 @@ button {
     }
 }
 
- 
+
 
 .tab-content-body {
 
@@ -221,31 +212,34 @@ button {
 }
 
 .tab-content-body.layout-default {
-    display: inline-block;
-
+    gap: 8px;
+    display: inline-flex
+;
     box-sizing: border-box;
+    align-items: center;
 }
-
 .tab-content-body.layout-default .transcription-button {
     display: inline-block;
     align-items: center;
     justify-content: flex-start;
-    flex-direction: row;
-    width: 100%;
+    flex-direction: row; 
     max-width: max-content;
     border-radius: 0.4rem;
-    border: 1px solid #eaeaea;
-    background: #ffffff;
+ background-color: #eaeaea;
     overflow: hidden;
     box-shadow: 0 0px 0px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
-    text-align: left;
-    margin: 0.5rem;
+    text-align: left; 
 }
-
+span#recording-status {
+    color: white;
+}
+#recording-container .transcription-button {
+    background: rgb(128, 0, 128);  
+}
 .tab-content-body.layout-default .transcription-button:hover {
-     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
 }
 
 .tab-content-body.layout-default .transcription-button .shortcut {
@@ -255,11 +249,12 @@ button {
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
     flex-shrink: 0;
     line-height: 1;
-    width: 2.2rem;
+    width: 1.2rem;
     height: 2.2rem;
     line-height: 2.2rem;
     text-align: center;
-    display: inline-block;;
+    display: inline-block;
+    ;
 }
 
 .tab-content-body.layout-default .transcription-button .text-button {
@@ -267,36 +262,42 @@ button {
     font-weight: 500;
     color: #222;
     flex: 1;
-    line-height: 1.2; 
-    display: inline-block;;
-    height: 100%;
-    ;
+    line-height: 1.2;
+    display: inline-block;
+    ;     height: 100%;
+    background-color: transparent;
+    background: transparent;
+    
 }
 
 /* Grid layout pro launchpad */
 .tab-content-body.layout-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 2fr));
+    grid-template-columns: repeat(auto-fit, minmax(100px, 200px));
     gap: 1rem;
     justify-items: center;
 }
 
 .launch-pad {
-    aspect-ratio: 1/1;
-    width: 100%;
+     width: 100%;
     border-radius: 0.5rem;
     overflow: hidden;
     position: relative;
-    display: flex; 
-    border: 1px solid #eaeaea;;
+    display: flex;
+    border: 1px solid #eaeaea;
+    ;
     flex-direction: column;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+     transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
 }
-
+div#recording-container.launch-pad #start-recording {
+    background: #7f007f;
+}div#recording-container.launch-pad {
+    background: #7f007f;
+    border:1px solid #7f007f;
+}
 .launch-pad:hover {
- 
+
     box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
 }
 
@@ -337,7 +338,7 @@ button {
     /* margin-right: 0.5rem; */
     /* padding-right: 1.5rem; */
     background-color: #eee;
-    border: none; 
+    border: none;
 }
 
 .tab-button:hover {
@@ -349,9 +350,10 @@ button {
     top: 0rem;
     right: 0.2rem;
     font-size: 0.9em;
-    cursor: pointer; 
-    opacity: 0; 
-    color: #333;;
+    cursor: pointer;
+    opacity: 0;
+    color: #333;
+    ;
 }
 
 .tab-button.active .tab-close {
@@ -365,26 +367,41 @@ button {
     border-radius: 0px;
     margin-left: auto;
 }
+
 button#add-tab-btn {
-    width: 3em
-57.6px
-;
+    width: 3em 57.6px;
     text-align: center;
-}button#add-tab-btn:hover {
-color: #ff0000;}
-#menuDropdown:hover .material-icons{
+}
+
+button#add-tab-btn:hover {
     color: #ff0000;
 }
-.dropdown-item:hover span{
-    color: #ff0000  ;
+
+#menuDropdown:hover .material-icons {
+    color: #ff0000;
 }
-#recording-container .transcription-button{
+
+.dropdown-item:hover span {
+    color: #ff0000;
+}
+
+#start-recording svg path {
+    fill: white;
+}
+
+
+#recording-container #recording-info {
+    
+    background: rgb(128, 0, 128);
+
+}
+
+
+#recording-container .text-button {
     background: rgb(128, 0, 128);
 }
-#recording-container #recording-info{
+#recording-time {
     color: white;
-    background: rgb(128, 0, 128);
-    background-color:rgb(128, 0, 128);
-    margin: 0px;
-    padding: 0px;
+    font-weight: bold;
+    font-size: 1.2rem;
 }

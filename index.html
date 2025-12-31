@@ -378,74 +378,53 @@
           const padChk = document.getElementById('launchPadMode');
           const avatarChk = document.getElementById('avatarEnabled');
           padChk.checked = settings.launchPad;
-          /* ---------- Pomocné funkce ----------------------------------------- */
-          /* IANA->ISO map jen pro nejběžnější zóny (doplň podle potřeby) */
-          const tzMap = {
-            'Europe/Prague': 'CZ',
-            'Europe/Bratislava': 'SK',
-            'Europe/Berlin': 'DE',
-            'Europe/London': 'GB',
-            'America/Chicago': 'US',
-            'America/New_York': 'US',
-            'Asia/Tokyo': 'JP'
-          };
-          /* Vrátí Promise<string> 2-písmenný kód země */
-          async function detectCountry() {
-            /* 1) Geo-lokace */
-            try {
-              const pos = await new Promise((res, rej) => {
-                navigator.geolocation.getCurrentPosition(res, rej, {
-                  timeout: 3000
-                });
-              });
-              const {
-                latitude: lat,
-                longitude: lon
-              } = pos.coords;
-              /* bezplatné reverse-geo API (≈1 KB odpověď) */
-              const resp = await fetch(
-                `https://geocoding-api.open-meteo.com/v1/search` +
-                `?name=${encodeURIComponent(cityOrPostcode)}&count=1`
-              );
-              const js = await resp.json();
-              if (js && js.country_code) return js.country_code.toUpperCase();
-            } catch (_) { /* ignorujeme chyby – jen zkusíme další metodu */ }
-            /* 2) časové pásmo */
-            try {
-              const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-              if (tz && tzMap[tz]) return tzMap[tz];
-            } catch (_) { /* fall-through */ }
-            /* 3) poslední záchrana – jazykové nastavení prohlížeče */
-            return (navigator.language || 'en-US').split('-')[1]?.toUpperCase() || 'US';
-          }
-          /* ---------- Přidat do initSettings() místo původního Populate voices */
-          (async () => {
-            /* zjištění země jen jednou */
-            const browserCountry = await detectCountry();
-            console.log('[voices] using country', browserCountry);
-            voices = speechSynthesis.getVoices();
-            /* filtrujeme podle stejné země */
-            const countryVoices = voices.filter(v => {
-              const vCountry = v.lang.split('-')[1]?.toUpperCase();
-              return vCountry === browserCountry;
-            });
-            /* fallback: když nic, necháme všechny */
-            const list = countryVoices.length ? countryVoices : voices;
-            select.innerHTML = ''; // vyčisti <select>
-            list.forEach(v => {
-              const opt = document.createElement('option');
-              opt.value = v.voiceURI;
-              opt.textContent = `${v.name} (${v.lang})` + (v.default ? ' ★' : '');
-              select.append(opt);
-            });
-            // implicitní výběr
-            select.value = settings.voiceURI || (list[0] && list[0].voiceURI);
-            // Přidej listener až po naplnění selectu
-            select.addEventListener('change', () => {
-              settings.voiceURI = select.value;
-              saveSettings();
-            });
-          })();
+          function populateCzechVoices() {
+  voices = speechSynthesis.getVoices() || [];
+
+  // jen české hlasy
+  const cz = voices.filter(v => (v.lang || "").toLowerCase().startsWith("cs"));
+
+  select.innerHTML = "";
+
+  if (!cz.length) {
+    const opt = document.createElement("option");
+    opt.value = "";
+    opt.textContent = "Žádný český hlas nenalezen (doinstaluj češtinu ve Windows/Edge)";
+    select.appendChild(opt);
+    select.disabled = true;
+    settings.voiceURI = "";   // aby to nebylo na neexistující
+    saveSettings();
+    return;
+  }
+
+  select.disabled = false;
+
+  cz.forEach(v => {
+    const opt = document.createElement("option");
+    opt.value = v.voiceURI;
+    opt.textContent = `${v.name} (${v.lang})` + (v.default ? " ★" : "");
+    select.appendChild(opt);
+  });
+
+  // vyber uložený, jinak první český
+  const saved = settings.voiceURI;
+  const exists = cz.some(v => v.voiceURI === saved);
+  select.value = exists ? saved : cz[0].voiceURI;
+
+  if (!exists) {
+    settings.voiceURI = select.value;
+    saveSettings();
+  }
+}
+ populateCzechVoices();
+
+// důležité: hlasy se často načítají asynchronně
+speechSynthesis.addEventListener("voiceschanged", populateCzechVoices);
+select.addEventListener("change", () => {
+  settings.voiceURI = select.value;
+  saveSettings();
+});
+
           const settingsToast = new bootstrap.Toast(
             document.getElementById('settingsToast'), {
             autohide: false

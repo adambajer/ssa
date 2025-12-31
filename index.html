@@ -519,6 +519,7 @@ select.addEventListener("change", () => {
             if (settings.avatarEnabled) {
               window.AvatarDock?.bubbleShow?.(text);
               window.AvatarDock?.talk?.(true);
+              window.AvatarDock?.react?.(text);
               window.AvatarDock?.lipsyncText?.(text, utter.rate || 1);
             }
           };
@@ -1321,6 +1322,9 @@ function hideOverlay() {
               head: q('#head-group'),
               face: q('#face-features'),
               glasses: q('#glasses-group'),
+              obrouckaGlint: q('#obroucka-glint'),
+              frameGlint: q('#frameGlint'),
+              mouthGroup: q('#mouth-group'),
               hands: q('#hands-group'),
               ears: q('#ears'),
               irises: [q('#iris-group-l'), q('#iris-group-r')].filter(Boolean),
@@ -1342,7 +1346,7 @@ function hideOverlay() {
               // lepší chování style.transform u SVG
               try { el.style.transformBox = 'fill-box'; } catch {}
             };
-            [els.head, els.face, els.glasses, els.hands, els.ears, els.eyebrows,
+            [els.head, els.face, els.glasses, els.mouthGroup, els.hands, els.ears, els.eyebrows,
              ...els.irises, ...els.glares, ...els.lidsUp, ...els.lidsLow].forEach(remember);
 
             const setTf = (el, extra) => {
@@ -1360,6 +1364,34 @@ function hideOverlay() {
             const mouse = { x: 0, y: 0 };
             const cur = { x: 0, y: 0 };
             let rafId = null;
+
+
+// Mimika (plynulé přechody) – ovlivňuje obočí + pozici/škálu pusy při zavřených ústech
+const exprCur = { browY: 0, browRot: 0, mouthY: 0, mouthS: 0 };
+const exprTgt = { browY: 0, browRot: 0, mouthY: 0, mouthS: 0 };
+const lerp = (a,b,k) => a + (b-a)*k;
+
+function setExprTarget(p){
+  exprTgt.browY   = Number(p?.browY   || 0);
+  exprTgt.browRot = Number(p?.browRot || 0);
+  exprTgt.mouthY  = Number(p?.mouthY  || 0);
+  exprTgt.mouthS  = Number(p?.mouthS  || 0);
+}
+
+function pickExpression(text){
+  // deterministický výběr dle textu (ať je to konzistentní na stejné tlačítko)
+  const s = String(text || '');
+  let h = 2166136261;
+  for (let i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  const r = (h >>> 0) % 5;
+
+  // 0 neutral, 1 happy, 2 angry, 3 surprised, 4 skeptical
+  if (r === 1) return { browY: -0.2, browRot: 0, mouthY: -1.5, mouthS:  0.18 };
+  if (r === 2) return { browY:  2.4, browRot:  0, mouthY:  1.6, mouthS: -0.12 };
+  if (r === 3) return { browY: -0.1, browRot:  0.0, mouthY:  0.4, mouthS:  0.02 };
+  if (r === 4) return { browY:  0.8, browRot: 0, mouthY:  0.8, mouthS: -0.04 };
+  return { browY: 0, browRot: 0, mouthY: 0, mouthS: 0 };
+}
 
             // Výchozí pusa
             els.mouthOpen.style.opacity = '0';
@@ -1476,12 +1508,35 @@ function hideOverlay() {
               const cx = cur.x;
               const cy = cur.y;
 
+
+// Mimika lerp
+exprCur.browY   = lerp(exprCur.browY,   exprTgt.browY,   0.08);
+exprCur.browRot = lerp(exprCur.browRot, exprTgt.browRot, 0.08);
+exprCur.mouthY  = lerp(exprCur.mouthY,  exprTgt.mouthY,  0.10);
+exprCur.mouthS  = lerp(exprCur.mouthS,  exprTgt.mouthS,  0.10);
+
               // Parallax (laděno mírně méně agresivně)
               if (els.head)   setTf(els.head,   `translate(${(cx*10).toFixed(2)} ${(cy*6).toFixed(2)}) rotate(${(cx*6).toFixed(2)} 300 300)`);
               if (els.face)   setTf(els.face,   `translate(${(cx*8).toFixed(2)} ${(cy*8).toFixed(2)})`);
+              if (els.mouthGroup) setTf(els.mouthGroup, `translate(0 ${exprCur.mouthY.toFixed(2)}) scale(${(1+exprCur.mouthS).toFixed(3)} 1)`);
               if (els.glasses)setTf(els.glasses,`translate(${(cx*12).toFixed(2)} ${(cy*10).toFixed(2)})`);
+
+
+// Odlesk obrouček (frame glint) – posun/rotace dle kurzoru, při mluvení silnější
+if (els.obrouckaGlint){
+  const base = isTalking ? 0.75 : 0.35;
+  // jemné bliknutí
+  const pulse = isTalking ? (0.15 + 0.15*Math.sin(t*8)) : (0.05 + 0.08*Math.sin(t*2.2));
+  els.obrouckaGlint.setAttribute('opacity', String(Math.max(0, Math.min(0.95, base + pulse))));
+}
+if (els.frameGlint){
+  const tx = (cx*35);
+  const ty = (cy*18);
+  const rot = (cx*18);
+  els.frameGlint.setAttribute('gradientTransform', `translate(${tx.toFixed(2)} ${ty.toFixed(2)}) rotate(${rot.toFixed(2)} 300 245)`);
+}
               if (els.ears)   setTf(els.ears,   `translate(${(-cx*5).toFixed(2)} 0)`);
-              if (els.eyebrows) setTf(els.eyebrows, `translate(0 ${(cy*-2).toFixed(2)})`);
+              if (els.eyebrows) setTf(els.eyebrows, `translate(0 ${((cy*-2) + exprCur.browY).toFixed(2)}) rotate(${(exprCur.browRot).toFixed(2)} 300 210)`);
 
               // Oči
               els.irises.forEach(el => setTf(el, `translate(${(cx*10).toFixed(2)} ${(cy*8).toFixed(2)})`));
@@ -1513,6 +1568,10 @@ function hideOverlay() {
 
             // veřejné API
             window.AvatarDock = {
+              react(text){
+                // nastav výraz (při každém čtení něco jiného)
+                setExprTarget(pickExpression(text));
+              },
               setEnabled(on){
                 enabled = !!on;
                 dock.classList.toggle('is-hidden', !enabled);
@@ -1530,6 +1589,16 @@ function hideOverlay() {
               },
               talk(on){
                 isTalking = !!on;
+                if (isTalking){
+                  // při startu řeči zvol výraz (pokud nebyl nastaven přes react)
+                  // necháme target tak jak je, nebo ho nastavíme na lehký "mluvící" preset
+                  if (exprTgt.browY===0 && exprTgt.browRot===0 && exprTgt.mouthY===0 && exprTgt.mouthS===0){
+                    setExprTarget({ browY:-1.2, browRot:-0.8, mouthY:-0.6, mouthS:0.06 });
+                  }
+                } else {
+                  // návrat do neutrálu
+                  setExprTarget({ browY:0, browRot:0, mouthY:0, mouthS:0 });
+                }
                 dock.classList.toggle('is-talking', isTalking);
                 if (!isTalking){
                   lipsyncStop();
@@ -1583,6 +1652,15 @@ function hideOverlay() {
                 <stop offset="1" style="stop-color:#FE330A;stop-opacity:0.4"></stop>
             </linearGradient>
             
+            
+<!-- Odlesk na obroučkách (dynamický) -->
+<linearGradient id="frameGlint" gradientUnits="userSpaceOnUse" x1="160" y1="200" x2="420" y2="290">
+    <stop offset="0" style="stop-color:#FFFFFF;stop-opacity:0"></stop>
+    <stop offset="0.40" style="stop-color:#FFFFFF;stop-opacity:0"></stop>
+    <stop offset="0.52" style="stop-color:#FFFFFF;stop-opacity:0.62"></stop>
+    <stop offset="0.62" style="stop-color:#FFFFFF;stop-opacity:0"></stop>
+    <stop offset="1" style="stop-color:#FFFFFF;stop-opacity:0"></stop>
+</linearGradient>
             <!-- DEFINICE OŘEZOVÝCH MASEK (Aby oči nevyjížděly) -->
             <clipPath id="clip-eye-left">
                 <path d="M220.7,240.5c0,0,5.5,7.6,6.9,7.6c1.4,0.3,10.7,3.8,13.2,3.8c2.4,0,18,0,20.8-0.7 c2.4-0.7,10.4-1.4,11.4-2.1c1-0.7,5.9-2.8,5.9-4.9c0-2.4,0.3-4.2,0-5.5s-3.1-4.9-4.9-5.5c-1.7-0.7-12.1-5.5-14.9-5.5 s-18.7-1-20.8-0.3c-2.1,0.7-5.5,0.7-7.6,1.7c-1.7,1-5.5,3.8-6.6,4.5c-1,0.7-2.4,2.1-2.8,2.8c-0.3,0.7-1,2.1-1,2.4 C220.7,239.5,220.7,240.5,220.7,240.5z"></path>
@@ -1684,6 +1762,7 @@ function hideOverlay() {
                 <!-- BRÝLE (Parallax vrstva) -->
                 <g id="glasses-group" data-svg-origin="181 198.5" transform="matrix(1,0,0,1,-0.0557,-0.5998)" style="translate: none; rotate: none; scale: none; transform-origin: 0px 0px;">
                     <path id="obroucka" fill="#3F3F3F" d="M407.8,204c-2.9-0.5-22.7-5.5-43.1-5.5s-39,4.7-47.3,7.7c-8.3,2.9-18.5,2.5-18.5,2.5 s-10.2,0.4-18.5-2.5s-27-7.7-47.3-7.7s-40.1,5-43.1,5.5c-2.9,0.5-9,1.6-9,1.6l0.6,17.2c0,0,3.7,0.2,5.3,3.9 c1.4,3.3,2,57.2,49.3,57.2s49.7-37.8,51.9-47.3c2-8.8,6.4-13.7,10.7-13.7s8.7,4.9,10.7,13.7c2.2,9.5,4.5,47.3,51.9,47.3 s47.9-54,49.3-57.2c1.6-3.8,5.3-3.9,5.3-3.9l0.6-17.2C416.7,205.6,410.7,204.6,407.8,204z M238.2,279.3 c-33.7,0-46.5-30.4-41.5-60.8c0,0,3.5-15.8,40.7-15c37.1,0.8,44.1,8.8,44.4,28.6S272.3,279.3,238.2,279.3z M359.6,279.3 c-34.1,0-43.9-27.4-43.6-47.2s7.3-27.8,44.4-28.6s40.7,15,40.7,15C406.2,249,393.3,279.3,359.6,279.3z"></path>
+                    <use href="#obroucka" id="obroucka-glint" fill="url(#frameGlint)" opacity="0" style="mix-blend-mode: screen;"></use>
                     <path id="sklo-l" fill="url(#cool)" d="M196.7,218.5c0,0,3.5-15.8,40.7-15c37.1,0.8,44.1,8.8,44.4,28.6s-9.5,47.2-43.6,47.2 C204.5,279.3,191.7,249,196.7,218.5z"></path>
                     <path id="sklo-r" fill="url(#cool)" d="M401.1,218.5c0,0-3.5-15.8-40.7-15c-37.1,0.8-44.1,8.8-44.4,28.6s9.5,47.2,43.6,47.2 C393.3,279.3,406.2,249,401.1,218.5z"></path>
                 </g>

@@ -3,9 +3,9 @@ body {
 }
 
 button {
-    outline: 0;
     display: inline-block;
     border: none;
+    outline: 0;
 
     color: #333;
     cursor: pointer;
@@ -16,18 +16,18 @@ button {
 
 
 .material-icons {
-    font-family: 'Material Icons';
-    font-weight: normal;
-    font-style: normal;
+    display: inline-block;
     line-height: 1;
     color: rgb(164, 164, 164);
-    font-size: 1rem;
-    letter-spacing: normal;
     text-transform: none;
-    display: inline-block;
-    white-space: nowrap;
-    word-wrap: normal;
     direction: ltr;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    font-family: 'Material Icons';
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: normal;
     -webkit-font-smoothing: antialiased;
 }
 
@@ -40,30 +40,30 @@ button {
 }
 
 .tab-button {
+    position: relative;
     padding: 8px 16px;
-    cursor: pointer;
     border: none;
     background: transparent;
-    position: relative;
-    font-weight: normal;
+    cursor: pointer;
     transition: color 0.2s;
+    font-weight: normal;
 }
 
 
 .tab-button.active {
     color: #ff0000;
-    font-weight: bold;
     background-color: white;
+    font-weight: bold;
 }
 
 .tab-button.active::after {
-    content: '';
     position: absolute;
-    left: 0;
     right: 0;
     bottom: -2px;
+    left: 0;
     height: 3px;
     background: #ff0000;
+    content: '';
 }
 
 .tab-content {
@@ -76,9 +76,9 @@ button {
 
 .panel {
     display: flex;
-    background-color: #eee;
     padding: 20px auto;
     margin-bottom: 20px;
+    background-color: #eee;
 }
 
 
@@ -88,32 +88,32 @@ button {
 
 .transcription-button {
     position: relative;
+    align-content: space-around;
+    align-items: stretch;
     flex-direction: row;
     flex-wrap: nowrap;
-    align-content: space-around;
     justify-content: center;
-    align-items: stretch;
     background-color: transparent;
 
 }
 
 .icon-button {
     display: inline-flex;
-    flex-direction: column;
     align-items: center;
+    flex-direction: column;
     justify-content: center;
-    cursor: pointer;
     margin: 20px;
+    cursor: pointer;
 }
 
 
 
 .label {
-    margin-top: 0.5rem;
-    font-size: 1rem;
     line-height: 1;
+    margin-top: 0.5rem;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    font-size: 1rem;
 }
 
 
@@ -124,19 +124,19 @@ button {
 }
 
 .context-menu button {
-    background-color: white;
-    width: 100px;
-    text-align: left;
     display: block;
+    width: 100px;
+    background-color: white;
+    text-align: left;
 }
 
 .edit-button,
 .delete-button {
-    cursor: pointer;
-    background: transparent;
-    font-size: 16px;
-    padding: 4px;
     width: 100%;
+    padding: 4px;
+    background: transparent;
+    cursor: pointer;
+    font-size: 16px;
 }
 
 
@@ -149,13 +149,13 @@ button {
 
 .tooltip {
     position: absolute;
-    background-color: #333;
-    color: #fff;
-    text-align: center;
-    padding: 5px;
-    visibility: hidden;
     z-index: 1;
     top: -25px;
+    visibility: hidden;
+    padding: 5px;
+    color: #fff;
+    background-color: #333;
+    text-align: center;
 }
 
 .transcription-button {
@@ -212,27 +212,27 @@ button {
 }
 
 .tab-content-body.layout-default {
-    gap: 1rem;
     display: inline-flex
 ;
-    box-sizing: border-box;
     align-items: center;
     flex-direction: row;
     flex-wrap: wrap;
+    box-sizing: border-box;
+    gap: 1rem;
  
 }
 .tab-content-body.layout-default .transcription-button {
     display: inline-block;
+    overflow: hidden;
     align-items: center;
-    justify-content: flex-start;
-    flex-direction: row; 
+    flex-direction: row;
+    justify-content: flex-start; 
     max-width: max-content;
     border-radius: 0.4rem;
  background-color: #eaeaea;
-    overflow: hidden;
     box-shadow: 0 0px 0px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
     text-align: left; 
 }
 span#recording-status {
@@ -245,32 +245,32 @@ span#recording-status {
 }
 
 .tab-content-body.layout-default .transcription-button .shortcut {
-background: rgb(128, 0, 128);
-    font-size: 1.2rem;
-    font-weight: 800;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    display: inline-block;
     flex-shrink: 0;
-    line-height: 1;
     width: 2.2rem;
     height: 2.2rem;
+    line-height: 1;
     line-height: 2.2rem;
+background: rgb(128, 0, 128);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
     text-align: center;
-    display: inline-block;
+    font-size: 1.2rem;
+    font-weight: 800;
 }
 .layout-default svg {
     margin:0.4rem;
 }
 
 .tab-content-body.layout-default .transcription-button .text-button {
+    display: inline-block;
+    flex: 1;
+    ;     height: 100%;
+    line-height: 1.2;
+    color: #222;
+    background: transparent;
+    background-color: transparent;
     font-size: 0.95rem;
     font-weight: 500;
-    color: #222;
-    flex: 1;
-    line-height: 1.2;
-    display: inline-block;
-    ;     height: 100%;
-    background-color: transparent;
-    background: transparent;
     
 }
 
@@ -283,20 +283,20 @@ background: rgb(128, 0, 128);
 }
 
 .launch-pad {
+    position: relative;
+    display: flex;
+    overflow: hidden; 
+    flex-direction: column;
      width: 100%;
     border-radius: 0.5rem;
-    overflow: hidden;
-    position: relative;
-    display: flex; 
-    flex-direction: column;
-     transition: transform 0.2s ease, box-shadow 0.2s ease;
     cursor: pointer;
+     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 div#recording-container.launch-pad #start-recording {
     background: #7f007f;
 }div#recording-container.launch-pad {
-    background: #7f007f;
     border:1px solid #7f007f;
+    background: #7f007f;
 }
 .launch-pad:hover {
 
@@ -304,28 +304,28 @@ div#recording-container.launch-pad #start-recording {
 }
 
 .launch-pad .shortcut {
-    flex: 1;
     display: flex;
     align-items: center;
+    flex: 1;
     justify-content: center;
+    width: 100%;
+    color: white;
+    background: var(--color-top, #888);
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
     font-size: clamp(1.8rem, 8vw, 2.5rem);
     font-weight: 900;
-    color: white;
-    width: 100%;
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.7);
-    background: var(--color-top, #888);
 }
 
 .launch-pad .text-button {
-    flex: 1;
     display: flex;
     align-items: center;
+    flex: 1;
     justify-content: center;
+    color: #222;
+    background: var(--color-bottom, #eee);
     font-size: 0.70arem;
     font-weight: 600;
     backdrop-filter: blur(5px);
-    color: #222;
-    background: var(--color-bottom, #eee);
 }
 
 
@@ -334,13 +334,13 @@ div#recording-container.launch-pad #start-recording {
 }
 
 .tab-button {
+    position: relative;
 
     width: 4rem;
-    position: relative;
+    border: none;
     /* margin-right: 0.5rem; */
     /* padding-right: 1.5rem; */
     background-color: #eee;
-    border: none;
 }
 
 .tab-button:hover {
@@ -351,10 +351,10 @@ div#recording-container.launch-pad #start-recording {
     position: absolute;
     top: 0rem;
     right: 0.2rem;
-    font-size: 0.9em;
-    cursor: pointer;
     opacity: 0;
     color: #333;
+    cursor: pointer;
+    font-size: 0.9em;
     ;
 }
 
@@ -363,11 +363,11 @@ div#recording-container.launch-pad #start-recording {
 }
 
 .tab-add-btn {
-    font-size: 1.2em;
     line-height: 1;
     padding: 0.25em 0.5em;
-    border-radius: 0px;
     margin-left: auto;
+    border-radius: 0px;
+    font-size: 1.2em;
 }
 
 button#add-tab-btn {
@@ -404,31 +404,31 @@ button#add-tab-btn:hover {
    
  }
 .loader {
-  margin-top: 20px;
   width: 40px;
   height: 40px;
+  margin-top: 20px;
   border: 5px solid #aaa;
-    backdrop-filter:blur(10px);
   border-top: 5px solid limegreen;
   border-radius: 50%;
   animation: spin 1s linear infinite;
+    backdrop-filter:blur(10px);
 }
 /* Overlay */
 #connection-overlay {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.85);
-  color: white;
-  font-family: sans-serif;
   z-index: 9999;
+  top: 0; right: 0; bottom: 0; left: 0;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  flex-direction: column;
   justify-content: center;
-  text-align: center;
   padding: 2rem;
-  transition: opacity 0.5s ease;
   opacity: 0;
+  color: white;
+  background: rgba(0, 0, 0, 0.85);
+  transition: opacity 0.5s ease;
+  text-align: center;
+  font-family: sans-serif;
   pointer-events: none;
 }
 #connection-overlay.visible {
@@ -439,15 +439,15 @@ button#add-tab-btn:hover {
 /* Pokročilá animace signálu */
 .signal-bars {
   display: flex;
-  gap: 5px;
   margin-top: 20px;
+  gap: 5px;
 }
 .signal-bars .bar {
   width: 12px;
-  background: #444;
   border-radius: 2px;
-  animation: signal-blink 1s infinite ease-in-out;
+  background: #444;
   transform-origin: bottom;
+  animation: signal-blink 1s infinite ease-in-out;
 }
 .signal-bars .bar:nth-child(1) { height: 20px; animation-delay: 0s; }
 .signal-bars .bar:nth-child(2) { height: 30px; animation-delay: 0.2s; }
@@ -455,15 +455,15 @@ button#add-tab-btn:hover {
 .signal-bars .bar:nth-child(4) { height: 50px; animation-delay: 0.6s; }
 
 @keyframes signal-blink {
-  0%, 100% { transform: scaleY(0.3); background: #444; }
-  50% { transform: scaleY(1.2); background: #ff4a4a; }
+  0%, 100% { background: #444; transform: scaleY(0.3); }
+  50% { background: #ff4a4a; transform: scaleY(1.2); }
 }
 
 /* Loader pro obnovený signál */
 .loader {
-  margin-top: 20px;
   width: 40px;
   height: 40px;
+  margin-top: 20px;
   border: 5px solid #aaa;
   border-top: 5px solid limegreen;
   border-radius: 50%;
@@ -475,82 +475,56 @@ button#add-tab-btn:hover {
 /* ---------------- Avatar Dock (Adam) ---------------- */
 .avatar-dock{
   position: fixed;
-  right: 16px;
-  bottom: 16px;
-  width: min(240px, 48vw);
   z-index: 1090; /* nad toastama */
-  pointer-events: none;
+  right: 0;
+  bottom: 0;
+  width: min(420px, 72vw);
   user-select: none;
-  filter: drop-shadow(0 18px 28px rgba(0,0,0,.35));
-}
-.avatar-dock.is-hidden{ display:none; }
-.avatar-dock #adam-svg{ width:100%; height:auto; display:block; }
-.avatar-dock #mouth-open{ opacity:0; }
-.avatar-dock #mouth-closed{ opacity:1; }
-.avatar-dock.is-talking #mouth-open{ opacity:1; }
-.avatar-dock.is-talking #mouth-closed{ opacity:0; }
-
-/* "mluvení" – jemné otevírání pusy */
-.avatar-dock.is-talking #mouth-open{
-  transform-box: fill-box;
-  transform-origin: 50% 50%;
-  animation: avatarTalk 160ms ease-in-out infinite alternate;
-}
-@keyframes avatarTalk{
-  from { transform: scaleY(0.92); }
-  to   { transform: scaleY(0.55); }
-}
-
-/* na velmi malých displejích držíme avatar menší */
-@media (max-width: 420px){
-  .avatar-dock{ right: 10px; bottom: 10px; width: min(180px, 46vw); }
-}
-
-
-/* Avatar dock + bublina */
-.avatar-dock{
-     position: fixed;
-    right: 41%;
-    bottom: 0;
-    width: 20%;
-    z-index: 9999;
-    pointer-events: none;
+  pointer-events: none; /* avatar neblokuje UI */
+  filter: drop-shadow(0 18px 28px rgba(0,0,0,.28));
 }
 .avatar-dock.is-hidden{ display:none; }
 
 .avatar-dock svg{
+  display:block;
   width: 100%;
   height: auto;
-  display:block;
-  filter: drop-shadow(0 10px 24px rgba(0,0,0,.18));
 }
 
 .avatar-bubble{
   position: absolute;
-  right: 0;
-  bottom: 260px; /* doladíš dle velikosti avatara */
-  max-width: 340px;
-  background: #fff;
-  color: #111;
+  right: 40px;
+  bottom: calc(100% - 10px);
+  overflow: hidden;
+  max-width: min(460px, 92vw);
+  max-height: 180px;
+  padding: 10px 12px;
   border: 1px solid rgba(0,0,0,.12);
   border-radius: 14px;
-  padding: 10px 12px;
+  color: #111;
+  background: #fff;
   box-shadow: 0 10px 28px rgba(0,0,0,.16);
+  word-break: break-word;
+  white-space: pre-wrap;
   font: 14px/1.35 system-ui, -apple-system, Segoe UI, Roboto, Arial;
   pointer-events: none;
-  white-space: pre-wrap;
 }
 .avatar-bubble .spoken{ font-weight: 700; }
-.avatar-bubble .rest{ opacity: .45; }
+.avatar-bubble .rest{ font-weight: 700;}
 .avatar-bubble::after{
-  content:"";
   position:absolute;
-  right: 24px;
+  right: 34px;
   bottom: -9px;
   width: 16px;
   height: 16px;
-  background: #fff;
   border-right: 1px solid rgba(0,0,0,.12);
   border-bottom: 1px solid rgba(0,0,0,.12);
+  background: #fff;
+  content:"";
   transform: rotate(45deg);
+}
+
+@media (max-width: 420px){
+  .avatar-dock{ width: min(320px, 86vw); }
+  .avatar-bubble{ right: 10px; }
 }
